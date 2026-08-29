@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      width: 240px;
+      margin: 0;
+      padding: 16px;
+      font: 14px/1.4 "Segoe UI", system-ui, sans-serif;
+      background: #ffffff;
+      color: #1a1f26;
+    }
+    h1 { font-size: 15px; margin: 0 0 2px; }
+    p.sub { margin: 0 0 14px; font-size: 12px; color: #5b6673; }
+    .row { display: flex; align-items: center; justify-content: space-between; }
+    .switch { position: relative; width: 46px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0; cursor: pointer;
+      background: #c7ced6; border-radius: 999px; transition: .2s;
+    }
+    .slider::before {
+      content: ""; position: absolute; height: 20px; width: 20px;
+      left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s;
+    }
+    input:checked + .slider { background: #0b5cad; }
+    input:checked + .slider::before { transform: translateX(20px); }
+    .state { margin-top: 12px; font-size: 12px; color: #5b6673; }
+    .state b { color: #0b5cad; }
+  </style>
+</head>
+<body>
+  <h1>iVirtual Wrap</h1>
+  <p class="sub">Reskin del front de iVirtual</p>
+  <div class="row">
+    <span>Activar wrap</span>
+    <label class="switch">
+      <input type="checkbox" id="toggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div class="state">Estado: <b id="stateLabel">—</b></div>
+  <script src="storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

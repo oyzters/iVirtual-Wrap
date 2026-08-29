@@ -1,0 +1,218 @@
+/* ============================================================
+   LOGIN  —  body#page-login-index
+   ============================================================ */
+
+/* Fondo degradado azul a pantalla completa */
+:root[data-ivw="on"] body#page-login-index {
+  background: radial-gradient(1200px 600px at 15% -10%, #1a73c7 0%, transparent 55%),
+              radial-gradient(1000px 700px at 110% 20%, #0b5cad 0%, transparent 50%),
+              linear-gradient(160deg, #082a4d 0%, #0a3a66 55%, #0b5cad 100%) !important;
+  min-height: 100vh;
+}
+
+/* Quitar cromo del tema que estorba en login */
+:root[data-ivw="on"] #page-login-index #page-second-header,
+:root[data-ivw="on"] #page-login-index .navbar,
+:root[data-ivw="on"] #page-login-index #page-footer,
+:root[data-ivw="on"] #page-login-index footer .footer-blocks {
+  display: none !important;
+}
+
+:root[data-ivw="on"] #page-login-index #page,
+:root[data-ivw="on"] #page-login-index #page-wrapper,
+:root[data-ivw="on"] #page-login-index #page-content,
+:root[data-ivw="on"] #page-login-index #region-main-box,
+:root[data-ivw="on"] #page-login-index #region-main {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Centrar vertical/horizontal — SOLO en .login-wrapper.
+   OJO: #maincontent es un <span> vacío dentro de la tarjeta, no un wrapper. */
+:root[data-ivw="on"] #page-login-index .login-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  padding: 32px 16px !important;
+}
+:root[data-ivw="on"] #page-login-index #maincontent {
+  display: none !important;   /* span vacío, no ocupa espacio */
+}
+:root[data-ivw="on"] #page-login-index .login-container > [role="main"] {
+  width: 100% !important;
+}
+
+/* La tarjeta */
+:root[data-ivw="on"] #page-login-index .login-container {
+  width: 100% !important;
+  max-width: 430px !important;
+  background: rgba(255, 255, 255, .98) !important;
+  border: 1px solid rgba(255, 255, 255, .5) !important;
+  border-radius: var(--r-xl) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 40px 36px 30px !important;
+  backdrop-filter: blur(6px);
+}
+
+/* Encabezado de marca dentro de la tarjeta */
+:root[data-ivw="on"] #page-login-index .login-container::before {
+  content: "iVirtual";
+  display: block;
+  font-family: var(--font-body); /* Inter, igual que el texto de abajo */
+  font-weight: 600;
+  font-style: normal;
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--blue-700);
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Formulario */
+:root[data-ivw="on"] #page-login-index .loginform,
+:root[data-ivw="on"] #page-login-index .login-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+:root[data-ivw="on"] #page-login-index .form-group { margin: 0 !important; }
+
+:root[data-ivw="on"] #page-login-index #username,
+:root[data-ivw="on"] #page-login-index #password {
+  width: 100% !important;
+  font-size: 15px !important;
+  padding: 0.8rem 0.95rem !important;
+  border-radius: var(--r) !important;
+}
+
+/* Botón entrar */
+:root[data-ivw="on"] #page-login-index #loginbtn,
+:root[data-ivw="on"] #page-login-index .loginbtn {
+  width: 100% !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: var(--r) !important;
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700)) !important;
+  border: 0 !important;
+  box-shadow: 0 8px 20px rgba(11, 92, 173, .35) !important;
+  margin-top: 4px !important;
+}
+:root[data-ivw="on"] #page-login-index #loginbtn:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 10px 26px rgba(11, 92, 173, .45) !important;
+}
+
+/* Recuperar contraseña */
+:root[data-ivw="on"] #page-login-index .login-form-forgotpassword {
+  text-align: center !important;
+  font-size: 13.5px !important;
+  margin-top: 2px !important;
+}
+/* Ocultar la pregunta "¿Ha extraviado la contraseña?" */
+:root[data-ivw="on"] #page-login-index .login-form-forgotpassword a[href*="forgot_password"] {
+  display: none !important;
+}
+/* "Recuperar Contraseña" = azul, SIN subrayado */
+:root[data-ivw="on"] #page-login-index .login-form-forgotpassword a[href*="RecuperaPassword"] {
+  color: var(--blue-600) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  transition: color .15s ease !important;
+}
+:root[data-ivw="on"] #page-login-index .login-form-forgotpassword a[href*="RecuperaPassword"]:hover {
+  color: var(--blue-800) !important;
+}
+
+/* Divisor + pie (idioma / cookies) */
+:root[data-ivw="on"] #page-login-index .login-divider {
+  border-top: 1px solid var(--line) !important;
+  margin: 22px 0 16px !important;
+}
+/* Contenedor idioma+cookies: apilar en columna, centrado */
+:root[data-ivw="on"] #page-login-index .login-divider + .d-flex {
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+:root[data-ivw="on"] #page-login-index .login-languagemenu {
+  display: flex !important;
+  justify-content: center !important;
+}
+:root[data-ivw="on"] #page-login-index .login-languagemenu .dropdown-toggle {
+  color: var(--ink-2) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+}
+/* Botón "Aviso sobre 'cookies'" = link sutil, no botón */
+:root[data-ivw="on"] #page-login-index button[data-modal="alert"] {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--muted) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  padding: 4px 8px !important;
+  text-decoration: underline !important;
+  text-decoration-color: var(--line) !important;
+  text-underline-offset: 3px !important;
+  width: auto !important;
+  white-space: nowrap !important;
+}
+:root[data-ivw="on"] #page-login-index button[data-modal="alert"]:hover {
+  color: var(--blue-600) !important;
+  text-decoration-color: var(--blue-300) !important;
+}
+
+/* Separador entre idioma y cookies: de VERTICAL (border-left) a HORIZONTAL */
+:root[data-ivw="on"] #page-login-index .login-divider + .d-flex .divider.border-left {
+  border-left: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  width: 64% !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 4px 0 !important;
+  align-self: center !important;
+}
+
+/* ---------- Dropdown de idioma mejorado ---------- */
+:root[data-ivw="on"] #page-login-index .login-languagemenu .dropdown-menu {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 6px !important;
+  min-width: 220px !important;
+  margin-top: 8px !important;
+  animation: ivw-menu-in .12s ease-out;
+}
+:root[data-ivw="on"] #page-login-index .login-languagemenu .dropdown-item {
+  border-radius: var(--r-sm) !important;
+  padding: 9px 12px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--ink-2) !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] #page-login-index .login-languagemenu .dropdown-item:hover,
+:root[data-ivw="on"] #page-login-index .login-languagemenu .dropdown-item:focus {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+/* flechita del toggle */
+:root[data-ivw="on"] #page-login-index .login-languagemenu .caret {
+  border-top-color: var(--blue-600) !important;
+  margin-left: 6px !important;
+}
+@keyframes ivw-menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

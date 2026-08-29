@@ -1,0 +1,157 @@
+/* ============================================================
+   iVirtual Wrap — DESIGN SYSTEM (base)
+   Todo scoped bajo :root[data-ivw="on"]  (el flag apaga todo).
+   Excepción: #ivw-badge (siempre visible para reactivar).
+   ============================================================ */
+
+:root[data-ivw="on"] {
+  /* Azules clásicos iVirtual / ITSON */
+  --blue-900: #082a4d;
+  --blue-800: #0a3a66;
+  --blue-700: #0b5cad;   /* primario */
+  --blue-600: #1461bd;
+  --blue-500: #1a73c7;   /* accent */
+  --blue-300: #6aa9e0;
+  --blue-100: #d6e6f7;
+  --blue-50:  #eef5fc;
+
+  /* Neutros */
+  --ink:      #0f1b2d;
+  --ink-2:    #38465c;
+  --muted:    #6b7891;
+  --line:     #e5eaf2;
+  --surface:  #ffffff;
+  --canvas:   #f4f7fb;
+
+  --ok:       #12805c;
+  --warn:     #b7791f;
+  --danger:   #c0392b;
+
+  /* Forma */
+  --r-sm: 8px;
+  --r:    12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --sp:   8px;
+
+  --sh-1: 0 1px 2px rgba(15, 27, 45, .06), 0 1px 3px rgba(15, 27, 45, .05);
+  --sh-2: 0 4px 14px rgba(15, 27, 45, .08);
+  --sh-3: 0 12px 34px rgba(10, 42, 102, .16);
+
+  /* Tipografía */
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-head: "Plus Jakarta Sans", var(--font-body);
+}
+
+/* ---------- Base tipográfica global ---------- */
+:root[data-ivw="on"] body {
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+  background: var(--canvas) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.55;
+}
+:root[data-ivw="on"] h1,
+:root[data-ivw="on"] h2,
+:root[data-ivw="on"] h3,
+:root[data-ivw="on"] h4,
+:root[data-ivw="on"] .h1,
+:root[data-ivw="on"] .h2,
+:root[data-ivw="on"] .h3 {
+  font-family: var(--font-head) !important;
+  color: var(--ink) !important;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+:root[data-ivw="on"] a {
+  color: var(--blue-700);
+  text-decoration: none;
+}
+:root[data-ivw="on"] a:hover { color: var(--blue-500); text-decoration: underline; }
+
+:root[data-ivw="on"] img { max-width: 100%; height: auto; }
+
+/* ---------- Componentes genéricos ---------- */
+:root[data-ivw="on"] .btn {
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  border-radius: var(--r-sm) !important;
+  padding: 0.6rem 1.1rem !important;
+  border: 1px solid transparent !important;
+  transition: transform .06s ease, box-shadow .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"] .btn:active { transform: translateY(1px) !important; }
+
+:root[data-ivw="on"] .btn-primary {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  box-shadow: var(--sh-1) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .btn-primary:hover {
+  background: var(--blue-600) !important;
+  box-shadow: var(--sh-2) !important;
+}
+:root[data-ivw="on"] .btn-secondary,
+:root[data-ivw="on"] .btn-outline-primary {
+  background: var(--surface) !important;
+  border-color: var(--line) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .btn-secondary:hover,
+:root[data-ivw="on"] .btn-outline-primary:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+
+:root[data-ivw="on"] .form-control,
+:root[data-ivw="on"] input.form-control,
+:root[data-ivw="on"] select,
+:root[data-ivw="on"] textarea {
+  font-family: var(--font-body) !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  padding: 0.65rem 0.85rem !important;
+  color: var(--ink) !important;
+  background: var(--surface) !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .form-control:focus,
+:root[data-ivw="on"] select:focus,
+:root[data-ivw="on"] textarea:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  outline: none !important;
+}
+
+:root[data-ivw="on"] .card,
+:root[data-ivw="on"] .block {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+}
+
+/* ============================================================
+   #ivw-badge — botón toggle flotante (SIEMPRE visible)
+   ============================================================ */
+#ivw-badge {
+  position: fixed !important;
+  bottom: 14px !important;
+  right: 14px !important;
+  z-index: 2147483647 !important;
+  border: 0 !important;
+  cursor: pointer !important;
+  color: #fff !important;
+  font: 700 12px/1 "Inter", system-ui, sans-serif !important;
+  letter-spacing: .02em !important;
+  padding: 10px 15px !important;
+  border-radius: 999px !important;
+  box-shadow: 0 6px 20px rgba(8, 42, 102, .35) !important;
+  transition: transform .08s ease, opacity .15s ease, background .15s ease !important;
+}
+#ivw-badge:hover { transform: translateY(-1px) !important; }
+#ivw-badge:active { transform: translateY(0) !important; }
+#ivw-badge[data-on="1"] { background: #0b5cad !important; }
+#ivw-badge[data-on="0"] { background: #6b7280 !important; opacity: .92 !important; }

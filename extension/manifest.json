@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "iVirtual Wrap",
+  "version": "0.1.0",
+  "description": "Front wrap para ivirtual.itson.edu.mx. Reskin del Moodle con flag on/off. No requiere permisos del sitio.",
+  "action": {
+    "default_title": "iVirtual Wrap",
+    "default_popup": "src/popup.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://ivirtual.itson.edu.mx/*",
+    "https://apps9.itson.edu.mx/PortalSistemas/CambioPass/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://ivirtual.itson.edu.mx/*",
+        "https://apps9.itson.edu.mx/PortalSistemas/CambioPass/*"
+      ],
+      "js": ["src/storage.js", "src/content.js"],
+      "css": [
+        "src/base.css",
+        "src/pages/login.css",
+        "src/pages/dashboard.css",
+        "src/pages/frontpage.css",
+        "src/pages/recuperapassword.css",
+        "src/pages/chrome.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

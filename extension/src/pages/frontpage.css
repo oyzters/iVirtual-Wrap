@@ -1,0 +1,114 @@
+/* ============================================================
+   FRONTPAGE / INICIO  —  body#page-site-index
+   Hero = slider Adaptable (#main-slider .flexslider) con banners jpg.
+   ============================================================ */
+
+:root[data-ivw="on"] #page-site-index #page { background: var(--canvas) !important; }
+
+:root[data-ivw="on"] #page-site-index #region-main,
+:root[data-ivw="on"] #page-site-index .region-main-content {
+  max-width: 1180px !important;
+  margin-inline: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Nav superior como pills (igual que dashboard) ---------- */
+:root[data-ivw="on"] #page-site-index .navbar,
+:root[data-ivw="on"] #page-site-index #main-navbar,
+:root[data-ivw="on"] #page-site-index .secondnavbar {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] #page-site-index .nav-link,
+:root[data-ivw="on"] #page-site-index .navbar-nav .nav-link {
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  border-radius: var(--r-sm) !important;
+  padding: .5rem .9rem !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] #page-site-index .nav-link:hover,
+:root[data-ivw="on"] #page-site-index .nav-link.active {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+
+/* ---------- HERO: slider enmarcado ---------- */
+:root[data-ivw="on"] #page-site-index #main-slider,
+:root[data-ivw="on"] #page-site-index .flexslider {
+  max-width: 1180px !important;
+  margin: 20px auto 26px !important;
+  border-radius: var(--r-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--sh-3) !important;
+  border: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] #page-site-index .flexslider .slides img {
+  border-radius: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Flechas prev/next → círculos modernos */
+:root[data-ivw="on"] #page-site-index .flex-direction-nav a {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 999px !important;
+  background: rgba(8, 42, 102, .45) !important;
+  backdrop-filter: blur(4px);
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: var(--sh-2) !important;
+  opacity: .85 !important;
+  transition: background .15s ease, opacity .15s ease, transform .08s ease !important;
+  text-shadow: none !important;
+}
+:root[data-ivw="on"] #page-site-index .flex-direction-nav a:hover {
+  background: var(--blue-700) !important;
+  opacity: 1 !important;
+  transform: scale(1.06) !important;
+}
+:root[data-ivw="on"] #page-site-index .flex-direction-nav a::before {
+  color: #fff !important;
+  font-size: 20px !important;
+}
+
+/* Dots de paginación */
+:root[data-ivw="on"] #page-site-index .flex-control-paging li a {
+  background: rgba(255, 255, 255, .55) !important;
+  box-shadow: 0 0 0 1px rgba(8, 42, 102, .25) !important;
+  border: 0 !important;
+  width: 11px !important;
+  height: 11px !important;
+  transition: background .15s ease, transform .15s ease !important;
+}
+:root[data-ivw="on"] #page-site-index .flex-control-paging li a.flex-active {
+  background: #fff !important;
+  transform: scale(1.15) !important;
+  box-shadow: 0 0 0 2px var(--blue-600) !important;
+}
+
+/* ---------- Bloques como tarjetas ---------- */
+:root[data-ivw="on"] #page-site-index .block {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 6px 4px !important;
+}
+:root[data-ivw="on"] #page-site-index .block h2,
+:root[data-ivw="on"] #page-site-index .block .card-title {
+  font-family: var(--font-head) !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  font-size: 16px !important;
+}
+:root[data-ivw="on"] #page-site-index .block a { color: var(--blue-700) !important; }

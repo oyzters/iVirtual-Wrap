@@ -1,0 +1,138 @@
+/* ============================================================
+   DASHBOARD / TABLERO  —  body#page-my-index
+   (muchos selectores sirven también a otras páginas internas)
+   ============================================================ */
+
+/* Lienzo + ancho legible */
+:root[data-ivw="on"] #page-my-index #page {
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] #page-my-index #region-main,
+:root[data-ivw="on"] #page-my-index .region-main-content {
+  max-width: 1080px !important;
+  margin-inline: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Header banner ----------
+   NO repintar el banner: trae el logo/gráfico ITSON. Solo recortar el
+   espacio vacío para que no quede una banda enorme. */
+:root[data-ivw="on"] #page-my-index #page-header {
+  box-shadow: var(--sh-1) !important;
+}
+
+/* ---------- Nav superior (Inicio/Tablero/Cursos/Eventos) como pills ---------- */
+:root[data-ivw="on"] #page-my-index .navbar,
+:root[data-ivw="on"] #page-my-index #main-navbar,
+:root[data-ivw="on"] #page-my-index .secondnavbar {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] #page-my-index .nav-link,
+:root[data-ivw="on"] #page-my-index .navbar-nav .nav-link {
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  border-radius: var(--r-sm) !important;
+  padding: .5rem .9rem !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] #page-my-index .nav-link:hover,
+:root[data-ivw="on"] #page-my-index .nav-link.active {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+
+/* Botón "Personalizar esta página" */
+:root[data-ivw="on"] #page-my-index button[data-action="editmode"],
+:root[data-ivw="on"] #page-my-index .editmode-switch-form .btn,
+:root[data-ivw="on"] #page-my-index #customise-this-page {
+  border-radius: 999px !important;
+}
+
+/* ---------- Bloques como tarjetas ---------- */
+:root[data-ivw="on"] #page-my-index .block,
+:root[data-ivw="on"] #page-my-index .card {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 6px !important;
+}
+:root[data-ivw="on"] #page-my-index .block .card-title,
+:root[data-ivw="on"] #page-my-index .block h3,
+:root[data-ivw="on"] #page-my-index .block h4 {
+  font-family: var(--font-head) !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- Línea de tiempo (block_timeline) ---------- */
+:root[data-ivw="on"] #page-my-index .block_timeline .list-group,
+:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .list-group {
+  border-radius: var(--r) !important;
+  overflow: hidden !important;
+}
+
+/* filtros como chips */
+:root[data-ivw="on"] #page-my-index .block_timeline .btn-group .btn,
+:root[data-ivw="on"] #page-my-index .block_timeline .dropdown-toggle {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border: 1px solid var(--blue-100) !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  padding: .5rem 1rem !important;
+}
+
+/* buscador */
+:root[data-ivw="on"] #page-my-index .block_timeline input[type="text"],
+:root[data-ivw="on"] #page-my-index .block_timeline input.form-control {
+  border-radius: 999px !important;
+  padding-left: 1rem !important;
+}
+
+/* separador de fecha (sábado, 29 de agosto…) */
+:root[data-ivw="on"] #page-my-index .block_timeline h5,
+:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] h5 {
+  font-family: var(--font-head) !important;
+  font-weight: 700 !important;
+  color: var(--ink-2) !important;
+  font-size: 14px !important;
+  text-transform: none !important;
+  margin: 18px 4px 8px !important;
+}
+
+/* cada actividad como fila-tarjeta */
+:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item,
+:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .list-group-item {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  margin-bottom: 10px !important;
+  padding: 14px 16px !important;
+  box-shadow: var(--sh-1) !important;
+  transition: box-shadow .15s ease, transform .06s ease !important;
+}
+:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item:hover {
+  box-shadow: var(--sh-2) !important;
+  transform: translateY(-1px) !important;
+}
+:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item a {
+  color: var(--blue-700) !important;
+  font-weight: 600 !important;
+}
+
+/* botón de acción (Añadir envío / Ver) a pill outline */
+:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item .btn,
+:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .btn {
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  border: 0 !important;
+  font-weight: 600 !important;
+  padding: .5rem 1.1rem !important;
+}

@@ -1,0 +1,443 @@
+/* ============================================================
+   CHROME compartido de Moodle (header/topbar) — cargar AL FINAL.
+   ============================================================ */
+
+/* Ocultar lo marcado por JS (Vista estándar/compacta, barra vieja de tabs) */
+:root[data-ivw="on"] [data-ivw-hide="1"] { display: none !important; }
+
+/* Quitar el banner grande (logos + diagonal) en páginas internas */
+:root[data-ivw="on"] #page-site-index #page-header,
+:root[data-ivw="on"] #page-my-index #page-header {
+  display: none !important;
+}
+
+/* Tabs movidas al topbar */
+:root[data-ivw="on"] .ivw-topnav {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+  margin: 0 auto 0 0 !important;   /* pegadas a la izquierda del topbar */
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .ivw-topnav .nav-item { margin: 0 !important; }
+
+/* Topbar es BLANCO → tabs en oscuro (texto + iconos visibles) */
+:root[data-ivw="on"] #page-navbar .ivw-topnav .nav-link,
+:root[data-ivw="on"] .ivw-topnav .nav-link {
+  color: var(--ink-2) !important;
+  font-weight: 600 !important;
+  padding: .45rem .8rem !important;
+  border-radius: var(--r-sm) !important;
+  background: transparent !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] #page-navbar .ivw-topnav .nav-link:hover,
+:root[data-ivw="on"] .ivw-topnav .nav-link:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .ivw-topnav .nav-link i,
+:root[data-ivw="on"] .ivw-topnav .nav-link .fa,
+:root[data-ivw="on"] #page-navbar .ivw-topnav .nav-link i {
+  color: var(--blue-600) !important;
+}
+:root[data-ivw="on"] #page-navbar .ivw-topnav .nav-link:hover i {
+  color: var(--blue-700) !important;
+}
+
+/* Quitar el background-image (banner) del wrapper → adiós bloques azules a los lados */
+:root[data-ivw="on"] #adaptable-page-header-wrapper,
+:root[data-ivw="on"] #adaptable-page-header-wrapper.headerbgimage,
+:root[data-ivw="on"] header.headerbgimage {
+  background-image: none !important;
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] #header1,
+:root[data-ivw="on"] .above-header {
+  background: transparent !important;
+}
+/* Una sola fila compacta: navbar interno sin fondo/borde propios */
+:root[data-ivw="on"] #header1 .navbar.btco-hover-menu {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 6px 0 !important;
+  min-height: 0 !important;
+}
+:root[data-ivw="on"] #header1 .navbar-collapse {
+  display: flex !important;
+  align-items: center !important;
+}
+:root[data-ivw="on"] #header1 .ivw-topnav,
+:root[data-ivw="on"] #header1 #adaptable-user-nav {
+  display: flex !important;
+  align-items: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+/* Todos los items y links del header en una misma línea centrada
+   (NO tocar los <li> directos: rompe el responsive d-none/d-lg-none) */
+:root[data-ivw="on"] #header1 .navbar-collapse .nav-link,
+:root[data-ivw="on"] #header1 .navbar-collapse .popover-region,
+:root[data-ivw="on"] #header1 .navbar-collapse .popover-region-toggle,
+:root[data-ivw="on"] #header1 .navbar-collapse .action-menu-trigger {
+  display: flex !important;
+  align-items: center !important;
+  height: auto !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+:root[data-ivw="on"] #header1 .navbar-collapse .nav-link {
+  line-height: 1.1 !important;
+  padding-top: .35rem !important;
+  padding-bottom: .35rem !important;
+}
+
+/* Ocultar la barra sobrante de zoom (#main-navbar: Pantalla completa/Vista estándar) */
+:root[data-ivw="on"] #main-navbar { display: none !important; }
+
+/* Ocultar el buscador móvil duplicado (usamos el de escritorio movido al topbar) */
+:root[data-ivw="on"] .navbarsearchsocial { display: none !important; }
+
+/* Ocultar TODOS los botones toggle de búsqueda sueltos (lupa extra) — el input ya está siempre visible */
+:root[data-ivw="on"] [data-action="opensearch"] { display: none !important; }
+
+/* Nuke total: ocultar toda lupa; re-mostrar SOLO la del botón enviar del buscador bueno */
+:root[data-ivw="on"] i.fa-magnifying-glass { display: none !important; }
+:root[data-ivw="on"] .ivw-search .btn-submit i.fa-magnifying-glass,
+:root[data-ivw="on"] .ivw-search [data-action="submit"] i.fa-magnifying-glass {
+  display: inline-block !important;
+}
+
+/* Buscador de escritorio movido al topbar: input SIEMPRE visible, inline, sin toggle/X */
+:root[data-ivw="on"] .ivw-search {
+  display: inline-flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  margin: 0 8px 0 0 !important;
+  order: -1 !important;   /* a la izquierda del resto de iconos */
+}
+:root[data-ivw="on"] .ivw-search .simplesearchform { position: static !important; }
+:root[data-ivw="on"] .ivw-search .collapse {
+  display: block !important;   /* mostrar el form siempre */
+  position: static !important;
+}
+/* ocultar el botón lupa toggle y la X de cerrar */
+:root[data-ivw="on"] .ivw-search [data-action="opensearch"],
+:root[data-ivw="on"] .ivw-search .adsimplesearchclose {
+  display: none !important;
+}
+:root[data-ivw="on"] .ivw-search .searchform-navbar { margin: 0 !important; }
+:root[data-ivw="on"] .ivw-search .input-group {
+  display: flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .ivw-search .input-group:focus-within {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 3px rgba(26,115,199,.15) !important;
+}
+:root[data-ivw="on"] .ivw-search .form-control {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: .42rem .9rem !important;
+  min-width: 190px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .ivw-search .btn-submit {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--blue-600) !important;
+  padding: 0 12px !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .ivw-search .btn-submit:hover { color: var(--blue-800) !important; }
+:root[data-ivw="on"] .ivw-search .btn-submit i { color: inherit !important; }
+
+/* Iconos del user-nav (campana, mensajes, buscador, avatar) → color del texto del topbar */
+:root[data-ivw="on"] #adaptable-user-nav .nav-link i,
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-toggle i,
+:root[data-ivw="on"] #adaptable-user-nav #nav-popover-container i,
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-messages i {
+  color: var(--ink-2) !important;
+}
+
+/* Alinear avatar + nombre del usuario horizontalmente */
+:root[data-ivw="on"] #adaptable-user-nav .userbutton {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .userbutton .usertext {
+  margin: 0 !important;
+  line-height: 1.1 !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .userbutton .avatars,
+:root[data-ivw="on"] #adaptable-user-nav .userbutton .avatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger .dropdown-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* ---------- Dropdown del usuario ---------- */
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-menu {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 6px !important;
+  min-width: 240px !important;
+  margin-top: 10px !important;
+  animation: ivw-menu-in .12s ease-out;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: var(--r-sm) !important;
+  padding: 9px 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ink-2) !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item:hover,
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item:focus {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item i,
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item .fa {
+  color: var(--blue-600) !important;
+  width: 18px !important;
+  text-align: center !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item:hover i {
+  color: var(--blue-700) !important;
+}
+/* Salir en tono de peligro sutil */
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item[href*="logout"] {
+  color: var(--danger) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item[href*="logout"] i {
+  color: var(--danger) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item[href*="logout"]:hover {
+  background: #fdecea !important;
+  color: var(--danger) !important;
+}
+/* Dividers: uno solo, sin dobles ni al inicio/fin */
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-divider {
+  margin: 6px 4px !important;
+  border-top: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-divider + .dropdown-divider,
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-menu > .dropdown-divider:first-child,
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-menu > .dropdown-divider:last-child {
+  display: none !important;
+}
+
+/* ---------- Popover de notificaciones (y mensajes) ---------- */
+:root[data-ivw="on"] .popover-region-container {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 0 !important;
+  min-width: 380px !important;
+  max-width: 420px !important;
+  margin-top: 10px !important;
+  overflow: hidden !important;
+  animation: ivw-menu-in .12s ease-out;
+}
+:root[data-ivw="on"] .popover-region-header-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 16px !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .popover-region-header-text {
+  font-family: var(--font-head) !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .popover-region-header-actions {
+  display: flex !important;
+  gap: 6px !important;
+}
+:root[data-ivw="on"] .popover-region-header-actions .btn {
+  background: transparent !important;
+  border: 0 !important;
+  color: var(--muted) !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .popover-region-header-actions .btn:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+
+/* Contenido scrolleable */
+:root[data-ivw="on"] .popover-region-content-container {
+  max-height: 62vh !important;
+  overflow-y: auto !important;
+}
+:root[data-ivw="on"] .popover-region-content-container::-webkit-scrollbar { width: 8px; }
+:root[data-ivw="on"] .popover-region-content-container::-webkit-scrollbar-thumb {
+  background: var(--blue-100); border-radius: 999px;
+}
+
+/* Items */
+:root[data-ivw="on"] [data-region="all-notifications"] > a,
+:root[data-ivw="on"] [data-region="all-notifications"] .notification,
+:root[data-ivw="on"] [data-region="all-notifications"] > * {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--line) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] [data-region="all-notifications"] > a:hover,
+:root[data-ivw="on"] [data-region="all-notifications"] .notification:hover {
+  background: var(--blue-50) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] [data-region="all-notifications"] .notification.unread {
+  background: rgba(26, 115, 199, .06) !important;
+  border-left: 3px solid var(--blue-500) !important;
+}
+:root[data-ivw="on"] [data-region="all-notifications"] a {
+  color: var(--blue-700) !important;
+  font-weight: 600 !important;
+}
+:root[data-ivw="on"] [data-region="all-notifications"] .notification .time,
+:root[data-ivw="on"] [data-region="all-notifications"] small {
+  color: var(--muted) !important;
+  font-weight: 500 !important;
+}
+
+/* Mensaje vacío */
+:root[data-ivw="on"] .popover-region .empty-message {
+  padding: 22px 16px !important;
+  color: var(--muted) !important;
+  text-align: center !important;
+}
+
+/* Footer "Verlo todo" */
+:root[data-ivw="on"] .popover-region .see-all-link { display: block !important; }
+:root[data-ivw="on"] .popover-region-footer-container {
+  padding: 12px !important;
+  text-align: center !important;
+  border-top: 1px solid var(--line) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .popover-region .see-all-link:hover .popover-region-footer-container {
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .popover-region-seeall-text {
+  color: var(--blue-700) !important;
+  font-weight: 700 !important;
+}
+
+/* Ocultar el botón/menú de idioma del header (no el del login, que es .login-languagemenu) */
+:root[data-ivw="on"] .langmenu,
+:root[data-ivw="on"] .langdesc {
+  display: none !important;
+}
+
+/* Topbar en una sola línea, sin wrap, todo centrado vertical */
+:root[data-ivw="on"] .navbar-collapse {
+  flex-wrap: nowrap !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav {
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+/* Misma altura de caja para todos los items del user-nav → centrado uniforme */
+:root[data-ivw="on"] #adaptable-user-nav > li,
+:root[data-ivw="on"] #adaptable-user-nav .nav-link,
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-toggle,
+:root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger {
+  min-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ============================================================
+   ALINEACIÓN DEFINITIVA DEL TOPBAR (cargar al final = gana cascada)
+   ============================================================ */
+:root[data-ivw="on"] #header1 .navbar.btco-hover-menu {
+  display: flex !important;
+  align-items: center !important;
+}
+:root[data-ivw="on"] #header1 .navbar-collapse {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+/* Las dos listas: misma línea, centradas, sin márgenes verticales */
+:root[data-ivw="on"] #header1 .ivw-topnav,
+:root[data-ivw="on"] #header1 #adaptable-user-nav {
+  display: flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+:root[data-ivw="on"] #header1 #adaptable-user-nav { margin-left: auto !important; } /* a la derecha */
+/* Cada item de ambas listas centrado, misma caja */
+:root[data-ivw="on"] #header1 .ivw-topnav > li,
+:root[data-ivw="on"] #header1 #adaptable-user-nav > li,
+:root[data-ivw="on"] #header1 .ivw-search {
+  display: flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  min-height: 40px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+/* matar el my-auto que descentra */
+:root[data-ivw="on"] #header1 .my-auto { margin-top: 0 !important; margin-bottom: 0 !important; }
+
+/* Ocultar el globo de idioma de forma definitiva */
+:root[data-ivw="on"] #header1 .fa-globe { display: none !important; }
+:root[data-ivw="on"] #header1 li.langmenu,
+:root[data-ivw="on"] #header1 a[title="Idioma"] { display: none !important; }
+
+/* FIX pill: centrar verticalmente el input dentro de .ivw-search (medía 72px con el input arriba) */
+:root[data-ivw="on"] .ivw-search,
+:root[data-ivw="on"] .ivw-search .simplesearchform,
+:root[data-ivw="on"] .ivw-search .collapse,
+:root[data-ivw="on"] .ivw-search form.searchform-navbar {
+  display: flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iVirtual Wrap — Interfaz moderna para el Moodle de ITSON</title>
+<meta name="description" content="Extensión de navegador que le pone una interfaz limpia, moderna y consistente al portal iVirtual (Moodle) de ITSON. Corre sobre tu propia sesión: sin servidor, sin credenciales. Open source por Oyzters.">
+<meta property="og:title" content="iVirtual Wrap — Interfaz moderna para el Moodle de ITSON">
+<meta property="og:description" content="Una capa limpia y moderna sobre el portal iVirtual (Moodle) de ITSON. 100% en tu navegador, open source.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d11; --surface:#14171d; --surface2:#1b1f27; --surface3:#22262f;
+    --ink:#f4f6f9; --ink2:#c7cdd8; --muted:#93a0b0; --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+    --brand:#5b9dff; --brand2:#8bbaff; --brand-deep:#2f6fe0; --soft:rgba(91,157,255,.12);
+    --ok:#8bbaff;
+    --radius:16px;
+    --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+    --shadow:0 2px 8px rgba(0,0,0,.4), 0 24px 60px -18px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(60% 50% at 50% -8%, rgba(91,157,255,.12), transparent 70%);}
+  a{color:inherit; text-decoration:none}
+  .wrap{max-width:1120px; margin:0 auto; padding-inline:24px}
+  .eyebrow{font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--brand2)}
+
+  /* nav */
+  header.nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(10px);
+    background:color-mix(in srgb, var(--bg) 82%, transparent); border-bottom:1px solid var(--line)}
+  .nav-in{display:flex; align-items:center; gap:16px; height:64px}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.01em; font-size:16px}
+  .brand .mk{width:30px; height:30px; border-radius:9px; display:grid; place-items:center; color:#fff;
+    background:linear-gradient(150deg,var(--brand),var(--brand-deep)); box-shadow:0 4px 12px -3px var(--brand); font-size:14px}
+  .brand .mk svg{width:17px;height:17px}
+  .nav-links{margin-left:auto; display:flex; align-items:center; gap:6px}
+  .nav-links a{padding:8px 12px; border-radius:9px; font-size:14px; color:var(--ink2)}
+  .nav-links a:hover{background:var(--surface2); color:var(--ink)}
+  .btn{display:inline-flex; align-items:center; gap:8px; border-radius:11px; font-weight:600; font-size:14px; cursor:pointer; border:1px solid transparent; transition:transform .12s, filter .12s, background .12s, border-color .12s}
+  .btn svg{width:16px;height:16px}
+  .btn-primary{background:linear-gradient(180deg,var(--brand),var(--brand-deep)); color:#fff; padding:11px 18px;
+    box-shadow:0 10px 24px -10px var(--brand), inset 0 1px 0 rgba(255,255,255,.22)}
+  .btn-primary:hover{filter:brightness(1.06); transform:translateY(-1px)}
+  .btn-ghost{background:var(--surface2); color:var(--ink); border-color:var(--line); padding:11px 16px}
+  .btn-ghost:hover{border-color:var(--line2)}
+
+  /* hero */
+  .hero{padding:104px 0 84px; display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center}
+  .hero h1{font-size:clamp(32px,4.6vw,52px); line-height:1.05; letter-spacing:-.03em; margin:16px 0 0; font-weight:800; text-wrap:balance}
+  .hero h1 .g{background:linear-gradient(120deg,var(--brand2),var(--brand)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .hero p.lead{color:var(--ink2); font-size:18px; margin:18px 0 28px; max-width:52ch}
+  .hero .cta{display:flex; gap:12px; flex-wrap:wrap}
+  .hero .tags{display:flex; gap:18px; flex-wrap:wrap; margin-top:22px; color:var(--muted); font-size:13.5px}
+  .hero .tags span{display:inline-flex; align-items:center; gap:7px}
+  .hero .tags svg{width:15px; height:15px; color:var(--ok)}
+
+  /* mockup */
+  .mock{background:var(--surface); border:1px solid var(--line); border-radius:16px; overflow:hidden; box-shadow:var(--shadow)}
+  .mock .bar{display:flex; align-items:center; gap:7px; padding:11px 14px; border-bottom:1px solid var(--line); background:var(--surface2)}
+  .mock .bar i{width:11px;height:11px;border-radius:50%;background:var(--surface3); display:block}
+  .mock .bar .url{margin-left:10px; font-family:var(--mono); font-size:11px; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:7px; padding:4px 10px; flex:1}
+  .mock .app{display:grid; grid-template-columns:150px 1fr; min-height:300px}
+  .mock .side{border-right:1px solid var(--line); padding:14px 10px; background:var(--surface)}
+  .mock .side .b{display:flex; align-items:center; gap:8px; margin-bottom:12px}
+  .mock .side .b .l{width:26px;height:26px;border-radius:8px;background:linear-gradient(150deg,var(--brand),var(--brand-deep))}
+  .mock .side .b .t{font-size:11px;font-weight:700}
+  .mock .side .b .t small{display:block; color:var(--muted); font-weight:500; font-size:9px}
+  .mock .side .i{height:9px; border-radius:5px; background:var(--surface3); margin:9px 6px}
+  .mock .side .i.on{background:var(--soft); border-left:2px solid var(--brand); width:80%}
+  .mock .main{padding:16px}
+  .mock .main .h{height:12px; width:45%; border-radius:6px; background:var(--surface3); margin-bottom:14px}
+  .mock .cards{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .mock .card{background:var(--surface2); border:1px solid var(--line); border-radius:11px; padding:12px}
+  .mock .card .ic{width:26px;height:26px;border-radius:8px;background:var(--soft); margin-bottom:9px}
+  .mock .card .l1{height:8px;width:70%;border-radius:4px;background:var(--surface3); margin-bottom:6px}
+  .mock .card .l2{height:6px;width:90%;border-radius:4px;background:var(--surface3); opacity:.6}
+  .mock .card .chip{height:7px;width:40%;border-radius:4px;background:var(--soft); margin-top:10px}
+
+  /* sections */
+  section{padding:96px 0}
+  .sec-head{text-align:center; max-width:640px; margin:0 auto 56px}
+  .sec-head h2{font-size:clamp(26px,3.4vw,36px); letter-spacing:-.02em; margin:12px 0 10px; font-weight:800; text-wrap:balance}
+  .sec-head p{color:var(--muted); font-size:16px; margin:0}
+
+  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+  .feat{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; transition:border-color .15s, transform .15s}
+  .feat:hover{border-color:var(--line2); transform:translateY(-3px)}
+  .feat .fi{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:var(--soft); color:var(--brand2); margin-bottom:14px}
+  .feat .fi svg{width:22px; height:22px}
+  .feat h3{margin:0 0 6px; font-size:17px; letter-spacing:-.01em}
+  .feat p{margin:0; color:var(--muted); font-size:14px}
+
+  /* install */
+  .install{background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:44px; display:grid; grid-template-columns:1fr 1fr; gap:48px}
+  .steps{counter-reset:s; display:flex; flex-direction:column; gap:4px}
+  .step{display:grid; grid-template-columns:34px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--line)}
+  .step:first-child{border-top:none}
+  .step::before{counter-increment:s; content:counter(s); font-family:var(--mono); font-weight:600; font-size:13px; color:var(--brand2);
+    width:34px; height:34px; display:grid; place-items:center; background:var(--soft); border-radius:9px}
+  .step h4{margin:0 0 2px; font-size:15px}
+  .step p{margin:0; color:var(--muted); font-size:13.5px}
+  .step code{font-family:var(--mono); font-size:12px; background:var(--bg); border:1px solid var(--line); border-radius:6px; padding:1px 6px; color:var(--brand2)}
+  .install .aside{display:flex; flex-direction:column; justify-content:center; gap:16px}
+  .install .note{display:flex; gap:12px; background:var(--surface2); border:1px solid var(--line); border-left:3px solid var(--ok); border-radius:12px; padding:16px}
+  .install .note svg{width:20px;height:20px;color:var(--ok); flex:0 0 auto; margin-top:1px}
+  .install .note p{margin:0; font-size:13.5px; color:var(--ink2)}
+  .install .note b{color:var(--ink)}
+
+  /* team */
+  .team{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; max-width:720px; margin:0 auto}
+  .member{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; display:flex; align-items:center; gap:15px}
+  .member .av{width:52px; height:52px; border-radius:14px; display:grid; place-items:center; font-weight:700; font-size:18px; color:#fff;
+    background:linear-gradient(150deg,var(--brand),var(--brand-deep))}
+  .member h4{margin:0; font-size:16px}
+  .member span{color:var(--muted); font-size:13px}
+  .oyz{text-align:center; margin-top:26px; color:var(--muted); font-size:14px}
+  .oyz b{color:var(--ink)}
+
+  /* footer */
+  footer{border-top:1px solid var(--line); padding:34px 0 46px; margin-top:20px}
+  .foot{display:flex; align-items:center; gap:16px; flex-wrap:wrap; color:var(--muted); font-size:13px}
+  .foot .brand{color:var(--ink)}
+  .foot a:hover{color:var(--ink)}
+  .foot .sp{flex:1}
+  .disclaimer{max-width:1120px; margin:16px auto 0; padding:0 24px; color:var(--muted); font-size:12px; line-height:1.6; text-align:center; opacity:.85}
+
+  @media (max-width:880px){
+    .hero{grid-template-columns:1fr; gap:32px; padding-top:48px}
+    .features{grid-template-columns:1fr}
+    .install{grid-template-columns:1fr; padding:26px}
+    .team{grid-template-columns:1fr}
+    .nav-links a:not(.btn){display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 8-4"/><path d="M6 11v5c0 1.5 2.7 2.6 6 2.6s6-1.1 6-2.6v-5"/></svg></span> iVirtual&nbsp;Wrap</div>
+    <nav class="nav-links">
+      <a href="#features">Características</a>
+      <a href="#install">Instalar</a>
+      <a href="#team">Equipo</a>
+      <a class="btn btn-ghost" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2z"/></svg>GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="wrap hero">
+    <div>
+      <span class="eyebrow">Extensión de navegador · Open source</span>
+      <h1>Una interfaz <span class="g">moderna</span> para iVirtual de ITSON</h1>
+      <p class="lead">iVirtual Wrap le pone una capa limpia y consistente al <strong>Moodle iVirtual</strong> de ITSON — login rediseñado, una sola barra superior, inicio y tablero en tarjetas. Corre <strong>sobre tu propia sesión</strong>: sin servidor, sin tocar tus credenciales.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#install"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>Instalar la extensión</a>
+        <a class="btn btn-ghost" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">Ver el código</a>
+      </div>
+      <div class="tags">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>100% en tu navegador</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>No maneja credenciales</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>Se prende y apaga con un flag</span>
+      </div>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="bar"><i></i><i></i><i></i><span class="url">ivirtual.itson.edu.mx</span></div>
+      <div class="app">
+        <div class="side">
+          <div class="b"><span class="l"></span><span class="t">iVirtual<small>Moodle ITSON</small></span></div>
+          <div class="i on"></div><div class="i"></div><div class="i"></div><div class="i"></div><div class="i"></div><div class="i"></div>
+        </div>
+        <div class="main">
+          <div class="h"></div>
+          <div class="cards">
+            <div class="card"><div class="ic"></div><div class="l1"></div><div class="l2"></div><div class="chip"></div></div>
+            <div class="card"><div class="ic"></div><div class="l1"></div><div class="l2"></div><div class="chip"></div></div>
+            <div class="card"><div class="ic"></div><div class="l1"></div><div class="l2"></div></div>
+            <div class="card"><div class="ic"></div><div class="l1"></div><div class="l2"></div><div class="chip"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Qué hace</span>
+      <h2>El mismo Moodle, una experiencia nueva</h2>
+      <p>Reestiliza y reorganiza el portal sin cambiar la lógica del sistema. Tú entras como siempre; todo pasa en tu equipo, sobre tu sesión.</p>
+    </div>
+    <div class="features">
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13l3 3v13H4z"/><path d="M8 13h8M8 17h5"/></svg></div><h3>Login rediseñado</h3><p>La pantalla de acceso con tarjeta centrada, fondo azul, campos y botón cuidados. Enlaces de idioma y recuperación ordenados.</p></div>
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div><h3>Barra superior unificada</h3><p>Se quita el banner pesado y las tabs (Inicio, Tablero, Cursos, Eventos), búsqueda y usuario quedan en una sola barra limpia.</p></div>
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><h3>Inicio y tablero en tarjetas</h3><p>El slider enmarcado, los cursos como tarjetas y la línea de tiempo en filas legibles con chips y acciones claras.</p></div>
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17a2 2 0 0 0 2-2v-3a2 2 0 0 0-4 0v3a2 2 0 0 0 2 2z"/><path d="M5 11V8a7 7 0 0 1 14 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg></div><h3>Recuperar contraseña</h3><p>La página de recuperación (apps9) también rediseñada: tarjeta, encabezado con logo, campos y contacto ordenados.</p></div>
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Privado · sin permisos de TI</h3><p>Se ejecuta en tu navegador sobre tu sesión. No hay servidor intermedio, no maneja contraseñas y no requiere autorización del área de sistemas.</p></div>
+      <div class="feat"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18c-4 1.5-4-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.7 11.7 0 0 0-6 0C6.9 2.3 5.9 2.6 5.9 2.6a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4.5 9c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></div><h3>Open source</h3><p>Código abierto en GitHub. Reportes, ideas y contribuciones son bienvenidos.</p></div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Instalación</span>
+      <h2>Instálala en menos de un minuto</h2>
+      <p>Por ahora se instala en modo desarrollador. Publicación en la Chrome Web Store, próximamente.</p>
+    </div>
+    <div class="install">
+      <div class="steps">
+        <div class="step"><div><h4>Descarga el código</h4><p>Clona o descarga el repo desde <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener" style="color:var(--brand2)">GitHub</a> y descomprímelo.</p></div></div>
+        <div class="step"><div><h4>Abre las extensiones</h4><p>En Chrome, Edge o Brave ve a <code>chrome://extensions</code>.</p></div></div>
+        <div class="step"><div><h4>Activa el modo desarrollador</h4><p>El interruptor está arriba a la derecha.</p></div></div>
+        <div class="step"><div><h4>Carga la carpeta</h4><p>Clic en <b>Cargar descomprimida</b> y selecciona la carpeta <code>extension/</code>.</p></div></div>
+        <div class="step"><div><h4>Entra a iVirtual</h4><p>Inicia sesión como siempre. La nueva interfaz se aplica sola; abajo a la derecha hay un botón <b>Wrap ON/OFF</b>.</p></div></div>
+      </div>
+      <div class="aside">
+        <a class="btn btn-primary" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener" style="justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2z"/></svg>Descargar de GitHub</a>
+        <div class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <p><b>Tu privacidad primero.</b> iVirtual Wrap solo re-estiliza las páginas que ya tienes abiertas. No envía datos a ningún lado, no guarda contraseñas y no pasa por servidores externos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Quiénes somos</span>
+      <h2>Hecho por Oyzters</h2>
+      <p>Un proyecto independiente creado por estudiantes, para estudiantes.</p>
+    </div>
+    <div class="team">
+      <div class="member"><div class="av">MC</div><div><h4>Manuel Cortez</h4><span>Oyzters</span></div></div>
+      <div class="member"><div class="av">SE</div><div><h4>Sebastian Escalante</h4><span>Oyzters</span></div></div>
+    </div>
+    <p class="oyz">Un producto de <b>Oyzters</b> · <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener" style="color:var(--brand2)">github.com/oyzters/iVirtual-Wrap</a></p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span class="brand"><span class="mk" style="width:26px;height:26px;border-radius:8px;display:inline-grid;place-items:center;color:#fff;background:linear-gradient(150deg,var(--brand),var(--brand-deep))"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 8-4"/><path d="M6 11v5c0 1.5 2.7 2.6 6 2.6s6-1.1 6-2.6v-5"/></svg></span> iVirtual Wrap</span>
+    <span class="sp"></span>
+    <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/oyzters/iVirtual-Wrap/issues" target="_blank" rel="noopener">Reportar / Contribuir</a>
+    <span>Licencia MIT</span>
+  </div>
+  <p class="disclaimer">iVirtual Wrap es un proyecto independiente y de código abierto, sin afiliación ni respaldo oficial del Instituto Tecnológico de Sonora (ITSON). "ITSON", "iVirtual" y "Moodle" pertenecen a sus respectivos titulares. La extensión no recopila ni transmite datos personales.</p>
+</footer>
+
+</body>
+</html>
