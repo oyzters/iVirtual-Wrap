@@ -37,6 +37,33 @@ tu propia sesión**, ya iniciada con tu cuenta.
 1. Ve a `about:debugging#/runtime/this-firefox`.
 2. **Cargar complemento temporal** → elige `extension/manifest.json`.
 
+## Otras formas de usarlo (gemelas de la extensión)
+
+Mismo reskin, cambia cómo se activa:
+
+| Forma | Instalación | Se activa |
+|---|---|---|
+| **Extensión** (`extension/`) | Cargar en el navegador | Sola, siempre |
+| **Userscript** (`userscript/`) | Tampermonkey + pegar `ivirtual-wrap.user.js` | Sola |
+| **Bookmarklet** (`bookmarklet/`) | Abrir `ivirtual-wrap-installer.html` y arrastrar el botón | Clic en cada visita |
+
+> El bookmarklet lleva **todo el reskin embebido** (~52 KB), así que el
+> marcador es grande. Si tu navegador no lo acepta, usa el userscript o la
+> extensión.
+
+## Build (userscript + bookmarklet)
+
+El userscript y el bookmarklet se **generan** desde una sola fuente (el CSS de
+`extension/src` + `build/core.js`), para no duplicar estilos:
+
+```
+node build/build.js
+```
+
+Regenera `userscript/ivirtual-wrap.user.js`, `bookmarklet/bookmarklet.js` y
+`bookmarklet/ivirtual-wrap-installer.html`. Corre esto tras editar cualquier
+CSS o `build/core.js`.
+
 ## El flag ON/OFF
 
 El estado vive en `chrome.storage.local` (`wrapEnabled`, por defecto ON). Todo
