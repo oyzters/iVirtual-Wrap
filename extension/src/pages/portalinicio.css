@@ -1,0 +1,631 @@
+/* ============================================================
+   PORTAL DE SISTEMAS · PORTADA PÚBLICA  ·  apps9.itson.edu.mx/PortalSistemas
+   La pantalla real: nav fija sobre fondo blanco, un "hero" gris con el título
+   en #585b60, el carrusel de banners desbordado a la derecha, el calendario
+   escolar dentro de un <iframe> de 700px casi vacío, "LIGAS DE INTERÉS" en
+   azul #006db6 con el texto en gris claro (ilegible), la galería recortada,
+   footer negro y el modal de acceso —que se abre solo al cargar— en dorado.
+
+   Aquí pasa a ser: nav limpia, portada azul con título, entradilla y botones,
+   banners y calendario en tarjeta, ligas y galería como rejillas de tarjetas,
+   footer azul y un modal de acceso rediseñado.
+
+   Todo bajo [data-ivw-page="portalinicio"], que pone content.js.
+   ============================================================ */
+
+:root[data-ivw="on"][data-ivw-page="portalinicio"] body {
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+  font-size: 15px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] h1,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] h2,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] h3 {
+  font-family: var(--font-head) !important;
+}
+/* animate.css deja los `.wow` con `visibility: hidden` hasta que WOW.js los
+   dispara; si el script no llega, la sección entera queda invisible. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .wow {
+  visibility: visible !important;
+  animation-name: none !important;
+}
+
+/* ---------- Navegación ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] nav.navbar.fixed-top {
+  background: rgba(255, 255, 255, .94) !important;
+  backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 8px 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] nav.navbar .container {
+  max-width: 1240px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .navbar-brand img {
+  width: auto !important;
+  height: 30px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .navbar-nav {
+  gap: 4px !important;
+  margin-left: 18px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .navbar-expand-lg .navbar-nav .nav-link {
+  padding: 8px 12px !important;
+  border-radius: 999px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  color: var(--ink-2) !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .navbar-expand-lg .navbar-nav .nav-link:hover,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .navbar-nav .nav-item.active .nav-link {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+/* "INICIAR SESIÓN" era un borde fino de 10px arrinconado */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .btn-sing .btn-border {
+  padding: 9px 18px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: .02em !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .btn-sing .btn-border:hover {
+  background: var(--blue-600) !important;
+  box-shadow: var(--sh-2) !important;
+}
+
+/* ---------- Portada ----------
+   `#hero-area` traía `margin-top:-100px` inline (se metía debajo de la nav
+   fija) y el título en gris sobre gris. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area {
+  margin-top: 0 !important;
+  padding: 116px 20px 44px !important;
+  background: linear-gradient(160deg, var(--blue-800), var(--blue-900) 70%) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area .overlay { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area .row { margin: 0 !important; }
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area .contents {
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area .contents .head-title {
+  margin: 0 !important;
+  max-width: 20ch !important;
+  font-size: clamp(28px, 4vw, 44px) !important;
+  line-height: 1.1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #fff !important;
+  text-transform: none !important;
+}
+/* Entradilla y botones: los inyecta enhance.js */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-sub {
+  max-width: 62ch;
+  margin: 14px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, .82);
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: background .15s ease, border-color .15s ease, transform .1s ease;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a:first-child {
+  background: #fff;
+  color: var(--blue-800) !important;
+  box-shadow: var(--sh-2);
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a:first-child:hover { transform: translateY(-1px); }
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a + a {
+  border: 1px solid rgba(255, 255, 255, .35);
+  color: #fff !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a + a:hover {
+  border-color: rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .08);
+}
+
+/* ---------- Encabezado de sección (inyectado) y títulos del sitio ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .section-padding {
+  padding: 46px 20px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .section-header {
+  max-width: 1240px !important;
+  margin: 0 auto 22px !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .section-header .section-title,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .section-header .title-hl,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-head h2 {
+  margin: 0 !important;
+  text-align: left !important;
+  font-family: var(--font-head) !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  max-width: 1240px;
+  margin: 0 auto 18px;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-head a {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-700) !important;
+}
+
+/* ---------- Carrusel de banners ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner {
+  max-width: 1240px !important;
+  margin: 34px auto 0 !important;
+  padding: 0 20px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner #demo {
+  border-radius: var(--r-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--sh-2) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner .carousel-inner {
+  overflow: hidden !important;
+}
+/* Alto reservado de antemano ----------------------------------------------
+   Los banners son enormes (`Bienvenidos potros.png` son 6250×1208 y 8.6 MB;
+   `conoceAppPotros.jpeg`, 26042×5034 y 3.9 MB), así que el slide entrante
+   tardaba en tener alto: con `height: auto` medía 0 hasta terminar de bajar la
+   imagen y el carrusel daba el brinco. Los dos comparten proporción (5.17:1),
+   de modo que se fija esa caja y `cover` no recorta nada. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner .carousel-inner {
+  width: 100% !important;
+  margin: 0 !important;
+  aspect-ratio: 5.17 / 1 !important;
+  background: var(--blue-900) !important;   /* nada de destello blanco */
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner .carousel-item {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner .carousel-item img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner .carousel-caption { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-prev,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-next {
+  width: 52px !important;
+  opacity: 1 !important;
+}
+/* Los iconos del tema son PNG blancos sobre nada: se sustituye el dibujo por
+   un chevron azul y la pastilla blanca queda como fondo del botón. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-prev-icon,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-next-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 999px !important;
+  background-color: rgba(255, 255, 255, .95) !important;
+  background-size: 15px 15px !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  box-shadow: var(--sh-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b5cad' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E") !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b5cad' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E") !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-indicators li {
+  width: 8px !important;
+  height: 8px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .55) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .carousel-indicators li.active {
+  background: #fff !important;
+  width: 22px !important;
+}
+
+/* ---------- Calendario escolar (iframe a apps11) ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #CalendarSection {
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+}
+/* Alto suficiente para el mes completo del calendario embebido: con los 700px
+   del sitio quedaba un segundo scroll dentro del <iframe>. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #CalendarSection iframe {
+  display: block !important;
+  width: 100% !important;
+  height: 1120px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+
+/* ---------- Ligas de interés ----------
+   Era azul corporativo con el texto en gris claro: no se leía. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #ligasinteres {
+  background: var(--surface) !important;
+  border-top: 1px solid var(--line) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #ligasinteres .container {
+  max-width: 1240px !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #ligasinteres .row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 16px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #ligasinteres .row > [class*="col-"] {
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item {
+  height: 100% !important;
+  padding: 20px !important;
+  text-align: left !important;
+  background: var(--canvas) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  transition: transform .12s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--sh-2) !important;
+}
+/* El icono es un PNG blanco (`PI_negativo.png`): sobre fondo claro no se veía */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .icon {
+  display: grid !important;
+  place-items: center !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-900)) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .icon img {
+  width: 22px !important;
+  height: auto !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .services-content h3 {
+  margin: 14px 0 6px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .services-content h3 a {
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item:hover .services-content h3 a,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .services-content h3 a:hover {
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .services-content p {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  text-align: left !important;
+  color: var(--ink-2) !important;
+}
+
+/* ---------- Galería de fotos ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .container {
+  max-width: 1240px !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .carousel-item > .row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 16px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .carousel-item > .row > [class*="col-"] {
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card {
+  height: 100% !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  transition: transform .12s ease, box-shadow .18s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh-2) !important;
+}
+/* Las fotos de la galería son 5184×3456 (y 4496×3000): todas 3:2. Forzarlas a
+   4:3 recortaba y añadía un reescalado vertical de más — con la proporción
+   nativa se ven notablemente mejor al reducirlas. */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card img {
+  width: 100% !important;
+  aspect-ratio: 3 / 2 !important;
+  object-fit: cover !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .info-text {
+  padding: 12px 14px 16px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card-title {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card-title a {
+  font-family: var(--font-head) !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .card:hover .card-title a { color: var(--blue-700) !important; }
+/* Las flechas del carrusel de la galería quedaban encima de las tarjetas */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #galeria .btnNextPrev {
+  width: 44px !important;
+}
+
+/* ---------- Pie ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #copyright {
+  background: var(--blue-900) !important;
+  border: 0 !important;
+  padding: 26px 20px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #copyright .container { max-width: 1240px !important; }
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #copyright p {
+  line-height: 1.7 !important;
+  font-size: 13.5px !important;
+  color: rgba(255, 255, 255, .75) !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #copyright p span {
+  display: block !important;
+  font-family: var(--font-head) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #copyright p a {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
+
+/* ---------- Botón flotante de ayuda ---------- */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #BotonAyuda .open-button {
+  width: auto !important;
+  height: auto !important;
+  padding: 11px 20px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  opacity: 1 !important;
+  box-shadow: 0 6px 20px rgba(8, 42, 102, .35) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #BotonAyuda .open-button p {
+  margin: 0 !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+}
+
+/* ============================================================
+   Modal de acceso (#InicioSesion) — se abre solo al cargar
+   El sitio lo pinta en dorado #C6984D con estilos inline en el `.modal-content`
+   y en la columna del logo, así que casi todo va con !important.
+   ============================================================ */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .modal-dialog {
+  max-width: 760px !important;
+  width: min(94vw, 760px) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .modal-content {
+  background: var(--surface) !important;
+  border: 0 !important;
+  border-radius: var(--r-xl) !important;
+  overflow: hidden !important;
+  box-shadow: 0 30px 80px rgba(8, 42, 102, .35) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin {
+  display: flex !important;
+  /* `.col-lg-4` + `.col-lg-8` sumaban más del 100% con el ancho nuevo de la
+     columna del logo y la card se iba a una segunda fila. */
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  margin: 0 !important;
+}
+/* Columna del logo 70: dorado plano → degradado azul */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin .section-LogoITSON {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 38% !important;
+  max-width: 38% !important;
+  padding: 28px !important;
+  background: linear-gradient(160deg, var(--blue-700), var(--blue-900)) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin .logoITSON-login {
+  max-width: 170px !important;
+  filter: brightness(0) invert(1) !important;
+  opacity: .95 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin > .col-lg-8 {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .card {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 26px 30px 22px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .modal-header {
+  padding: 0 !important;
+  border: 0 !important;
+  justify-content: flex-end !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .content-group {
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .card > center img {
+  max-width: 150px !important;
+  margin: 10px 0 4px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion {
+  padding: 16px 0 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-group {
+  position: relative !important;
+  margin: 0 0 12px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-control {
+  height: 46px !important;
+  padding: 0 14px 0 40px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-control:focus {
+  background: var(--surface) !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+}
+/* El icono del campo es un <div> con un PNG dentro, colocado por el tema */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-control-feedback {
+  position: absolute !important;
+  left: 13px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  opacity: .55 !important;
+  pointer-events: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #btnIniciar {
+  width: 100% !important;
+  height: 46px !important;
+  margin-top: 4px !important;
+  border: 0 !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: .02em !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #btnIniciar:hover {
+  background: var(--blue-600) !important;
+  box-shadow: var(--sh-2) !important;
+}
+/* Los tres enlaces iban uno bajo otro, todos en negrita del mismo tamaño */
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion > .text-center {
+  margin-top: 10px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion > .text-center a {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion > .text-center a:hover {
+  text-decoration: underline !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .card-footer {
+  margin: 18px -30px -22px !important;
+  padding: 14px 30px !important;
+  border-top: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .card-footer a {
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .btn-close,
+:root[data-ivw="on"][data-ivw-page="portalinicio"] #InicioSesion .close {
+  opacity: .6 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalinicio"] .modal-backdrop.show {
+  opacity: .55 !important;
+}
+
+/* ---------- Angosto ---------- */
+@media (max-width: 820px) {
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area {
+    padding: 96px 16px 36px !important;
+  }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] .section-padding { padding: 34px 16px !important; }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #Banner { padding: 0 16px !important; }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #CalendarSection iframe { height: 760px !important; }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin { flex-direction: column !important; }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin .section-LogoITSON {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+    padding: 18px !important;
+  }
+  :root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin .logoITSON-login { max-width: 110px !important; }
+}
+
+/* ---------- Wrap apagado ---------- */
+:root[data-ivw="off"] .ivw-pi-sub,
+:root[data-ivw="off"] .ivw-pi-cta,
+:root[data-ivw="off"] .ivw-pi-head { display: none !important; }

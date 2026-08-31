@@ -1,0 +1,305 @@
+/* ============================================================
+   FORMULARIO DE DENUNCIA  ·  apps9.itson.edu.mx/eres
+   Denuncia de violencia, acoso u hostigamiento sexual. La pantalla real es la
+   plantilla sb-admin-2 sin tocar: degradado azul a sangre, tarjeta de 1100px
+   con el logo enorme, etiquetas en gris claro con `float:left`, campos de
+   borde fino, los radios de ocupación sueltos, el captcha dentro de un
+   <center> y el pie en `position: fixed` tapando el final del formulario.
+
+   Es un trámite delicado y largo: aquí se busca que se lea y se complete sin
+   fricción — columna estrecha, etiquetas legibles, campos de 46px, opciones
+   de ocupación como fichas, captcha en su caja y botón de ancho completo.
+   No se cambia ningún texto del formulario ni sus reglas de validación.
+
+   Todo bajo [data-ivw-page="eres"], que pone content.js.
+   ============================================================ */
+
+:root[data-ivw="on"][data-ivw-page="eres"] body {
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+  background: linear-gradient(170deg, var(--blue-800), var(--blue-900) 65%) !important;
+  min-height: 100vh !important;
+}
+
+/* ---------- Columna ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .container {
+  max-width: 760px !important;
+  padding: 0 16px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .container > .row > [class*="col-"] {
+  width: 100% !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .card {
+  margin: 34px 0 !important;
+  border: 0 !important;
+  border-radius: var(--r-xl) !important;
+  box-shadow: 0 24px 60px rgba(6, 26, 56, .32) !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body .p-5 {
+  padding: 30px 32px 8px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .container > .row > [class*="col-"] > hr { display: none !important; }
+/* Los <br> sueltos con los que el sitio separaba el final de la tarjeta */
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body > br { display: none !important; }
+
+/* ---------- Encabezado ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body .text-center img {
+  width: 148px !important;
+  height: auto !important;
+  margin: 0 auto 18px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body .text-center br { display: none !important; }
+/* El título venía como <label class="big"> en azul; enhance.js pone un <h1>
+   delante y esconde el label (no tenía `for`: era decorativo). */
+:root[data-ivw="on"][data-ivw-page="eres"] .ivw-eres-title {
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ink) !important;
+  text-align: center !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .ivw-eres-note {
+  margin: 10px auto 26px !important;
+  max-width: 46ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------- Campos ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .form-group {
+  margin: 0 0 18px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .form-group > label {
+  float: none !important;   /* venían con `float:left` inline */
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 6px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .form-control,
+:root[data-ivw="on"][data-ivw-page="eres"] .form-control-user {
+  height: 46px !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14.5px !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] select.form-control {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  padding-right: 40px !important;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7891' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 13px center !important;
+  background-size: 16px 16px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] textarea.form-control {
+  height: auto !important;
+  min-height: 150px !important;
+  padding: 12px 14px !important;
+  line-height: 1.55 !important;
+  resize: vertical !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .form-control:focus {
+  background: var(--surface) !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  outline: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .form-control::placeholder { color: var(--muted) !important; }
+
+/* Contador del textarea (lo pone enhance.js) */
+:root[data-ivw="on"][data-ivw-page="eres"] .ivw-eres-count {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .ivw-eres-count[data-full="1"] { color: var(--warn); }
+
+/* ---------- Ocupación: los radios sueltos pasan a fichas ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .radio {
+  margin: 0 0 8px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .radio > label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+  cursor: pointer !important;
+  transition: border-color .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .radio > label:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .radio input[type="radio"] {
+  width: 17px !important;
+  height: 17px !important;
+  margin: 0 !important;
+  accent-color: var(--blue-700);
+  flex: 0 0 auto !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .radio:has(input:checked) > label {
+  border-color: var(--blue-500) !important;
+  background: var(--blue-50) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .12) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] #txtOtraOcupacion { margin-top: 8px !important; }
+
+/* ---------- Captcha ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body form > center {
+  display: block !important;
+  margin: 0 32px 4px !important;
+  padding: 20px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--canvas) !important;
+  text-align: center !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .ivw-eres-captcha-label {
+  display: block;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+:root[data-ivw="on"][data-ivw-page="eres"] #captcha canvas,
+:root[data-ivw="on"][data-ivw-page="eres"] canvas#captcha {
+  display: block !important;
+  margin: 0 auto 12px !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] #cpatchaTextBox {
+  width: 200px !important;
+  height: 46px !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  letter-spacing: .08em !important;
+  text-align: center !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] #cpatchaTextBox:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  outline: none !important;
+}
+
+/* ---------- Enviar ----------
+   Estaba en una columna de 2/12 entre dos columnas vacías. */
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body form > .row:last-of-type {
+  display: block !important;
+  margin: 18px 32px 30px !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body form > .row:last-of-type > [class*="col-"] {
+  width: 100% !important;
+  max-width: none !important;
+  flex: none !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .card-body form > .row:last-of-type br { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="eres"] #btnEnviar {
+  width: 100% !important;
+  height: 48px !important;
+  border: 0 !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] #btnEnviar:hover {
+  background: var(--blue-600) !important;
+  box-shadow: var(--sh-2) !important;
+}
+
+/* ---------- Errores de jquery.validate ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] label.error {
+  display: block !important;
+  float: none !important;
+  width: 100% !important;
+  margin: 6px 0 0 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--danger) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .form-control.error {
+  border-color: var(--danger) !important;
+  background: rgba(192, 57, 43, .04) !important;
+}
+
+/* ---------- Pie ----------
+   Era `position: fixed`: tapaba el captcha y el botón al llegar al final. */
+:root[data-ivw="on"][data-ivw-page="eres"] footer.EmailDQF,
+:root[data-ivw="on"][data-ivw-page="eres"] .footer {
+  position: static !important;
+  height: auto !important;
+  padding: 0 16px 34px !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, .72) !important;
+  text-align: center !important;
+}
+
+/* ---------- Avisos de alertify ---------- */
+:root[data-ivw="on"][data-ivw-page="eres"] .alertify .ajs-dialog {
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-3) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .alertify .ajs-body,
+:root[data-ivw="on"][data-ivw-page="eres"] .alertify .ajs-header {
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="eres"] .alertify .ajs-button {
+  border-radius: var(--r-sm) !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+}
+
+/* ---------- Angosto ---------- */
+@media (max-width: 620px) {
+  :root[data-ivw="on"][data-ivw-page="eres"] .card { margin: 16px 0 !important; }
+  :root[data-ivw="on"][data-ivw-page="eres"] .card-body .p-5 { padding: 22px 18px 6px !important; }
+  :root[data-ivw="on"][data-ivw-page="eres"] .card-body form > center,
+  :root[data-ivw="on"][data-ivw-page="eres"] .card-body form > .row:last-of-type { margin-left: 18px !important; margin-right: 18px !important; }
+}
+
+/* ---------- Wrap apagado ---------- */
+:root[data-ivw="off"] .ivw-eres-title,
+:root[data-ivw="off"] .ivw-eres-note,
+:root[data-ivw="off"] .ivw-eres-count,
+:root[data-ivw="off"] .ivw-eres-captcha-label { display: none !important; }

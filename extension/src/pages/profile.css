@@ -1,0 +1,479 @@
+/* ============================================================
+   PERFIL — body#page-user-profile (y #page-user-view dentro de un curso)
+   Moodle lo arma con `column-count: 2`, que parte las tarjetas por la
+   mitad, y con listas dt/dd sin jerarquía. Aquí: cabecera con identidad,
+   rejilla real de dos columnas y pares etiqueta/valor legibles.
+   ============================================================ */
+:root[data-ivw="on"] #page-user-profile #page,
+:root[data-ivw="on"] #page-user-view #page { background: var(--canvas) !important; }
+
+:root[data-ivw="on"] #page-user-profile #region-main,
+:root[data-ivw="on"] #page-user-view #region-main {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+/* Ancho de lectura: sin esto la rejilla se abría a 6 columnas flacas en
+   pantallas grandes y las tarjetas quedaban desbalanceadas */
+:root[data-ivw="on"] .userprofile {
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 0 auto !important;
+}
+
+/* ---------- Cabecera: avatar + nombre + acciones ---------- */
+:root[data-ivw="on"] .userprofile .page-context-header,
+:root[data-ivw="on"] #page-user-profile .page-context-header,
+:root[data-ivw="on"] #page-user-view .page-context-header {
+  width: 100% !important;   /* era un flex item y se encogía al contenido */
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+  flex-wrap: wrap !important;
+  background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-900) 100%) !important;
+  color: #fff !important;
+  border-radius: var(--r-xl) !important;
+  padding: 22px 24px !important;
+  margin: 6px 0 18px !important;
+  box-shadow: var(--sh-2) !important;
+}
+:root[data-ivw="on"] #page-user-profile .page-context-header,
+:root[data-ivw="on"] #page-user-view .page-context-header {
+  max-width: 1180px !important;
+  margin-inline: auto !important;
+}
+:root[data-ivw="on"] .page-header-image { flex: none !important; margin: 0 !important; }
+:root[data-ivw="on"] .page-header-image img,
+:root[data-ivw="on"] .page-header-image .userinitials {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255, 255, 255, .35) !important;
+  background: rgba(255, 255, 255, .12) !important;
+  color: #fff !important;
+  font-family: var(--font-head) !important;
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  object-fit: cover !important;
+}
+:root[data-ivw="on"] .page-header-headings {
+  flex: 1 1 260px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .page-header-headings h1,
+:root[data-ivw="on"] #page-user-profile .page-header-headings h1 {
+  font-family: var(--font-head) !important;
+  font-size: clamp(22px, 2.4vw, 30px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  line-height: 1.2 !important;
+  color: #fff !important;
+  margin: 0 !important;
+  text-transform: none !important;
+}
+/* Correo bajo el nombre (lo copia enhance.js desde "Detalles de usuario") */
+:root[data-ivw="on"] .ivw-profile-sub {
+  display: block !important;
+  margin-top: 4px !important;
+  font-size: 13.5px !important;
+  color: #bcd9f5 !important;
+}
+:root[data-ivw="on"] .header-button-group,
+:root[data-ivw="on"] .ivw-profile-actions,
+:root[data-ivw="on"] .page-context-header .btn-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: none !important;
+  margin: 0 0 0 auto !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+}
+:root[data-ivw="on"] .header-button-group a,
+:root[data-ivw="on"] .ivw-profile-actions a,
+:root[data-ivw="on"] a.ivw-profile-action,
+:root[data-ivw="on"] .page-context-header a.btn,
+:root[data-ivw="on"] .page-context-header .message-button a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(255, 255, 255, .12) !important;
+  border: 1px solid rgba(255, 255, 255, .35) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 9px 18px !important;
+  text-decoration: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] .header-button-group a:hover,
+:root[data-ivw="on"] .ivw-profile-actions a:hover,
+:root[data-ivw="on"] a.ivw-profile-action:hover,
+:root[data-ivw="on"] .page-context-header a.btn:hover {
+  background: rgba(255, 255, 255, .22) !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .page-context-header i { color: inherit !important; }
+
+/* ---------- Rejilla de tarjetas (adiós column-count) ---------- */
+:root[data-ivw="on"] .userprofile .profile_tree {
+  /* Mampostería por columnas: las tarjetas tienen alturas muy dispares y
+     una rejilla por filas dejaba huecos grandes. `break-inside: avoid` en
+     las secciones evita que se partan, que era el defecto original. */
+  display: block !important;
+  column-count: 3 !important;
+  column-gap: 16px !important;
+}
+@media (max-width: 1000px) {
+  :root[data-ivw="on"] .userprofile .profile_tree { column-count: 2 !important; }
+}
+@media (max-width: 640px) {
+  :root[data-ivw="on"] .userprofile .profile_tree { column-count: 1 !important; }
+}
+
+:root[data-ivw="on"] .userprofile .profile_tree section,
+:root[data-ivw="on"] .userprofile section.node_category {
+  break-inside: avoid !important;
+  -webkit-column-break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  display: block !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 0 0 8px !important;
+  margin: 0 0 16px !important;
+}
+:root[data-ivw="on"] .userprofile section.node_category > h3,
+:root[data-ivw="on"] .userprofile .node_category h3.lead {
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  padding: 13px 16px 11px !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul,
+:root[data-ivw="on"] .userprofile .node_category ul.list-unstyled {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 8px !important;
+}
+
+/* ---------- Pares etiqueta / valor ---------- */
+:root[data-ivw="on"] .userprofile .contentnode {
+  padding: 8px 8px !important;
+  margin: 0 !important;
+  border-radius: var(--r-sm) !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dl {
+  display: block !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dt {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 0 2px !important;
+  float: none !important;
+  width: auto !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd {
+  font-size: 14px !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
+  overflow-wrap: anywhere !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd a:not(.btn) { color: var(--blue-700) !important; }
+
+/* Enlaces sueltos (Misceláneos, Reportes, Perfiles de curso) como filas */
+:root[data-ivw="on"] .userprofile .contentnode > a,
+:root[data-ivw="on"] .userprofile li.contentnode > a:only-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 10px 10px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode > a::after {
+  content: "" !important;
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-top: 2px solid currentColor !important;
+  border-right: 2px solid currentColor !important;
+  transform: rotate(45deg) !important;
+  opacity: .5 !important;
+  transition: transform .12s ease !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode > a:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode > a:hover::after { transform: rotate(45deg) translate(1px, -1px); opacity: 1 !important; }
+
+/* "Editar perfil": sube al encabezado como botón (lo mueve enhance.js).
+   Si por lo que sea no se movió, igual se ve como botón y no ocupa toda
+   la fila de la tarjeta. */
+:root[data-ivw="on"] .userprofile .contentnode > a[href*="/user/edit.php"],
+:root[data-ivw="on"] .userprofile .contentnode > a[href*="editadvanced.php"],
+:root[data-ivw="on"] .userprofile a.ivw-profile-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  margin: 6px 8px !important;
+  width: fit-content !important;
+  align-self: flex-start !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode > a[href*="/user/edit.php"]::after,
+:root[data-ivw="on"] .userprofile a.ivw-profile-action::after { content: none !important; }
+:root[data-ivw="on"] .userprofile .contentnode > a[href*="/user/edit.php"]:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+/* Dentro del encabezado azul se ve como el botón "Mensaje" */
+:root[data-ivw="on"] .ivw-profile-actions a.ivw-profile-action,
+:root[data-ivw="on"] .header-button-group a.ivw-profile-action {
+  background: rgba(255, 255, 255, .12) !important;
+  border: 1px solid rgba(255, 255, 255, .35) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 9px 18px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .ivw-profile-actions a.ivw-profile-action:hover,
+:root[data-ivw="on"] .header-button-group a.ivw-profile-action:hover {
+  background: rgba(255, 255, 255, .22) !important;
+  color: #fff !important;
+}
+
+/* Lista de cursos del perfil: filas con hover */
+:root[data-ivw="on"] .userprofile .contentnode dd a:not(.btn) {
+  display: block !important;
+  padding: 7px 8px !important;
+  margin: 0 -8px !important;
+  border-radius: var(--r-sm) !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd a:not(.btn):hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+/* El email lleva texto suelto al lado, no debe volverse fila */
+:root[data-ivw="on"] .userprofile .contentnode dd a[href^="mailto:"] {
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Subtítulos dentro de una tarjeta ("Perfiles de curso") */
+:root[data-ivw="on"] .userprofile .node_category h4,
+:root[data-ivw="on"] .userprofile .contentnode h4,
+:root[data-ivw="on"] .userprofile .contentnode > b:first-child {
+  display: block !important;
+  font-family: var(--font-body) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 6px 2px 2px !important;
+}
+
+/* Código QR de la app móvil */
+:root[data-ivw="on"] .userprofile img[src*="qr"],
+:root[data-ivw="on"] .userprofile .qrcode img {
+  display: block !important;
+  margin: 10px auto !important;
+  padding: 10px !important;
+  background: #fff !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  max-width: 220px !important;
+}
+
+@media (max-width: 700px) {
+  :root[data-ivw="on"] .userprofile .page-context-header { padding: 18px !important; }
+  :root[data-ivw="on"] .userprofile .header-button-group { margin: 8px 0 0 !important; width: 100% !important; }
+}
+
+/* Los cursos vienen separados por <br>: con las filas ya espaciadas eso
+   dejaba el doble de aire entre uno y otro */
+:root[data-ivw="on"] .userprofile .contentnode dd br { display: none !important; }
+:root[data-ivw="on"] .userprofile .contentnode dd img + br,
+:root[data-ivw="on"] .userprofile .contentnode dd br:first-child { display: block !important; }
+
+
+/* ============================================================
+   CONTENIDO DE LAS TARJETAS
+   El markup es `li > span > a` para las acciones y `li.contentnode > dl`
+   para los pares etiqueta/valor. Sin esto los enlaces quedan como texto
+   suelto con mucho aire y la lista de cursos se lee como un párrafo.
+   ============================================================ */
+
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul { padding: 6px !important; }
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li {
+  display: block !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+/* Una línea fina separa fila de fila; la última no la lleva */
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li + li {
+  border-top: 1px solid var(--line) !important;
+}
+/* La fila oculta ("Editar perfil", que sube al encabezado) no debe dejar su
+   línea colgando sobre la primera fila visible */
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li[data-ivw-hide="1"] + li {
+  border-top: 0 !important;
+}
+
+/* ---------- Filas de acción (Reportes, Misceláneos, Privacidad) ---------- */
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > span > a,
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 10px 10px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > span { display: block !important; }
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > span > a::after,
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > a::after {
+  content: "" !important;
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-top: 2px solid currentColor !important;
+  border-right: 2px solid currentColor !important;
+  transform: rotate(45deg) !important;
+  opacity: .45 !important;
+  transition: transform .12s ease, opacity .12s ease !important;
+}
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > span > a:hover,
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > a:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li > span > a:hover::after {
+  transform: rotate(45deg) translate(1px, -1px) !important;
+  opacity: 1 !important;
+}
+/* "Editar perfil" se va al encabezado; si el JS no corrió, queda como fila
+   normal en vez de flotando a la derecha */
+:root[data-ivw="on"] .userprofile li.editprofile { float: none !important; text-align: left !important; }
+
+/* ---------- Pares etiqueta / valor ---------- */
+:root[data-ivw="on"] .userprofile .node_category .card-body > ul > li.contentnode { padding: 10px !important; }
+:root[data-ivw="on"] .userprofile .contentnode dt {
+  font-size: 11px !important;
+  margin: 0 0 3px !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd {
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+/* Dentro de un par, la lista anidada pega al borde de la tarjeta */
+:root[data-ivw="on"] .userprofile .contentnode dd > ul {
+  margin: 4px -4px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd > ul > li { margin: 0 !important; padding: 0 !important; }
+
+/* ---------- Cursos: código en pastilla + nombre ---------- */
+:root[data-ivw="on"] .userprofile .contentnode dd a[data-ivw-course] {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  padding: 7px 6px !important;
+  margin: 0 !important;
+  border-radius: var(--r-sm) !important;
+}
+:root[data-ivw="on"] .ivw-course-code {
+  flex: none !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em !important;
+  line-height: 1.5 !important;
+  white-space: nowrap !important;
+}
+:root[data-ivw="on"] .ivw-course-name {
+  min-width: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .userprofile .contentnode dd a[data-ivw-course]:hover .ivw-course-name { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .userprofile .contentnode dd a[data-ivw-course]:hover .ivw-course-code {
+  background: var(--blue-100) !important;
+}
+
+/* ---------- Botones dentro de una tarjeta ("Ver código QR") ---------- */
+:root[data-ivw="on"] .userprofile .node_category .btn-primary,
+:root[data-ivw="on"] .userprofile .contentnode dd a.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin: 10px 0 0 !important;
+  padding: 9px 16px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .userprofile .node_category .btn-primary:hover,
+:root[data-ivw="on"] .userprofile .contentnode dd a.btn:hover {
+  background: var(--blue-800) !important;
+  color: #fff !important;
+}

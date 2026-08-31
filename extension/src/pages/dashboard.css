@@ -70,69 +70,480 @@
   color: var(--ink) !important;
 }
 
-/* ---------- Línea de tiempo (block_timeline) ---------- */
-:root[data-ivw="on"] #page-my-index .block_timeline .list-group,
-:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .list-group {
-  border-radius: var(--r) !important;
-  overflow: hidden !important;
+/* ---------- Encabezado de bloque ---------- */
+/* `:not(th)`: el calendario usa <th class="header"> para los días de la
+   semana y volverlos flex rompía la fila entera del <thead> */
+:root[data-ivw="on"] #page-my-index .block > .header,
+:root[data-ivw="on"] #page-my-index .block > .card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 10px 12px 4px !important;
 }
+:root[data-ivw="on"] #page-my-index .block > .header .title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #page-my-index .block .block-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: none !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #page-my-index .block h2,
+:root[data-ivw="on"] #page-my-index .block .card-title,
+:root[data-ivw="on"] #page-my-index .block h3 {
+  font-family: var(--font-head) !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+}
+/* Iconos decorativos del título del bloque (flecha / hamburguesa de Adaptable) */
+:root[data-ivw="on"] #page-my-index .block > .header h2 > i,
+:root[data-ivw="on"] #page-my-index .block .card-title > i { display: none !important; }
+/* Botón de zoom del bloque (lo marca enhance.js) */
+:root[data-ivw="on"] .block [data-action="zoom"],
+:root[data-ivw="on"] .block .blockzoom,
+:root[data-ivw="on"] .block a.zoom-in-out { display: none !important; }
 
-/* filtros como chips */
-:root[data-ivw="on"] #page-my-index .block_timeline .btn-group .btn,
-:root[data-ivw="on"] #page-my-index .block_timeline .dropdown-toggle {
+/* ============================================================
+   LÍNEA DE TIEMPO (block_timeline)
+   ============================================================ */
+/* Controles: chips + buscador */
+:root[data-ivw="on"] .block_timeline .dropdown-toggle,
+:root[data-ivw="on"] .block_timeline .btn-group .btn {
   background: var(--blue-50) !important;
   color: var(--blue-700) !important;
   border: 1px solid var(--blue-100) !important;
   border-radius: 999px !important;
   font-weight: 600 !important;
-  padding: .5rem 1rem !important;
+  font-size: 13.5px !important;
+  padding: .45rem 1rem !important;
+  box-shadow: none !important;
 }
-
-/* buscador */
-:root[data-ivw="on"] #page-my-index .block_timeline input[type="text"],
-:root[data-ivw="on"] #page-my-index .block_timeline input.form-control {
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:hover {
+  background: var(--blue-100) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] .block_timeline input.form-control,
+:root[data-ivw="on"] .block_timeline input[type="text"] {
+  border: 1.5px solid var(--line) !important;
   border-radius: 999px !important;
-  padding-left: 1rem !important;
+  padding: .5rem 1rem !important;
+  font-size: 13.5px !important;
+  height: 38px !important;
 }
 
-/* separador de fecha (sábado, 29 de agosto…) */
-:root[data-ivw="on"] #page-my-index .block_timeline h5,
-:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] h5 {
-  font-family: var(--font-head) !important;
+/* Separador de día: sticky, discreto */
+:root[data-ivw="on"] .block_timeline [data-region="event-list-content"] h5,
+:root[data-ivw="on"] .block_timeline .event-list-content h5,
+:root[data-ivw="on"] .block_timeline h5 {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2 !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
   font-weight: 700 !important;
-  color: var(--ink-2) !important;
-  font-size: 14px !important;
-  text-transform: none !important;
-  margin: 18px 4px 8px !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  background: var(--surface) !important;
+  margin: 18px 0 8px !important;
+  padding: 6px 2px !important;
+  border-bottom: 1px solid var(--line) !important;
 }
 
-/* cada actividad como fila-tarjeta */
-:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item,
-:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .list-group-item {
+/* La lista ya no necesita marco propio: el bloque es la tarjeta */
+:root[data-ivw="on"] .block_timeline .list-group {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+/* Cada actividad: hora · icono · texto · acción.
+   Todo el layout aguanta sin las clases ivw-tl-* (por si Moodle cambia el
+   markup): la fila es flex, el bloque de texto crece y el último hijo —el de
+   los botones— se va a la derecha con margin-left:auto. */
+:root[data-ivw="on"] .ivw-tl-item,
+:root[data-ivw="on"] .block_timeline [data-region="event-list-item"] {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
   background: var(--surface) !important;
   border: 1px solid var(--line) !important;
   border-radius: var(--r) !important;
-  margin-bottom: 10px !important;
-  padding: 14px 16px !important;
+  box-shadow: none !important;
+  margin: 0 0 8px !important;
+  padding: 12px 14px !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .ivw-tl-item:hover {
+  border-color: var(--blue-300) !important;
   box-shadow: var(--sh-1) !important;
-  transition: box-shadow .15s ease, transform .06s ease !important;
+  transform: none !important;
 }
-:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item:hover {
-  box-shadow: var(--sh-2) !important;
-  transform: translateY(-1px) !important;
+/* Bootstrap le mete márgenes negativos a .row: sin esto el botón se salía
+   por el borde derecho de la tarjeta */
+:root[data-ivw="on"] .ivw-tl-item .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
-:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item a {
-  color: var(--blue-700) !important;
-  font-weight: 600 !important;
+:root[data-ivw="on"] .ivw-tl-item > .row,
+:root[data-ivw="on"] .ivw-tl-item > .d-flex {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+}
+:root[data-ivw="on"] .ivw-tl-item [class*="col-"] {
+  padding: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
 }
 
-/* botón de acción (Añadir envío / Ver) a pill outline */
-:root[data-ivw="on"] #page-my-index .block_timeline .list-group-item .btn,
-:root[data-ivw="on"] #page-my-index [data-region="event-list-content"] .btn {
+/* Hora */
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-time,
+:root[data-ivw="on"] .ivw-tl-item time,
+:root[data-ivw="on"] .ivw-tl-item .timeline-event-time {
+  flex: none !important;
+  align-self: flex-start !important;
+  min-width: 48px !important;
+  text-align: center !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--ink-2) !important;
+  padding-top: 2px !important;
+}
+
+/* Icono: el círculo se pinta sobre el icono, no sobre su contenedor */
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-icon,
+:root[data-ivw="on"] .ivw-tl-item .activityiconcontainer {
+  flex: none !important;
+  align-self: flex-start !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+/* Salvavidas: si el marcado cayera sobre la celda equivocada, no la deforma */
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-icon:has(h6),
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-icon:has(.event-name),
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-icon:has(.btn) {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  flex: 1 1 auto !important;
+  justify-content: flex-start !important;
+}
+:root[data-ivw="on"] .ivw-tl-item img.icon,
+:root[data-ivw="on"] .ivw-tl-item .activityiconcontainer img,
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-icon i {
+  width: 19px !important;
+  height: 19px !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+}
+
+/* Texto: crece y puede truncar sin empujar al botón */
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-body,
+:root[data-ivw="on"] .ivw-tl-item > .row > [class*="col-"]:nth-child(3):not(.ivw-tl-action) {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  align-self: flex-start !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .event-name,
+:root[data-ivw="on"] .ivw-tl-item h6 {
+  font-family: var(--font-body) !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  margin: 0 0 2px !important;
+  overflow-wrap: anywhere !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .event-name a,
+:root[data-ivw="on"] .ivw-tl-item h6 a {
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .ivw-tl-item:hover .event-name a { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .ivw-tl-item small,
+:root[data-ivw="on"] .ivw-tl-meta {
+  display: block !important;
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-time small { display: inline !important; font-size: 13px !important; color: var(--ink-2) !important; }
+:root[data-ivw="on"] .ivw-course-chip {
+  display: inline-block !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border-radius: 999px !important;
+  padding: 2px 9px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  margin-left: 2px !important;
+  vertical-align: baseline !important;
+}
+
+/* Acción: arriba a la derecha, sin salirse de la tarjeta */
+:root[data-ivw="on"] .ivw-tl-item .ivw-tl-action,
+:root[data-ivw="on"] .ivw-tl-item > .row > *:last-child:not(.ivw-tl-body):not(.ivw-tl-time):not(.ivw-tl-icon),
+:root[data-ivw="on"] .ivw-tl-item > *:last-child:not(.row):not(.d-flex):not(.ivw-tl-body):not(.ivw-tl-time):not(.ivw-tl-icon) {
+  flex: none !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  align-self: flex-start !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  text-align: right !important;
+  max-width: 40% !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .btn {
   border-radius: 999px !important;
   background: var(--blue-700) !important;
   color: #fff !important;
   border: 0 !important;
   font-weight: 600 !important;
-  padding: .5rem 1.1rem !important;
+  font-size: 13px !important;
+  padding: .45rem 1rem !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .btn:hover { background: var(--blue-700) !important; }
+:root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft {
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+  border: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* "Mostrar más actividades" */
+:root[data-ivw="on"] .block_timeline [data-action="more-courses"],
+:root[data-ivw="on"] .block_timeline .btn-secondary {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  padding: .55rem 1.1rem !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .block_timeline .btn-secondary:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+/* Estado vacío */
+:root[data-ivw="on"] .block_timeline [data-region="empty-message"] {
+  color: var(--muted) !important;
+  text-align: center !important;
+  padding: 22px 12px !important;
+}
+
+@media (max-width: 720px) {
+  :root[data-ivw="on"] .ivw-tl-item,
+  :root[data-ivw="on"] .ivw-tl-item > .row {
+    flex-wrap: wrap !important;
+    row-gap: 8px !important;
+  }
+  :root[data-ivw="on"] .ivw-tl-item .ivw-tl-action,
+  :root[data-ivw="on"] .ivw-tl-item [class*="col-"]:last-child {
+    width: 100% !important;
+    text-align: left !important;
+  }
+}
+
+/* ============================================================
+   CURSOS ACCEDIDOS RECIENTEMENTE (block_recentlyaccessedcourses)
+   ============================================================ */
+:root[data-ivw="on"] .block_recentlyaccessedcourses .card-deck,
+:root[data-ivw="on"] .block_myoverview .card-deck {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+  gap: 14px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .dashboard-card,
+:root[data-ivw="on"] .block_myoverview .dashboard-card {
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  transition: transform .12s ease, box-shadow .15s ease, border-color .15s ease !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .dashboard-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh-2) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .dashboard-card-img,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .card-img-top {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .card-body,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .course-info-container {
+  padding: 12px 14px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .courseshortname,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .text-muted.muted {
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .multiline,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .card-body h4,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .coursename {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses .dashboard-card a { text-decoration: none !important; }
+
+/* Flechas del carrusel como círculos */
+:root[data-ivw="on"] .block_recentlyaccessedcourses [data-region="previous-page-button"],
+:root[data-ivw="on"] .block_recentlyaccessedcourses [data-region="next-page-button"],
+:root[data-ivw="on"] .block_recentlyaccessedcourses .paging-bar .btn {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .block_recentlyaccessedcourses [data-region="previous-page-button"]:hover,
+:root[data-ivw="on"] .block_recentlyaccessedcourses [data-region="next-page-button"]:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* ---------- Filtros de la línea de tiempo: TODOS con la misma pastilla ----------
+   Los dos controles no comparten clases (uno es btn-outline-secondary y el
+   otro btn-secondary / btn-link según la versión), así que "Ordenar por
+   fechas" se quedaba sin caja y el texto se perdía contra el fondo. Va al
+   final del archivo para ganarle a la regla de "Mostrar más actividades". */
+:root[data-ivw="on"] .block_timeline .dropdown > .btn,
+:root[data-ivw="on"] .block_timeline .dropdown-toggle,
+:root[data-ivw="on"] .block_timeline [data-toggle="dropdown"],
+:root[data-ivw="on"] .block_timeline .btn-group > .btn,
+:root[data-ivw="on"] .block_timeline .btn.btn-link,
+:root[data-ivw="on"] .block_timeline select.custom-select {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border: 1px solid var(--blue-100) !important;
+  border-radius: 999px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  line-height: 1.2 !important;
+  padding: .45rem 1rem !important;
+  height: auto !important;
+  min-height: 38px !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown > .btn:hover,
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:hover,
+:root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:hover {
+  background: var(--blue-100) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--blue-800) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:focus-visible,
+:root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .18) !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown-toggle::after {
+  border-top-color: currentColor !important;
+  margin-left: 2px !important;
+}
+
+/* El menú desplegado también necesita su caja: sin fondo se leía encima
+   de las actividades de abajo */
+:root[data-ivw="on"] .block_timeline .dropdown-menu {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 6px !important;
+  min-width: 220px !important;
+  margin-top: 6px !important;
+  z-index: 1050 !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown-item {
+  border-radius: var(--r-sm) !important;
+  padding: 8px 12px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown-item:hover,
+:root[data-ivw="on"] .block_timeline .dropdown-item:focus {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .block_timeline .dropdown-item.active,
+:root[data-ivw="on"] .block_timeline .dropdown-item[aria-current="true"] {
+  background: var(--blue-700) !important;
+  color: #fff !important;
 }

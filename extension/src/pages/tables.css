@@ -1,0 +1,174 @@
+/* ============================================================
+   TABLAS DE MOODLE  —  .generaltable / .table
+   Base para cualquier listado (participantes, notas, logs…) y afinado
+   para la vista general de calificaciones
+   (body#page-grade-report-overview-index).
+   ============================================================ */
+
+/* ---------- Contenedor: la tabla vive dentro de una tarjeta ---------- */
+:root[data-ivw="on"] .generaltable,
+:root[data-ivw="on"] table.table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--sh-1) !important;
+  font-size: 14px !important;
+  margin: 0 0 18px !important;
+}
+:root[data-ivw="on"] .generaltable caption,
+:root[data-ivw="on"] table.table caption {
+  caption-side: top !important;
+  text-align: left !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+  padding: 14px 18px 12px !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+
+/* ---------- Encabezado ---------- */
+:root[data-ivw="on"] .generaltable thead th,
+:root[data-ivw="on"] table.table thead th {
+  background: var(--canvas) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  padding: 11px 18px !important;
+  font-family: var(--font-body) !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] .generaltable thead th a { color: var(--ink-2) !important; }
+
+/* ---------- Celdas ---------- */
+:root[data-ivw="on"] .generaltable tbody td,
+:root[data-ivw="on"] .generaltable tbody th,
+:root[data-ivw="on"] table.table tbody td {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  padding: 13px 18px !important;
+  vertical-align: middle !important;
+  color: var(--ink) !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .generaltable tbody tr:last-child td,
+:root[data-ivw="on"] table.table tbody tr:last-child td { border-bottom: 0 !important; }
+
+/* El rayado del tema se cambia por hover: menos ruido */
+:root[data-ivw="on"] .generaltable tbody tr,
+:root[data-ivw="on"] table.table tbody tr {
+  background: transparent !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .generaltable tbody tr:hover,
+:root[data-ivw="on"] table.table tbody tr:hover { background: var(--blue-50) !important; }
+
+:root[data-ivw="on"] .generaltable tbody td a {
+  color: var(--ink) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .generaltable tbody tr:hover td a { color: var(--blue-700) !important; }
+
+/* ============================================================
+   VISTA GENERAL DE CALIFICACIONES
+   ============================================================ */
+:root[data-ivw="on"] #page-grade-report-overview-index #page { background: var(--canvas) !important; }
+:root[data-ivw="on"] #page-grade-report-overview-index #region-main,
+:root[data-ivw="on"] #page-grade-report-overview-index #maincontainer,
+:root[data-ivw="on"] #page-grade-report-overview-index #page-content {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] #page-grade-report-overview-index #region-main > [role="main"] {
+  max-width: 1080px !important;
+  margin-inline: auto !important;
+}
+:root[data-ivw="on"] #page-grade-report-overview-index h2 {
+  font-family: var(--font-head) !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  color: var(--ink) !important;
+  margin: 6px 0 14px !important;
+}
+/* Nombre del curso con más peso; la nota a la derecha */
+:root[data-ivw="on"] #page-grade-report-overview-index .generaltable tbody td:first-child {
+  font-weight: 600 !important;
+  width: 70% !important;
+}
+:root[data-ivw="on"] #page-grade-report-overview-index .generaltable thead th:last-child,
+:root[data-ivw="on"] #page-grade-report-overview-index .generaltable tbody td:last-child {
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* Nota como pastilla (la envuelve enhance.js) */
+:root[data-ivw="on"] .ivw-grade {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  gap: 3px !important;
+  min-width: 62px !important;
+  justify-content: center !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  border-radius: 999px !important;
+  padding: 5px 12px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+:root[data-ivw="on"] .ivw-grade[data-empty="1"] {
+  background: var(--canvas) !important;
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+  border: 1px dashed var(--line) !important;
+}
+:root[data-ivw="on"] .ivw-grade[data-zero="1"] {
+  background: #fdf1ec !important;
+  color: #a2452f !important;
+}
+
+/* ---------- Móvil: la tabla se lee como fichas ---------- */
+@media (max-width: 640px) {
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable thead { display: none !important; }
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable,
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable tbody,
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable tr,
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable td { display: block !important; width: auto !important; }
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable tr {
+    border-bottom: 1px solid var(--line) !important;
+    padding: 6px 0 !important;
+  }
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable td {
+    border: 0 !important;
+    padding: 6px 16px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    text-align: left !important;
+  }
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable td[data-ivw-label]::before {
+    content: attr(data-ivw-label);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex: none;
+  }
+  :root[data-ivw="on"] #page-grade-report-overview-index .generaltable td:first-child::before { display: none !important; }
+}

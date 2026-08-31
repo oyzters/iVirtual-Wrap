@@ -1,0 +1,1917 @@
+/* ============================================================
+   CURSO: ÍNDICE LATERAL, SECCIÓN Y ACTIVIDAD
+   Tres piezas que se usan siempre juntas mientras se cursa una materia:
+   el índice del curso (cajón izquierdo con las semanas), la página de una
+   sección (la lista de actividades) y la página de una actividad
+   (mod/assign y compañía). El tema las deja como listas de enlaces con
+   separadores y tablas de bordes grises; aquí pasan a tarjetas, fichas de
+   fecha y estados legibles.
+   ============================================================ */
+
+/* ============================================================
+   1. ÍNDICE DEL CURSO  (nav.courseindex, cajón izquierdo)
+   ============================================================ */
+/* Cabecera del cajón: el tema lo deja con 60px vacíos y la ✕ suelta. Aquí
+   lleva rótulo, igual que el cajón de bloques del otro lado. */
+:root[data-ivw="on"] #theme_adaptable-drawers-courseindex .drawerheader::before {
+  content: "Contenido del curso";
+  order: 0;
+  margin-right: auto;
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+:root[data-ivw="on"] #theme_adaptable-drawers-courseindex .drawerheader .drawertoggle {
+  order: 1 !important;
+  margin: 0 0 0 auto !important;
+}
+:root[data-ivw="on"] #theme_adaptable-drawers-courseindex .drawercontent {
+  padding: 12px !important;
+  background: var(--canvas) !important;
+}
+
+:root[data-ivw="on"] .courseindex {
+  padding: 0 !important;
+  font-family: var(--font-body) !important;
+}
+/* Cada semana, su propia tarjeta: antes eran filas seguidas sin separación
+   y no se veía dónde acababa una sección y empezaba la siguiente. */
+:root[data-ivw="on"] .courseindex .courseindex-section {
+  margin: 0 0 8px !important;
+  padding: 4px !important;
+  border: 1px solid var(--line) !important;
+  border-left-width: 3px !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-section.current {
+  border-color: var(--blue-300) !important;
+  border-left-color: var(--blue-700) !important;
+  box-shadow: 0 6px 18px rgba(11, 92, 173, .12) !important;
+}
+
+/* ---------- Título de sección ---------- */
+:root[data-ivw="on"] .courseindex .courseindex-section-title {
+  position: relative !important;
+  align-items: center !important;
+  gap: 2px !important;
+  margin: 0 !important;
+  padding: 8px 10px 8px 4px !important;
+  border-radius: var(--r-sm) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-section-title:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-section-title > a.courseindex-link {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-section-title > a.courseindex-link:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-chevron {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  flex: 0 0 auto !important;
+  border-radius: var(--r-sm) !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-chevron:hover { background: var(--blue-100) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-chevron .icon { margin: 0 !important; font-size: 11px !important; }
+
+/* La sección en curso: el tema la marca con su verde de marca. El texto
+   ("Semana actual") se come el ancho del título, así que la etiqueta se
+   queda en una palabra. */
+:root[data-ivw="on"] .courseindex .current-badge.badge {
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0 !important;          /* el texto del tema se apaga… */
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .courseindex .current-badge.badge::before {
+  content: "Actual";                /* …y en su lugar va una sola palabra */
+  font-size: 9.5px;
+}
+/* La franja de la sección en curso: el tema la pinta con su verde */
+:root[data-ivw="on"] .courseindex .courseindex-section.current {
+  border-left-color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-section.current > .courseindex-section-title {
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-section.current > .courseindex-section-title > a.courseindex-link { color: var(--blue-800) !important; }
+
+/* ---------- Actividades dentro de la sección ---------- */
+:root[data-ivw="on"] .courseindex .courseindex-sectioncontent {
+  margin: 2px 0 8px 16px !important;
+  padding: 0 0 0 8px !important;
+  border-left: 1px solid var(--line) !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-sectioncontent .courseindex-item {
+  position: relative !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 1px 0 !important;
+  padding: 6px 10px !important;
+  border-radius: var(--r-sm) !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-sectioncontent .courseindex-item:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-sectioncontent a.courseindex-link {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-sectioncontent .courseindex-item:hover a.courseindex-link { color: var(--blue-700) !important; }
+/* La actividad abierta ahora mismo (`pageitem`) va en azul sólido; `active`
+   es solo el foco de teclado, así que se queda en el tono suave. */
+:root[data-ivw="on"] .courseindex .courseindex-item.pageitem {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  box-shadow: 0 4px 12px rgba(11, 92, 173, .22) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-item.pageitem a.courseindex-link,
+:root[data-ivw="on"] .courseindex .courseindex-item.pageitem:hover a.courseindex-link {
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-item.pageitem:hover { background: var(--blue-800) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-item.pageitem .completioninfo { background: rgba(255, 255, 255, .65) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-item.active:not(.pageitem) {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-100) !important;
+  box-shadow: inset 2px 0 0 var(--blue-700) !important;
+}
+:root[data-ivw="on"] .courseindex .courseindex-item.active:not(.pageitem) a.courseindex-link {
+  font-weight: 600 !important;
+  color: var(--blue-800) !important;
+}
+/* Punto de estado de finalización: gris si no aplica, azul si está hecho */
+:root[data-ivw="on"] .courseindex .completioninfo {
+  flex: 0 0 7px !important;
+  min-width: 7px !important;
+  max-width: 7px !important;
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 999px !important;
+  background: #d3dbe8 !important;
+}
+:root[data-ivw="on"] .courseindex .completioninfo[data-value="1"],
+:root[data-ivw="on"] .courseindex .completioninfo.completion_complete { background: var(--ok) !important; }
+:root[data-ivw="on"] .courseindex .completioninfo[data-value="0"] { background: var(--warn) !important; }
+:root[data-ivw="on"] .courseindex .completioninfo.completion_fail { background: var(--danger) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-item.dimmed a.courseindex-link { color: var(--muted) !important; }
+:root[data-ivw="on"] .courseindex .courseindex-item.restrictions a.courseindex-link { color: var(--muted) !important; font-style: italic !important; }
+:root[data-ivw="on"] .courseindex .courseindex-locked { color: var(--muted) !important; font-size: 11px !important; }
+
+/* ============================================================
+   2. PÁGINA DE SECCIÓN / CURSO  (lista de actividades)
+   ============================================================ */
+:root[data-ivw="on"] body[id^="page-course-view"] #page,
+:root[data-ivw="on"] body[id^="page-mod-"] #page { background: var(--canvas) !important; }
+
+/* El encabezado de la pantalla ("General") se quedaba en gris casi blanco */
+:root[data-ivw="on"] body[id^="page-course-view"] #page-header h1,
+:root[data-ivw="on"] body[id^="page-course-view"] .page-context-header h1,
+:root[data-ivw="on"] body[id^="page-mod-"] #region-main > div > h2:first-of-type {
+  font-family: var(--font-head) !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--ink) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* El área principal deja de ser una hoja blanca: el lienzo es el fondo y
+   cada bloque se sostiene solo. */
+:root[data-ivw="on"] body[id^="page-course-view"] #region-main,
+:root[data-ivw="on"] body[id^="page-mod-"] #region-main {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-course-view"] #region-main-box,
+:root[data-ivw="on"] body[id^="page-mod-"] #region-main-box { background: transparent !important; }
+
+:root[data-ivw="on"] .course-content { margin: 0 !important; }
+:root[data-ivw="on"] .course-content ul.weeks,
+:root[data-ivw="on"] .course-content ul.topics { margin: 0 !important; padding: 0 !important; list-style: none !important; }
+
+/* ---------- Cada sección (semana), una tarjeta ----------
+   En la vista del curso completo el contenido de las semanas venía suelto
+   —banner, objetivo, "Actividades de la semana", enlaces y actividades— sin
+   nada que dijera dónde acaba una semana y empieza la siguiente. */
+:root[data-ivw="on"] .course-content li.section.course-section {
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-xl) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .course-content li.section.course-section.current {
+  border-color: var(--blue-300) !important;
+  box-shadow: 0 8px 26px rgba(11, 92, 173, .10) !important;
+}
+:root[data-ivw="on"] .course-content .section-item {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+/* Cabecera de la semana */
+:root[data-ivw="on"] .course-content .course-section-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 13px 18px !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .course-content li.section.course-section.current .course-section-header { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .course-content .course-section-header .btn-icon {
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0 8px 0 0 !important;
+  border-radius: var(--r-sm) !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .course-content .course-section-header .btn-icon:hover { background: var(--blue-100) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"] .course-content .course-section-header .btn-icon,
+:root[data-ivw="on"] .course-content .course-section-header .btn-icon:not(:hover) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+/* "Colapsar todo" / "Expandir todo" van en el verde del tema */
+:root[data-ivw="on"] .course-content [data-toggle="collapseall"],
+:root[data-ivw="on"] .course-content .collapseall,
+:root[data-ivw="on"] .course-content .expandall,
+:root[data-ivw="on"] #course-collapse-all {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+/* Resumen vacío: el tema deja el hueco igual */
+/* Resumen vacío: fuera (lo marca enhance.js; el tema lo pinta igual) */
+:root[data-ivw="on"] .course-content .summarytext:empty,
+:root[data-ivw="on"] .course-content .summarytext.ivw-empty { display: none !important; }
+:root[data-ivw="on"] .course-content .course-content-item-content > .my-3:has(.summarytext.ivw-empty):not(:has(.section_availability > *)) { display: none !important; }
+/* El encabezado de la pantalla queda vacío en la vista de curso */
+/* La franja del encabezado de pantalla queda vacía en la vista del curso y
+   se veía como una caja blanca colgando entre la ruta y el contenido. */
+:root[data-ivw="on"] body[id^="page-course-view"] #page-header,
+:root[data-ivw="on"] body[id^="page-course-view"] #page-second-header,
+:root[data-ivw="on"] body[id^="page-mod-"] #page-second-header,
+:root[data-ivw="on"] body[id^="page-course-view"] .page-context-header {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+/* Los bloques de la cabecera de sección se centran: uno de ellos llega con
+   `align-self-start` y estiraba la barra al doble de alto. */
+:root[data-ivw="on"] .course-content .course-section-header > * { align-self: center !important; }
+
+:root[data-ivw="on"] .course-content .sectionname,
+:root[data-ivw="on"] .course-content .sectionname a {
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 16.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .course-content .sectionname a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .course-content .sectionbadges { margin-left: 12px !important; }
+:root[data-ivw="on"] .course-content .sectionbadges .badge {
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  font-family: var(--font-body) !important;
+  font-size: 9.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .course-content .course-section-header .section_action_menu .btn { border-radius: var(--r-sm) !important; }
+
+/* Cuerpo de la sección */
+:root[data-ivw="on"] .course-content .course-content-item-content { padding: 8px 16px 14px !important; }
+/* Resumen de la semana (banner + objetivo): bloque aparte, no suelto */
+:root[data-ivw="on"] .course-content .summarytext {
+  margin: 8px 0 4px !important;
+  padding: 16px 18px !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .course-content .summarytext p { margin: 0 0 8px !important; }
+:root[data-ivw="on"] .course-content .summarytext p:last-child { margin-bottom: 0 !important; }
+:root[data-ivw="on"] .course-content .summarytext img {
+  display: block !important;
+  max-width: min(100%, 520px) !important;
+  height: auto !important;
+  margin: 0 auto 12px !important;
+  border-radius: var(--r-sm) !important;
+}
+:root[data-ivw="on"] .course-content .summarytext strong,
+:root[data-ivw="on"] .course-content .summarytext b { color: var(--ink) !important; }
+
+/* ---------- Cada actividad, una fila de la sección ----------
+   Dentro de la tarjeta de la semana, las actividades no vuelven a ser
+   tarjetas (caja dentro de caja): son filas separadas por una línea, que se
+   iluminan al pasar por encima. */
+:root[data-ivw="on"] .course-content ul.section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .course-content li.activity {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .course-content li.activity .activity-item {
+  padding: 13px 12px !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .course-content li.activity + li.activity > .activity-item {
+  border-top: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+}
+:root[data-ivw="on"] .course-content li.activity:not(.modtype_label) .activity-item:hover { background: var(--blue-50) !important; }
+/* Los rótulos son texto del profesor: ni caja, ni hover, y con ancho de lectura */
+:root[data-ivw="on"] .course-content li.activity.modtype_label .activity-item { padding: 14px 12px !important; }
+:root[data-ivw="on"] .course-content li.activity.modtype_label .activity-item:hover { background: transparent !important; }
+
+:root[data-ivw="on"] .course-content .activity-item .activityiconcontainer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 42px !important;
+  height: 42px !important;
+  margin: 0 12px 0 0 !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .course-content .activity-item .activityiconcontainer img { width: 22px !important; height: 22px !important; }
+/* Moodle agrupa los módulos por propósito; cada grupo, su tono */
+:root[data-ivw="on"] .course-content .activityiconcontainer.collaboration { background: #e6f0fb !important; }
+:root[data-ivw="on"] .course-content .activityiconcontainer.content { background: #eaf4f1 !important; }
+:root[data-ivw="on"] .course-content .activityiconcontainer.assessment { background: #fdf0e3 !important; }
+:root[data-ivw="on"] .course-content .activityiconcontainer.administration { background: #eef0f6 !important; }
+:root[data-ivw="on"] .course-content .activityiconcontainer.interface { background: #f3edfa !important; }
+
+:root[data-ivw="on"] .course-content .activity-item .activityname a,
+:root[data-ivw="on"] .course-content .activity-item .instancename {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .course-content li.activity .activity-item:hover .activityname a { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .course-content .activity-item .activitybadge {
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .course-content .activity-item .activitybadge:empty,
+:root[data-ivw="on"] .course-content .activity-item .activitybadge.ivw-empty { display: none !important; }
+:root[data-ivw="on"] .course-content .activity-item .description,
+:root[data-ivw="on"] .course-content .activity-item .activity-description {
+  margin-top: 4px !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .course-content .activity-altcontent {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .course-content .activity-altcontent img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: var(--r) !important;
+}
+:root[data-ivw="on"] .course-content .activity-altcontent h2,
+:root[data-ivw="on"] .course-content .activity-altcontent h3 {
+  font-family: var(--font-head) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .course-content .activity-item .badge.badge-none,
+:root[data-ivw="on"] .course-content .activity-item .completion-dropdown .btn {
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+}
+
+/* ============================================================
+   3. PÁGINA DE UNA ACTIVIDAD  (mod/assign, mod/page, mod/forum…)
+   ============================================================ */
+:root[data-ivw="on"] .activity-header {
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+/* Fechas de apertura y cierre: eran dos renglones de texto en negrita */
+:root[data-ivw="on"] .activity-header .activity-information { padding: 0 !important; }
+:root[data-ivw="on"] .activity-header .activity-dates {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+:root[data-ivw="on"] .activity-header .activity-dates > div {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  gap: 6px !important;
+  padding: 7px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  font-size: 12.5px !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .activity-header .activity-dates > div strong {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+/* La fecha de cierre manda: se marca en ámbar */
+:root[data-ivw="on"] .activity-header .activity-dates > div:last-child {
+  border-color: #f0dcbb !important;
+  background: #fdf6ec !important;
+}
+:root[data-ivw="on"] .activity-header .activity-dates > div:last-child strong { color: var(--warn) !important; }
+
+/* ---------- Orden de la pantalla ----------
+   Lo primero que se consulta al abrir una tarea es en qué punto va la
+   entrega, no el enunciado, que suele ser largo. El estado y el botón de
+   envío suben justo debajo de las fechas. `display: contents` en la cabecera
+   de la actividad deja sus dos bloques —fechas y enunciado— al mismo nivel
+   que el resto, para poder intercalar el estado entre ellos. */
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main {
+  display: flex !important;
+  flex-direction: column !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > h2 { order: 0 !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > .activity-header { display: contents !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] .activity-header > .activity-information { order: 1 !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] { order: 2 !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] .activity-header > .activity-description { order: 3 !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] .ivw-pdf { order: 5 !important; margin-top: 22px !important; }
+/* Con la cabecera en `display: contents` sus márgenes desaparecen: los toman
+   los bloques que ahora van sueltos. */
+:root[data-ivw="on"] body[id^="page-mod-assign"] .activity-header > .activity-information { margin-bottom: 18px !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] .activity-header > .activity-description { margin-top: 22px !important; }
+/* El bloque de acciones (Añadir/Editar/Quitar envío) va en una sola fila
+   justo debajo del panel de estado: ocupa el alto de un botón y no una
+   franja entera. */
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] {
+  display: flex !important;
+  flex-direction: column !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] > .submissionstatustable { order: 1 !important; }
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] > .container-fluid {
+  order: 2 !important;
+  margin: 14px 0 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] > .container-fluid .row {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #region-main > [role="main"] > .container-fluid [class*="col-"] {
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] .submissionstatustable h3 { margin-top: 0 !important; }
+/* El enunciado, ya en segundo plano, se anuncia con su propio rótulo */
+:root[data-ivw="on"] body[id^="page-mod-assign"] .activity-header > .activity-description::before {
+  content: "Enunciado";
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-head);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* ---------- Enunciado ---------- */
+:root[data-ivw="on"] .activity-header .activity-description {
+  margin-top: 16px !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .activity-description .box.generalbox {
+  padding: 22px 24px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  font-size: 14.5px !important;
+  line-height: 1.65 !important;
+  color: var(--ink-2) !important;
+}
+/* `no-overflow` mete una barra de scroll horizontal en cuanto el contenido
+   pegado desde Word trae márgenes negativos: mejor que ajuste. */
+:root[data-ivw="on"] .activity-description .no-overflow { overflow: visible !important; }
+:root[data-ivw="on"] .activity-description .box.generalbox { overflow-x: auto !important; }
+:root[data-ivw="on"] .activity-description .box.generalbox p {
+  margin: 0 0 10px !important;
+  max-width: 110ch !important;
+}
+:root[data-ivw="on"] .activity-description .box.generalbox p:empty { display: none !important; }
+:root[data-ivw="on"] .activity-description .box.generalbox strong,
+:root[data-ivw="on"] .activity-description .box.generalbox b { color: var(--ink) !important; }
+:root[data-ivw="on"] .activity-description .box.generalbox ol,
+:root[data-ivw="on"] .activity-description .box.generalbox ul { margin: 0 0 12px 20px !important; }
+:root[data-ivw="on"] .activity-description .box.generalbox li { margin-bottom: 4px !important; }
+
+/* Contenido pegado desde Word: viene con Arial 11pt, colores propios,
+   bordes de celda en los `span` y márgenes en centímetros (incluso
+   negativos). Se normaliza a la tipografía del wrap. */
+:root[data-ivw="on"] .activity-description .box.generalbox span,
+:root[data-ivw="on"] .activity-description .box.generalbox font {
+  font-family: var(--font-body) !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+/* Word reparte márgenes en centímetros y sangrías negativas por párrafos,
+   celdas y divs; con la columna del wrap eso sacaba el texto fuera de la
+   tarjeta por la izquierda. Se normaliza en todo el enunciado (las listas
+   conservan su sangría propia). */
+:root[data-ivw="on"] .activity-description .box.generalbox p,
+:root[data-ivw="on"] .activity-description .box.generalbox div,
+:root[data-ivw="on"] .activity-description .box.generalbox td,
+:root[data-ivw="on"] .activity-description .box.generalbox th {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-indent: 0 !important;
+}
+:root[data-ivw="on"] .activity-description .box.generalbox p[class^="Mso"],
+:root[data-ivw="on"] .activity-description .box.generalbox div[class^="Mso"] {
+  text-align: left !important;
+  line-height: 1.65 !important;
+}
+
+/* Tablas pegadas desde Word (criterios de evaluación y compañía) */
+/* Las tablas de Word traen ancho de celda en puntos (278pt + 88pt) y un
+   margen izquierdo propio: sumaban más que la columna de lectura y el texto
+   se salía de la tarjeta. Con `table-layout: fixed` esos anchos se reparten
+   dentro del 100% disponible. */
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) {
+  table-layout: fixed !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+  max-width: 720px !important;
+  margin: 14px 0 18px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  font-size: 13.5px !important;
+}
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) td,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) th {
+  width: auto !important;
+  height: auto !important;
+  overflow-wrap: anywhere !important;
+  padding: 10px 14px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  vertical-align: middle !important;
+  line-height: 1.45 !important;
+}
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:last-child td,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:last-child th { border-bottom: 0 !important; }
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:first-child td,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:first-child th {
+  background: var(--blue-50) !important;
+  font-weight: 700 !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:first-child td span,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:first-child th span { color: var(--blue-800) !important; }
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) tr:nth-child(even):not(:first-child) td { background: #fafbfe !important; }
+/* Word deja bordes y márgenes en los párrafos de dentro de la celda */
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) p,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) span,
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) div {
+  margin: 0 !important;
+  border: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  background: transparent !important;   /* Word deja recuadros blancos sueltos */
+}
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) caption.accesshide,
+:root[data-ivw="on"] .submissionstatustable caption.accesshide { display: none !important; }
+:root[data-ivw="on"] .activity-description table:not(.ygtvtable) td:last-child { text-align: center !important; white-space: nowrap !important; font-weight: 600 !important; color: var(--ink) !important; }
+
+/* ---------- Adjuntos del enunciado ---------- */
+/* ---------- Adjuntos ----------
+   Con JavaScript, Moodle convierte la lista de ficheros en un árbol YUI: el
+   marcado deja de ser `ul > li` y pasa a tablas (`.ygtvtable`), así que la
+   ficha se cuelga del propio bloque del archivo y no del contenedor, que
+   cambia de forma. Además el enunciado suele venir centrado desde Word y ese
+   centrado se heredaba: se fuerza alineación izquierda en todo el árbol. */
+:root[data-ivw="on"] [id^="assign_files_tree"] {
+  margin-top: 16px !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] [id^="assign_files_tree"] *,
+:root[data-ivw="on"] .plugincontentsummary [id^="assign_files_tree"] * { text-align: left !important; }
+:root[data-ivw="on"] [id^="assign_files_tree"] ul,
+:root[data-ivw="on"] [id^="assign_files_tree"] li,
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvitem,
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvchildren {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] [id^="assign_files_tree"] table,
+:root[data-ivw="on"] [id^="assign_files_tree"] tbody,
+:root[data-ivw="on"] [id^="assign_files_tree"] tr,
+:root[data-ivw="on"] [id^="assign_files_tree"] td {
+  display: block !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+/* El árbol trae una celda de sangría vacía por nivel; el tema le da relleno
+   propio y dejaba una franja muerta sobre el archivo. */
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvspacer,
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvblankdepthcell,
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvcell:not(.ygtvcontent) { display: none !important; }
+:root[data-ivw="on"] [id^="assign_files_tree"] li > div,
+:root[data-ivw="on"] [id^="assign_files_tree"] .ygtvhtml {
+  display: block !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+/* La ficha: nombre del archivo con su icono, del ancho de su contenido */
+:root[data-ivw="on"] .fileuploadsubmission,
+:root[data-ivw="on"] .fileuploadsubmissiontime { float: none !important; }
+:root[data-ivw="on"] .fileuploadsubmission {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 11px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  transition: border-color .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"] .fileuploadsubmission:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .fileuploadsubmission img.icon { width: 22px !important; height: 22px !important; margin: 0 !important; flex: 0 0 auto !important; }
+:root[data-ivw="on"] .fileuploadsubmission a {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+:root[data-ivw="on"] .fileuploadsubmissiontime {
+  display: block !important;
+  margin: 5px 0 0 2px !important;
+  line-height: 1.3 !important;
+  font-size: 11.5px !important;
+  color: var(--muted) !important;
+}
+
+/* ---------- Botón de acción principal ---------- */
+:root[data-ivw="on"] body[id^="page-mod-assign"] .singlebutton .btn-primary,
+:root[data-ivw="on"] body[id^="page-mod-assign"] .singlebutton button[type="submit"] {
+  height: 46px !important;
+  padding: 0 26px !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--blue-700) !important;
+  box-shadow: 0 8px 20px rgba(11, 92, 173, .25) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] .singlebutton .btn-primary:hover { background: var(--blue-800) !important; }
+
+/* ---------- Estado de la entrega: la tabla pasa a fichas ---------- */
+:root[data-ivw="on"] .submissionstatustable h3 {
+  margin: 26px 0 12px !important;
+  font-family: var(--font-head) !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .submissionstatustable .box.submissionsummarytable {
+  padding: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .submissionstatustable .table-responsive { overflow: visible !important; }
+:root[data-ivw="on"] .submissionstatustable table.generaltable {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+/* Cada dato, una ficha: en filas a lo ancho el valor quedaba perdido a la
+   izquierda de un metro de blanco. */
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)) !important;
+  gap: 10px !important;
+  padding: 14px !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  padding: 12px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+}
+/* La fila de los archivos entregados ocupa el ancho entero */
+/* La ficha de archivos entregados ocupa dos columnas, no la fila entera:
+   así el bloque de estado se resuelve en dos filas cortas. */
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr:has([id^="assign_files_tree"]),
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr:has(.plugincontentsummary) {
+  grid-column: span 2 !important;
+  min-width: 0 !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > th,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td {
+  display: block !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-size: 13.5px !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > th {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;   /* la etiqueta, siempre en un renglón */
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td {
+  width: 100% !important;
+  color: var(--muted) !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+/* El resumen del plugin de archivos viene centrado con `boxaligncenter` */
+:root[data-ivw="on"] .submissionstatustable .plugincontentsummary,
+:root[data-ivw="on"] .submissionstatustable .box.boxaligncenter {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;   /* el tema mete otra caja gris aquí */
+  box-shadow: none !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] .submissionstatustable [id^="assign_files_tree"] { margin-top: 0 !important; }
+/* Estados con color: sin entregar, sin calificar, fuera de plazo */
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionnotgraded,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionstatus0,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.timeremaining,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.latesubmission,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.overdue,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissiongraded,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.earlysubmission,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionstatussubmitted {
+  display: inline-flex !important;
+  align-items: center !important;
+  width: fit-content !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionnotgraded,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionstatus0 {
+  background: #fdf6ec !important;
+  color: #a35f10 !important;
+}
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.timeremaining { background: var(--blue-50) !important; color: var(--blue-800) !important; }
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.overdue,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.latesubmission { background: #fdecea !important; color: var(--danger) !important; }
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissiongraded,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.earlysubmission,
+:root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr > td.submissionstatussubmitted { background: #e7f5ef !important; color: var(--ok) !important; }
+
+/* ---------- Vista previa del PDF entregado (la inserta enhance.js) ---------- */
+:root[data-ivw="off"] .ivw-pdf { display: none !important; }
+:root[data-ivw="on"] .ivw-pdf {
+  margin: 18px 0 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .ivw-pdf:not([open]) > .ivw-pdf-head { border-bottom: 0 !important; }
+:root[data-ivw="on"] .ivw-pdf > .ivw-pdf-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 13px 18px !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  user-select: none !important;
+}
+:root[data-ivw="on"] .ivw-pdf > .ivw-pdf-head::-webkit-details-marker { display: none !important; }
+/* Chevron propio, que gira al plegar */
+:root[data-ivw="on"] .ivw-pdf > .ivw-pdf-head::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform .15s ease;
+}
+:root[data-ivw="on"] .ivw-pdf:not([open]) > .ivw-pdf-head::before { transform: rotate(-45deg); }
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-open {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue-700);
+  text-decoration: none;
+}
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-open:hover {
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #fff;
+}
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-note {
+  margin: 0 !important;
+  padding: 18px !important;
+  font-size: 13px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-frame:not([src]) { display: none !important; }
+:root[data-ivw="on"] .ivw-pdf .ivw-pdf-frame {
+  display: block !important;
+  width: 100% !important;
+  height: 760px !important;
+  border: 0 !important;
+  background: var(--canvas) !important;
+}
+@media (max-width: 900px) {
+  :root[data-ivw="on"] .ivw-pdf .ivw-pdf-frame { height: 60vh !important; }
+}
+
+@media (max-width: 720px) {
+  :root[data-ivw="on"] .submissionstatustable table.generaltable > tbody > tr { grid-template-columns: minmax(0, 1fr) !important; gap: 4px !important; }
+  :root[data-ivw="on"] .activity-description .box.generalbox { padding: 16px !important; }
+}
+
+/* ============================================================
+   4. FOROS  (mod/forum)
+   El tema deja la barra de herramientas suelta —el icono de ayuda, el
+   buscador y el selector de vista sin relación entre ellos, y el botón
+   "Configuraciones" en cian montándose sobre la primera publicación— y cada
+   mensaje como un rectángulo con borde de 1px. Aquí la barra se agrupa y
+   cada publicación pasa a ser una tarjeta con autor, fecha y acciones.
+   ============================================================ */
+
+/* ---------- Barra de herramientas ---------- */
+:root[data-ivw="on"] body[id^="page-mod-forum"] .tertiary-navigation {
+  margin: 0 0 12px !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .tertiary-navigation .row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .tertiary-navigation .navitem {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .input-group { position: relative !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform input.form-control {
+  height: 40px !important;
+  min-width: 260px !important;
+  padding: 0 42px 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform input.form-control:focus {
+  border-color: var(--blue-500) !important;
+  background: var(--surface) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .input-group-text,
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .input-group-append,
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .btn.search-icon,
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .btn.search-icon:hover {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .input-group-append {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  height: 40px !important;
+  z-index: 4 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .btn.search-icon {
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--blue-600) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] .simplesearchform .btn.search-icon:hover { color: var(--blue-800) !important; }
+/* El icono de ayuda del buscador: gris y discreto */
+:root[data-ivw="on"] body[id^="page-mod-forum"] .tertiary-navigation .fa-circle-question {
+  color: var(--muted) !important;
+  font-size: 15px !important;
+}
+
+/* Selector de modo de vista y menú de la discusión */
+:root[data-ivw="on"] body[id^="page-mod-forum"] .singleselect select.custom-select {
+  height: 40px !important;
+  padding: 0 34px 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background-color: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236b7891' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] [data-container="discussion-tools"] .dropdown-toggle.btn {
+  height: 40px !important;
+  padding: 0 16px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] [data-container="discussion-tools"] .dropdown-toggle.btn:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+/* La fila de controles vuelve a ser una fila con aire */
+:root[data-ivw="on"] body[id^="page-mod-forum"] [id^="discussion-container"] > .d-flex:first-child {
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 14px !important;
+}
+
+/* ---------- Cada publicación, una tarjeta ---------- */
+:root[data-ivw="on"] .forum-post-container { margin: 0 0 12px !important; }
+:root[data-ivw="on"] .forumpost {
+  padding: 18px 20px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+/* La publicación que abre el hilo (el enunciado del profesor) va marcada */
+:root[data-ivw="on"] .forumpost.firstpost,
+:root[data-ivw="on"] .forumpost.starter {
+  border-color: var(--blue-100) !important;
+  background: linear-gradient(180deg, var(--blue-50) 0%, var(--surface) 74px) !important;
+  box-shadow: inset 3px 0 0 var(--blue-700), var(--sh-1) !important;
+}
+:root[data-ivw="on"] .forumpost header.header {
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 0 12px !important;
+  padding: 0 0 12px !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .forumpost header.header > div[style*="width: 45px"] {
+  width: 40px !important;
+  min-width: 40px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .forumpost header.header img.rounded-circle {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover !important;
+  border: 1px solid var(--line) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .forumpost header.header h3 {
+  font-family: var(--font-head) !important;
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+}
+/* Autor y fecha: una sola línea discreta bajo el asunto */
+:root[data-ivw="on"] .forumpost header.header .mb-3 {
+  margin: 3px 0 0 !important;
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .forumpost header.header .mb-3 a {
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .forumpost header.header .mb-3 a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .forumpost header.header time { color: var(--muted) !important; }
+
+/* ---------- Cuerpo del mensaje ---------- */
+:root[data-ivw="on"] .forumpost .post-content-container {
+  font-size: 14.5px !important;
+  line-height: 1.65 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .forumpost .post-content-container p { margin: 0 0 10px !important; max-width: 78ch !important; }
+:root[data-ivw="on"] .forumpost .post-content-container p:empty { display: none !important; }
+:root[data-ivw="on"] .forumpost .post-content-container img,
+:root[data-ivw="on"] .forumpost .post-content-container video,
+:root[data-ivw="on"] .forumpost .post-content-container iframe {
+  max-width: 100% !important;
+  border-radius: var(--r) !important;
+}
+:root[data-ivw="on"] .forumpost .post-content-container a { color: var(--blue-700) !important; }
+
+/* ---------- Acciones al pie ---------- */
+:root[data-ivw="on"] .forumpost .post-actions {
+  gap: 8px !important;
+  margin-top: 14px !important;
+  padding: 12px 0 0 !important;
+  border-top: 1px solid var(--line) !important;
+  width: 100% !important;
+}
+:root[data-ivw="on"] .forumpost .post-actions .btn.btn-link {
+  height: 36px !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+:root[data-ivw="on"] .forumpost .post-actions .btn.btn-link:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--blue-700) !important;
+}
+/* "Responder" es la acción principal del mensaje */
+:root[data-ivw="on"] .forumpost .post-actions .btn.btn-link[data-action="collapsible-link"] {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .forumpost .post-actions .btn.btn-link[data-action="collapsible-link"]:hover {
+  background: var(--blue-800) !important;
+  border-color: var(--blue-800) !important;
+  color: #fff !important;
+}
+
+/* ---------- Respuestas anidadas ---------- */
+:root[data-ivw="on"] .forum-post-container .indent {
+  margin: 0 0 0 20px !important;
+  padding-left: 18px !important;
+  border-left: 2px solid var(--line) !important;
+}
+:root[data-ivw="on"] .forum-post-container .indent .forumpost { box-shadow: none !important; }
+
+/* ---------- Lista de discusiones y avisos del foro ---------- */
+:root[data-ivw="on"] body[id^="page-mod-forum"] .alert {
+  border: 1px solid var(--blue-100) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--blue-50) !important;
+  padding: 16px 18px !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list {
+  width: 100% !important;
+  margin: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list thead th {
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list tbody td {
+  padding: 14px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list tbody tr:last-child td { border-bottom: 0 !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list tbody tr:hover td { background: var(--blue-50) !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list .discussionname a,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list td a:not([data-type="favorite-toggle"]) {
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+
+/* ---------- Columna de la estrella (marcar la discusión) ---------- */
+/* El tema pinta cualquier .btn-link de cian (#0ca0cc) y le deja el relleno
+   de un botón normal, así que salía un rectángulo grande y descolorido; la
+   estrella, además, heredaba el color de tinta de los enlaces de la tabla y
+   se veía negra. Aquí es un botón cuadrado azul con la estrella en blanco. */
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list tbody td:first-child {
+  width: 1px !important;
+  padding: 10px 8px 10px 16px !important;
+  text-align: center !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list [data-type="favorite-toggle"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--blue-700) !important;
+  box-shadow: var(--sh-1) !important;
+  color: #fff !important;
+  transition: background .12s ease, transform .06s ease !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list [data-type="favorite-toggle"] i,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list [data-type="favorite-toggle"] .menu-action-text {
+  color: #fff !important;
+  font-size: 15px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list [data-type="favorite-toggle"]:hover {
+  background: var(--blue-600) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list [data-type="favorite-toggle"]:active { transform: translateY(1px) !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list tbody tr:hover .discussionname a { color: var(--blue-700) !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list img.userpicture,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.discussion-list .userinitials {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 999px !important;
+}
+
+
+/* ============================================================
+   5. PARTICIPANTES DEL CURSO  (user/index.php)
+   Pestañas del tema en verde, panel de filtros gris con botones cian, el
+   abecedario como pastillas verdes y una tabla rayada donde el nombre es un
+   enlace en mayúsculas. Aquí: pestañas con subrayado, filtros en tarjeta,
+   abecedario en fichas y una lista con avatar, rol y última visita legibles.
+   ============================================================ */
+:root[data-ivw="on"] body#page-course-view-participants #region-main {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Pestañas de la sección ----------
+   Moodle mide el ancho disponible y esconde en un menú "Más" las pestañas
+   que cree que no caben; con la tipografía del wrap se pasaba de frenada y
+   se las llevaba todas, dejando solo el desplegable. Son cuatro y caben de
+   sobra: se muestran siempre y el menú "Más" sobra. */
+/* El tema arranca el menú en `opacity: 0` y espera a que su JS lo mida; si
+   ese cálculo no llega, las pestañas se quedan invisibles. */
+:root[data-ivw="on"] .secondary-navigation .moremenu { opacity: 1 !important; height: auto !important; }
+:root[data-ivw="on"] .secondary-navigation .moremenu .nav-link { height: auto !important; }
+:root[data-ivw="on"] .secondary-navigation .moremenu .nav-item { display: block !important; }
+:root[data-ivw="on"] .secondary-navigation .moremenu .nav-item.dropdownmoremenu,
+:root[data-ivw="on"] .secondary-navigation .nav-item.dropdownmoremenu { display: none !important; }
+:root[data-ivw="on"] .secondary-navigation .nav.more-nav,
+:root[data-ivw="on"] .secondary-navigation .nav-tabs {
+  flex-wrap: wrap !important;
+  overflow: visible !important;
+}
+
+/* ---------- Pestañas de la sección ---------- */
+:root[data-ivw="on"] .secondary-navigation { width: 100% !important; }
+:root[data-ivw="on"] .secondary-navigation .nav-tabs {
+  justify-content: center !important;
+  gap: 4px !important;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-link,
+:root[data-ivw="on"] .secondary-navigation .moremenu .nav-link,
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-item,
+:root[data-ivw="on"] .secondary-navigation .moremenu .nav-item {
+  border: 0 !important;   /* el tema subraya cada pestaña con su verde */
+}
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-link {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) var(--r-sm) 0 0 !important;
+  background: transparent !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-link:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-link.active {
+  background: transparent !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .secondary-navigation .nav-tabs .nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--blue-700);
+}
+
+/* ---------- Panel de filtros ---------- */
+:root[data-ivw="on"] .userlist ~ * .filter-group,
+:root[data-ivw="on"] .filter-group {
+  margin: 0 0 16px !important;
+  padding: 16px 18px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .filter-group label { font-size: 13px !important; font-weight: 600 !important; color: var(--ink-2) !important; }
+:root[data-ivw="on"] .filter-group .custom-select,
+:root[data-ivw="on"] .filter-group select,
+:root[data-ivw="on"] .filter-group input[type="text"] {
+  height: 40px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background-color: var(--surface) !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filter-group .btn {
+  height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: var(--r-sm) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filter-group .btn-link {
+  border: 1.5px dashed var(--blue-300) !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .filter-group .btn-link:hover { background: var(--blue-100) !important; }
+:root[data-ivw="on"] .filter-group .btn-secondary {
+  border: 1.5px solid var(--line) !important;
+  background: var(--surface) !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .filter-group .btn-secondary:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"] .filter-group .btn-primary {
+  border: 1.5px solid var(--blue-700) !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .filter-group .btn-primary:hover { background: var(--blue-800) !important; border-color: var(--blue-800) !important; }
+
+/* ---------- La lista, en un solo bloque ----------
+   El recuento, el abecedario, la paginación, la tabla y las acciones venían
+   cada uno por su lado: unos dentro de caja, otros sueltos y con alineaciones
+   distintas. Aquí todo vive en la misma tarjeta, con sus franjas separadas
+   por una línea y un único margen a los lados. */
+:root[data-ivw="on"] .userlist {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+/* Recuento: cabecera de la tarjeta */
+/* Cabecera de la tarjeta: recuento a la izquierda y filtros por inicial a la
+   derecha, en la misma franja. `display: contents` en el contenedor de la
+   tabla permite colocar sus piezas en esta rejilla sin tocar el marcado. */
+:root[data-ivw="on"] .userlist #participantsform > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: start !important;
+}
+:root[data-ivw="on"] .userlist .table-dynamic { display: contents !important; }
+:root[data-ivw="on"] .userlist .initialbar.firstinitial { grid-column: 1 !important; grid-row: 2 !important; }
+:root[data-ivw="on"] .userlist .initialbar.lastinitial { grid-column: 1 !important; grid-row: 3 !important; }
+:root[data-ivw="on"] .userlist .no-overflow,
+:root[data-ivw="on"] .userlist nav.pagination,
+:root[data-ivw="on"] .userlist .table-dynamic > a,
+:root[data-ivw="on"] .userlist .buttons { grid-column: 1 / -1 !important; }
+:root[data-ivw="on"] .userlist #participantsform > div > p {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 16px 20px !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-head) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+/* La franja de cabecera se pinta en el contenedor, para que el fondo cubra
+   también el hueco entre el recuento y las letras; lo que va debajo vuelve
+   al blanco de la tarjeta. */
+:root[data-ivw="on"] .userlist #participantsform > div { background: var(--canvas) !important; }
+:root[data-ivw="on"] .userlist .initialbar { background: transparent !important; }
+:root[data-ivw="on"] .userlist .no-overflow,
+:root[data-ivw="on"] .userlist nav.pagination,
+:root[data-ivw="on"] .userlist .table-dynamic > a { background: var(--surface) !important; }
+:root[data-ivw="on"] .userlist .no-overflow { border-top: 1px solid var(--line) !important; }
+
+/* Filtros rápidos por inicial: su propia franja */
+:root[data-ivw="on"] .userlist .initialbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 4px 20px !important;
+  justify-content: flex-start !important;
+}
+:root[data-ivw="on"] .userlist .initialbar.lastinitial { padding-bottom: 14px !important; }
+:root[data-ivw="on"] .userlist .initialbar .initialbarlabel {
+  min-width: 92px !important;   /* las dos filas de letras arrancan alineadas */
+  margin-right: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .userlist .initialbargroups { justify-content: flex-start !important; gap: 2px !important; }
+:root[data-ivw="on"] .userlist .initialbar .pagination { gap: 2px !important; margin: 0 !important; }
+:root[data-ivw="on"] .userlist .initialbar .page-item .page-link,
+:root[data-ivw="on"] .userlist .initialbar .page-link {
+  min-width: 26px !important;
+  height: 26px !important;
+  padding: 0 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: transparent !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .userlist .initialbar .page-link:hover { background: var(--blue-50) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"] .userlist .initialbar .page-item.active .page-link,
+:root[data-ivw="on"] .userlist .initialbar .page-link.active {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+
+/* Paginación: franja discreta arriba y abajo de la tabla */
+:root[data-ivw="on"] .userlist nav.pagination {
+  margin: 0 !important;
+  padding: 10px 20px !important;
+  justify-content: flex-end !important;
+}
+/* La lista trae la misma paginación arriba y abajo; con la tabla completa a
+   la vista, la de arriba solo mete ruido. */
+:root[data-ivw="on"] .userlist .table-dynamic > nav.pagination:first-of-type { display: none !important; }
+:root[data-ivw="on"] .userlist nav.pagination + .no-overflow { border-top: 0 !important; }
+:root[data-ivw="on"] .userlist .pagination ul.pagination { margin: 0 !important; gap: 4px !important; }
+:root[data-ivw="on"] .userlist nav.pagination .page-link {
+  min-width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .userlist nav.pagination .page-link:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"] .userlist nav.pagination .page-item.active .page-link {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+/* "Mostrar todos los 34": pie de la tabla, alineado con el resto */
+:root[data-ivw="on"] .userlist .table-dynamic > a {
+  display: block !important;
+  margin: 0 !important;
+  padding: 12px 20px !important;
+  border-top: 1px solid var(--line) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .userlist .table-dynamic > a:hover { background: var(--blue-50) !important; }
+
+/* ---------- La tabla ----------
+   Sin caja propia: la caja es la tarjeta de la lista, así todas las franjas
+   comparten el mismo margen lateral. */
+:root[data-ivw="on"] table#participants {
+  width: 100% !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] table#participants > thead > tr > th {
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] table#participants > thead > tr > th a { color: var(--muted) !important; text-decoration: none !important; }
+:root[data-ivw="on"] table#participants > thead > tr > th a:hover { color: var(--blue-700) !important; }
+/* Los guiones sueltos bajo cada título son el control de "colapsar columna":
+   se quedan a la vista solo cuando el ratón (o el foco) está en la cabecera. */
+:root[data-ivw="on"] table#participants > thead th .commands {
+  opacity: 0 !important;
+  transition: opacity .15s ease !important;
+}
+:root[data-ivw="on"] table#participants > thead th:hover .commands,
+:root[data-ivw="on"] table#participants > thead th:focus-within .commands { opacity: 1 !important; }
+:root[data-ivw="on"] table#participants > thead th .commands a {
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] table#participants > thead th .commands a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] table#participants > tbody > tr > td,
+:root[data-ivw="on"] table#participants > tbody > tr > th {
+  padding: 12px 16px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] table#participants > tbody > tr:last-child > td,
+:root[data-ivw="on"] table#participants > tbody > tr:last-child > th { border-bottom: 0 !important; }
+:root[data-ivw="on"] table#participants > tbody > tr:hover > td,
+:root[data-ivw="on"] table#participants > tbody > tr:hover > th { background: var(--blue-50) !important; }
+/* Mismo margen lateral que el resto de franjas de la tarjeta */
+:root[data-ivw="on"] table#participants > thead > tr > th:first-child,
+:root[data-ivw="on"] table#participants > tbody > tr > th:first-child,
+:root[data-ivw="on"] table#participants > tbody > tr > td:first-child { padding-left: 20px !important; }
+:root[data-ivw="on"] table#participants > thead > tr > th:last-child,
+:root[data-ivw="on"] table#participants > tbody > tr > td:last-child { padding-right: 20px !important; }
+/* Nombre con avatar */
+:root[data-ivw="on"] table#participants > tbody > tr > th a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] table#participants > tbody > tr:hover > th a { color: var(--blue-700) !important; }
+:root[data-ivw="on"] table#participants .userinitials,
+:root[data-ivw="on"] table#participants img.userpicture {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border-radius: 999px !important;
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  object-fit: cover !important;
+}
+:root[data-ivw="on"] table#participants > tbody > tr > td:nth-of-type(3),
+:root[data-ivw="on"] table#participants > tbody > tr > td:nth-of-type(4) { color: var(--muted) !important; }
+:root[data-ivw="on"] table#participants input[type="checkbox"],
+:root[data-ivw="on"] table#participants > thead input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .userlist .no-overflow { overflow: visible !important; }
+
+/* ---------- Acciones sobre la selección ---------- */
+:root[data-ivw="on"] .userlist .buttons {
+  margin: 0 !important;
+  padding: 14px 20px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .userlist #participantsform > div > br { display: none !important; }
+:root[data-ivw="on"] .userlist .buttons > .d-flex { gap: 10px !important; align-items: center !important; }
+:root[data-ivw="on"] .userlist .buttons .btn,
+:root[data-ivw="on"] .userlist .buttons input.btn {
+  height: 40px !important;
+  padding: 0 16px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .userlist .buttons .btn:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; }
+:root[data-ivw="on"] .userlist .buttons label {
+  margin: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .userlist .buttons select.custom-select {
+  height: 40px !important;
+  min-width: 220px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13.5px !important;
+}
+:root[data-ivw="on"] .userlist a[href*="perpage"],
+:root[data-ivw="on"] .userlist .table-dynamic > a {
+  display: inline-block !important;
+  margin: 10px 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+}
+
+/* ============================================================
+   6. PÁGINAS DE CONTENIDO, ASISTENCIA, LISTA DE FOROS Y COMPETENCIAS
+   Cuatro pantallas que el tema deja sin envoltorio: el texto de una página
+   flotando a ancho completo, la asistencia con botones cian, la lista de
+   discusiones con estrellas y conmutadores del tema, y las competencias con
+   un filtro en verde. Todas pasan al mismo patrón: tarjeta, tipografía de
+   lectura y controles del wrap.
+   ============================================================ */
+
+/* ---------- Páginas de contenido (mod/page, mod/resource, mod/url) ---------- */
+:root[data-ivw="on"] body[id^="page-mod-page"] #region-main > div > .box.generalbox,
+:root[data-ivw="on"] body[id^="page-mod-resource"] #region-main > div > .box.generalbox,
+:root[data-ivw="on"] body[id^="page-mod-url"] #region-main > div > .box.generalbox {
+  max-width: none !important;
+  margin: 0 0 16px !important;
+  padding: 26px 28px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox p,
+:root[data-ivw="on"] body[id^="page-mod-resource"] .box.generalbox p {
+  max-width: 105ch !important;
+  margin: 0 0 12px !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox strong,
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox b { color: var(--ink) !important; }
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox img,
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox iframe,
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox video {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: var(--r) !important;
+}
+/* Las cajas con borde que el profesor pega desde Word: mismo lenguaje */
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox div[style*="border"],
+:root[data-ivw="on"] body[id^="page-mod-page"] .box.generalbox table[border] {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  padding: 16px 18px !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-"] .modified {
+  margin-top: 10px !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+
+
+/* ---------- Lista de discusiones del foro ---------- */
+:root[data-ivw="on"] .discussion-list-container,
+:root[data-ivw="on"] [id^="discussion-list"] .position-relative { margin-top: 4px !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table > thead > tr > th {
+  padding: 12px 14px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table > tbody > tr > td {
+  padding: 12px 14px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: transparent !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table > tbody > tr:hover > td { background: var(--blue-50) !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .discussionname a,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table td a[href*="discuss.php"] {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table tr:hover td a[href*="discuss.php"] { color: var(--blue-700) !important; }
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table img.userpicture,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .userinitials {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+}
+/* Estrella de favorito y menú de acciones: iconos, no botones cian */
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .btn.btn-primary,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .btn.btn-secondary,
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table [data-toggle="dropdown"].btn {
+  width: 34px !important;
+  height: 34px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  color: var(--ink-2) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .btn:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-forum"] table.table .custom-control-input:checked ~ .custom-control-label::before,
+:root[data-ivw="on"] body[id^="page-mod-forum"] .custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+}
+
+/* ---------- Competencias del curso ---------- */
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] #region-main > div > .float-end,
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] #region-main > div > .float-right {
+  float: none !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 16px !important;
+  padding: 12px 16px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .user-competency-course-navigation {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .user-competency-course-navigation select,
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] select {
+  height: 38px !important;
+  min-width: 260px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background-color: var(--surface) !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .btn,
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] a.btn {
+  height: 38px !important;
+  padding: 0 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .btn:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; }
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] #region-main {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] #region-main > div > h2 {
+  border-bottom: 0 !important;
+  margin: 0 0 14px !important;
+  font-family: var(--font-head) !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .alert,
+:root[data-ivw="on"] body[id^="page-admin-tool-lp"] .alert-info {
+  margin: 0 !important;
+  padding: 16px 18px !important;
+  border: 1px solid var(--blue-100) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--blue-50) !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+
+/* Cuando el ancho no da para el recuento y las dos filas de letras, la
+   cabecera se apila y las iniciales vuelven a la izquierda. */
+@media (max-width: 1150px) {
+  :root[data-ivw="on"] .userlist #participantsform > div { grid-template-columns: minmax(0, 1fr) !important; }
+  :root[data-ivw="on"] .userlist #participantsform > div > p { grid-row: 1 !important; border-bottom: 0 !important; }
+  :root[data-ivw="on"] .userlist .initialbar.firstinitial { grid-column: 1 !important; grid-row: 2 !important; }
+  :root[data-ivw="on"] .userlist .initialbar.lastinitial { grid-column: 1 !important; grid-row: 3 !important; }
+  :root[data-ivw="on"] .userlist .initialbar,
+  :root[data-ivw="on"] .userlist .initialbargroups { justify-content: flex-start !important; }
+}

@@ -1,0 +1,620 @@
+/* ============================================================
+   PORTAL DE SISTEMAS  ·  apps9.itson.edu.mx/PortalSistemas/PortalSistemas
+   La pantalla real: un banner a sangre de ~200px, el buscador suelto arriba
+   a la izquierda, y 20 fichas grises (`a.module-item`) flotadas con
+   `width: calc(25% - 12px)` — sin títulos de sección, sin descripción y con
+   la estrella de favoritos pegada con `margin-top:60px` inline.
+
+   Aquí pasa a ser: banda de marca recortada, barra pegajosa (marca + buscador
+   + perfil) y dos rejillas con encabezado — "Accesos rápidos" y "Todos los
+   sistemas" — de tarjetas con icono, nombre, descripción y estrella arriba.
+
+   Ojo con dos cosas del sitio, que condicionan los selectores:
+   1) `buscarSistemas()` filtra poniendo `style.display = "none" | ""` en cada
+      tarjeta → NINGUNA regla de `display` sobre `.module-item` puede llevar
+      `!important` o el filtro deja de ocultar. Se gana por especificidad
+      (5 clases contra las 4 del sitio), no con `!important`.
+   2) el click resuelve el sistema con `event.target.parentNode.id` y
+      `event.target.offsetParent.id` → todo lo que se inyecta en la tarjeta va
+      como hijo DIRECTO del `<a>` (rejilla, no envoltorios) y el `<a>` se pone
+      `position: relative` para que sea él el offsetParent.
+
+   Todo bajo [data-ivw-page="portalsistemas"], que pone content.js.
+   ============================================================ */
+
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] body {
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- El contenedor raíz venía `position: fixed` ----------
+   `.home-main` es fixed + `top:-100%` + una animación con 600ms de retraso:
+   la página aparecía de golpe y el scroll era el de un panel, no el del
+   documento. Pasa a flujo normal. */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-main,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-main.active {
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  z-index: auto !important;
+  overflow: visible !important;
+  color: var(--ink) !important;
+  animation: none !important;
+}
+
+/* ---------- Banner: fuera ----------
+   El banner a sangre (~200px, `bannerPrincipal.png`) se comía la primera
+   pantalla antes de llegar a un solo sistema. Con la foto y el botón de
+   cámara ya mudados a la barra, el `.home-header` no aporta nada más. */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-header { display: none !important; }
+
+/* La foto y el botón de cámara se mudan a la barra (enhance.js): fuera los
+   `position:absolute` con los que vivían encima del banner. */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-avatar #PhotoEmplid {
+  position: static !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--surface) !important;
+  box-shadow: 0 0 0 1px var(--line) !important;
+  object-fit: cover !important;
+  animation: none !important;
+  display: block !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-avatar #camara {
+  position: absolute !important;
+  right: -4px !important;
+  bottom: -4px !important;
+  top: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 9px !important;
+  color: #fff !important;
+  background: var(--blue-700) !important;
+  border: 2px solid var(--surface) !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-avatar #camara:hover {
+  background: var(--blue-500) !important;
+  color: #fff !important;
+}
+
+/* ============================================================
+   Barra pegajosa: marca · buscador · perfil
+   (#contenedor-perfil-buscar ya envolvía el nav y el buscador)
+   ============================================================ */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #contenedor-perfil-buscar.ivw-ps-bar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  display: flex !important;
+  /* el sitio lo pone `row-reverse` (y `pointer-events: none`) a partir de 768px */
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  pointer-events: auto !important;
+  gap: 16px !important;
+  padding: 10px max(20px, calc((100% - 1240px) / 2)) !important;
+  background: rgba(255, 255, 255, .92) !important;
+  backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: var(--sh-1) !important;
+}
+
+/* Marca (la inyecta enhance.js) */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ivw-ps-brand {
+  order: 1;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-900));
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-brand-text strong {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-brand-text small {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Buscador: era un `.row > .col-6.col-md-3` arrinconado a la izquierda */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar {
+  order: 2;
+  flex: 1 1 auto;
+  display: flex !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar > .col-6,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar > .col-md-3 {
+  width: 100% !important;
+  max-width: 560px !important;
+  flex: 1 1 auto !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar .form-group {
+  position: relative !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar {
+  width: 100% !important;
+  height: 42px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  padding: 0 44px 0 42px !important;
+  font-size: 14px !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar:focus {
+  background: var(--surface) !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar::placeholder {
+  color: var(--muted) !important;
+}
+/* La lupa del sitio es un `.glyphicon.form-control-feedback` suelto al final */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar .form-control-feedback {
+  position: absolute !important;
+  left: 14px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
+  font-size: 13px !important;
+  color: var(--muted) !important;
+  pointer-events: none !important;
+}
+/* Pista de atajo: "/" enfoca el buscador */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-kbd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 20px;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--surface);
+  font: 600 11px/1.4 var(--font-body);
+  color: var(--muted);
+  pointer-events: none;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar:focus ~ .ivw-ps-kbd { opacity: 0; }
+
+/* Perfil */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos {
+  order: 3;
+  flex: 0 0 auto;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  min-height: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .navbar-nav { margin: 0 !important; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .nav-link {
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .nav-link:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #nomUsuario {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .text-gray-600 {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .dropdown-menu {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  box-shadow: var(--sh-3) !important;
+  padding: 6px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .dropdown-item {
+  border-radius: var(--r-sm) !important;
+  padding: 9px 10px !important;
+  font-size: 13px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos .dropdown-item:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+
+/* ============================================================
+   Cuerpo: una sola columna centrada
+   ============================================================ */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-body .modules-navigation {
+  display: block !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-body .modules-navigation .modules {
+  /* `buscarSistemas()` le mete `width: 200%` inline en cada tecla */
+  width: 100% !important;
+  max-width: 1240px !important;
+  margin: 0 auto !important;
+  padding: 28px 20px 56px !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+/* Encabezado de sección (lo inyecta enhance.js) */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-head + .ivw-ps-head { margin-top: 0; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-head h2 {
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-count {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--blue-50);
+  color: var(--blue-700);
+  font-size: 12px;
+  font-weight: 700;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .ivw-ps-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+/* La sección de favoritos va después de la primera rejilla */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #divFavoritos { margin: 0 0 30px !important; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #divFavoritos + div { margin: 0 !important; }
+
+/* ---------- Rejillas ---------- */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .modules-items,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .modules-itemsN {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)) !important;
+  gap: 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ---------- Tarjeta ----------
+   OJO: `display` sin !important — el filtro del sitio necesita poder
+   ocultarla con `style.display = "none"`. */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 13px;
+  row-gap: 3px;
+  align-items: start !important;
+  align-content: center !important;
+  position: relative !important;
+  float: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 92px !important;
+  margin: 0 !important;
+  padding: 16px 40px 16px 16px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+  transition: transform .12s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--sh-2) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item:active {
+  transform: translateY(0) !important;
+}
+
+/* Icono: el sitio lo fija en 75×75 con !important */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > img {
+  grid-column: 1 !important;
+  grid-row: 1 / span 2 !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 12px !important;
+  object-fit: contain !important;
+  background: var(--blue-50) !important;
+  padding: 4px !important;
+  align-self: center !important;
+}
+
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > .module-name {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: auto !important;
+  padding: 0 !important;
+  display: block !important;
+  font-family: var(--font-head) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.32 !important;
+  color: var(--ink) !important;
+  overflow-wrap: anywhere;
+}
+/* Descripción: vivía solo en el `title=` (tooltip del navegador) */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > .ivw-ps-desc {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* Estrella de favoritos: `margin-top:60px; margin-left:-18px` inline y la
+   clase .btn (que base.css convierte en botón con padding). El color sí se
+   deja al sitio: es el que alterna amarillo/gris al marcar favorito. */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > .btn[id="btnEstrella"] {
+  position: absolute !important;
+  top: 10px !important;
+  right: 8px !important;
+  margin: 0 !important;
+  width: 26px !important;
+  height: 26px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  /* la estrella es `.btn.glyphicon` a la vez, y base.css le mete la tipografía
+     del wrap con !important → sin esto el glifo sale como caja vacía */
+  font-family: "Glyphicons Halflings" !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  opacity: .55;
+  transition: opacity .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > .btn[id="btnEstrella"].glyphicon-star { opacity: 1; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item:hover > .btn[id="btnEstrella"] { opacity: 1; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .module-item > .btn[id="btnEstrella"]:hover {
+  background: var(--blue-50) !important;
+}
+
+/* ---------- Sin resultados (lo inyecta enhance.js) ---------- */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ivw-ps-empty {
+  display: none;
+  padding: 44px 20px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ivw-ps-empty[data-show="1"] { display: block; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ivw-ps-empty strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 15px;
+  color: var(--ink);
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ivw-ps-empty span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Panel de la derecha: opciones del sistema / iframe / mesa de ayuda
+   (el sitio los muestra con jQuery .show(); van a ancho completo)
+   ============================================================ */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .home-body .modules-navigation .menu-options {
+  width: 100% !important;
+  max-width: 1240px !important;
+  margin: 0 auto 40px !important;
+  padding: 22px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .module-name {
+  font-family: var(--font-head) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+  margin: 0 0 14px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .DescripcionSistema {
+  margin: 0 0 18px !important;
+  padding: 14px 16px !important;
+  background: var(--blue-50) !important;
+  border-radius: var(--r) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .DescripcionSistema h4 {
+  margin: 0 0 4px !important;
+  font-family: var(--font-head) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .DescripcionSistema p {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .options-section {
+  display: block !important;
+  margin: 0 0 8px !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .section-info,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .option-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 11px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .section-info:hover,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .option-item:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .section-info a,
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .option-item a {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] .menu-options .divider { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #ContenidoIframe {
+  width: 100% !important;
+  height: 72vh !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+}
+/* Flecha de "regresar": era un glyphicon suelto con margin negativo */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #btnRegresarSistemas {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 0 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  font-size: 15px !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #btnRegresarSistemas:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-50) !important;
+}
+
+/* ---------- Modal "Manual de sistema" ---------- */
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #exampleModal .modal-content {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-3) !important;
+}
+:root[data-ivw="on"][data-ivw-page="portalsistemas"] #exampleModal .modal-title {
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- Angosto ---------- */
+@media (max-width: 820px) {
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] #contenedor-perfil-buscar.ivw-ps-bar {
+    flex-wrap: wrap !important;
+    padding: 10px 16px !important;
+  }
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar {
+    order: 3;
+    flex: 1 0 100%;
+  }
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar > .col-6,
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionBuscar > .col-md-3 {
+    max-width: none !important;
+  }
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] #SeccionDatos { order: 2; margin-left: auto !important; }
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .modules-items,
+  :root[data-ivw="on"][data-ivw-page="portalsistemas"] .modules .modules-itemsN {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================================================
+   Wrap apagado
+   El toggle revierte la CSS, pero no los nodos que enhance.js movió o añadió
+   (la foto vive ahora en la barra, y los encabezados de sección no existen en
+   el sitio). Estas reglas dejan la pantalla usable en OFF.
+   ============================================================ */
+:root[data-ivw="off"] #ivw-ps-brand,
+:root[data-ivw="off"] .ivw-ps-head,
+:root[data-ivw="off"] .ivw-ps-desc,
+:root[data-ivw="off"] .ivw-ps-kbd,
+:root[data-ivw="off"] #ivw-ps-empty { display: none !important; }
+
+:root[data-ivw="off"] .ivw-ps-avatar #PhotoEmplid {
+  position: static !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+:root[data-ivw="off"] .ivw-ps-avatar #camara { display: none !important; }

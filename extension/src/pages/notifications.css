@@ -1,0 +1,731 @@
+/* ============================================================
+   PANEL DE NOTIFICACIONES
+   Moodle las saca en un popover flotante bajo la campana; aquí entran
+   deslizándose desde la derecha, igual que el cajón de Mensajería, y cada
+   aviso se ordena en icono + texto + (hora · ver completa).
+   ============================================================ */
+
+:root[data-ivw="on"] .popover-region-notifications .popover-region-container,
+:root[data-ivw="on"] #nav-notification-popover-container .popover-region-container {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  width: min(420px, 100vw) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-left: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  box-shadow: -22px 0 48px -24px rgba(10, 42, 102, .45) !important;
+  z-index: 1080 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: ivw-drawer-in .2s cubic-bezier(.22, .8, .3, 1) !important;
+}
+@keyframes ivw-drawer-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+/* Velo sobre el resto de la página (decorativo: no intercepta clics, así
+   Moodle sigue cerrando el panel al hacer clic fuera) */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-container::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 min(420px, 100vw) 0 0 !important;
+  background: rgba(8, 42, 102, .16) !important;
+  pointer-events: none !important;
+  animation: ivw-fade-in .2s ease-out !important;
+}
+@keyframes ivw-fade-in { from { opacity: 0 } to { opacity: 1 } }
+
+/* Cabecera fija del panel */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-container {
+  flex: none !important;
+  padding: 18px 18px 14px !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-text {
+  font-family: var(--font-head) !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+}
+/* Lista scrolleable ocupando todo el alto disponible */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-content-container {
+  flex: 1 1 auto !important;
+  max-height: none !important;
+  height: auto !important;
+  overflow-y: auto !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-content {
+  height: auto !important;
+  max-height: none !important;
+}
+/* Pie fijo */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-footer-container {
+  flex: none !important;
+  border-top: 1px solid var(--line) !important;
+  padding: 14px !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .see-all-link {
+  flex: none !important;
+  margin-top: auto !important;
+}
+
+/* ---------- Un aviso ---------- */
+/* Markup real: .content-item-container > a.context-link > (.content-item-body
+   con .notification-image + .notification-message) + .content-item-footer con
+   .timestamp + a.view-more. La rejilla deja hora y "ver completa" en la misma
+   línea, bajo el texto. */
+:root[data-ivw="on"] .popover-region-notifications .content-item-container {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container.unread {
+  background: #f7fbff !important;
+  box-shadow: inset 3px 0 0 var(--blue-500) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container > a,
+:root[data-ivw="on"] .popover-region-notifications .content-item-container > div[tabindex] {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 2px 10px !important;
+  padding: 13px 16px !important;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container > a:hover,
+:root[data-ivw="on"] .popover-region-notifications .content-item-container > a:focus {
+  background: var(--blue-50) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-body {
+  grid-column: 1 / -1 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+/* El icono del tema va suelto sobre el texto: aquí es una ficha redonda */
+:root[data-ivw="on"] .popover-region-notifications .notification-image {
+  flex: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  margin: 1px 0 0 !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .notification-image i,
+:root[data-ivw="on"] .popover-region-notifications .notification-image img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 14px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: inherit !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .notification-message {
+  min-width: 0 !important;
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container.unread .notification-message {
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-footer {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  margin: 0 0 0 40px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container .content-item-footer .timestamp {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+}
+/* "Ver notificación completa": enlace corto a la derecha, no una frase suelta */
+:root[data-ivw="on"] .popover-region-notifications .content-item-container a.view-more {
+  display: inline-block !important;
+  width: auto !important;
+  grid-column: 2 !important;
+  justify-self: end !important;
+  padding: 4px 9px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .content-item-container a.view-more:hover {
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+}
+
+/* ---------- Sin notificaciones ---------- */
+:root[data-ivw="on"] .popover-region-notifications .empty-message {
+  padding: 32px 18px !important;
+  text-align: center !important;
+  font-size: 13.5px !important;
+  color: var(--muted) !important;
+}
+
+/* En pantallas chicas ocupa todo el ancho */
+@media (max-width: 520px) {
+  :root[data-ivw="on"] .popover-region-notifications .popover-region-container { width: 100vw !important; }
+  :root[data-ivw="on"] .popover-region-notifications .popover-region-container::before { display: none !important; }
+}
+
+/* ---------- Acciones de la cabecera ---------- */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions > a,
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions > button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions > a:hover,
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions > button:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-header-actions i {
+  font-size: 14px !important;
+  margin: 0 !important;
+  color: inherit !important;
+}
+
+/* ---------- Pie ---------- */
+/* El tema hereda aquí el tamaño de titular y "Verlo todo" salía enorme */
+:root[data-ivw="on"] .popover-region-notifications .see-all-link,
+:root[data-ivw="on"] .popover-region-notifications .see-all-link:hover {
+  display: block !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-footer-container {
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-seeall-text {
+  padding: 9px 12px !important;
+  border-radius: var(--r-sm) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  text-align: center !important;
+  color: var(--blue-700) !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .see-all-link:hover .popover-region-seeall-text {
+  background: var(--blue-50) !important;
+}
+
+/* ---------- Contador de la campana ---------- */
+:root[data-ivw="on"] .popover-region-notifications .count-container {
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 5px !important;
+  border-radius: 999px !important;
+  background: var(--danger) !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+  text-align: center !important;
+}
+
+/* ---------- Barra de scroll fina ---------- */
+:root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar { width: 8px !important; }
+:root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar-thumb {
+  background: #cfdaea !important;
+  border-radius: 999px !important;
+}
+:root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar-track { background: transparent !important; }
+
+/* ============================================================
+   PANTALLA COMPLETA DE NOTIFICACIONES
+   (#page-message-output-popup-notifications → .notification-area)
+   Moodle la deja como dos cajas grises pegadas: lista de 300px con los avisos
+   en texto plano, detalle con el asunto de 10px, el aviso a sangre y el enlace
+   "Ir a:" suelto y centrado al fondo. Aquí son dos tarjetas: bandeja a la
+   izquierda (icono + asunto + hora, no leído con punto, abierto en azul) y
+   lectura a la derecha con cabecera, cuerpo legible y acción al pie.
+   El diseño de escritorio va en @media (min-width: 980px) porque por debajo el
+   tema cambia a modo deslizante (.show-content-area) y hay que respetarlo.
+   ============================================================ */
+
+/* ---------- Lienzo de la pantalla ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications #region-main,
+:root[data-ivw="on"] #page-message-output-popup-notifications #region-main-box,
+:root[data-ivw="on"] #page-message-output-popup-notifications #page-content,
+:root[data-ivw="on"] #page-message-output-popup-notifications #maincontainer {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications #region-main {
+  padding: 0 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications #page {
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications #region-main > [role="main"] > h2 {
+  font-family: var(--font-head) !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  color: var(--ink) !important;
+  margin: 0 0 16px !important;
+}
+
+/* ---------- Las dos tarjetas ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications .notification-area {
+  height: clamp(460px, calc(100vh - 250px), 840px) !important;
+  margin: 0 0 28px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .control-area,
+:root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .content-area {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+
+@media (min-width: 980px) {
+  :root[data-ivw="on"] #page-message-output-popup-notifications .notification-area {
+    display: grid !important;
+    grid-template-columns: minmax(280px, 350px) minmax(0, 1fr) !important;
+    gap: 18px !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+  :root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .control-area,
+  :root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .content-area {
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* ---------- Bandeja (izquierda) ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .header:empty {
+  display: none !important;
+}
+
+/* Un aviso de la bandeja */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  padding: 0 !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container > a,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container > div[tabindex] {
+  display: block !important;
+  padding: 13px 16px !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container:hover,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread:hover {
+  background: #f5f9fe !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread {
+  background: var(--surface) !important;
+}
+/* El aviso abierto: azul suave con barra, no el bloque azul saturado del tema */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.selected,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.selected:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--line) !important;
+  box-shadow: inset 3px 0 0 var(--blue-700) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.selected .notification-message {
+  color: var(--blue-800) !important;
+  font-weight: 700 !important;
+}
+
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .content-item-body {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 11px !important;
+  width: auto !important;
+  margin: 0 !important;
+  font-weight: 400 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .notification-image {
+  flex: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  float: none !important;
+  width: 30px !important;
+  height: 30px !important;
+  margin: 1px 0 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .notification-image i,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .notification-image img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 15px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: inherit !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .notification-message {
+  display: block !important;
+  min-width: 0 !important;
+  width: auto !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  color: var(--ink) !important;
+}
+/* No leído: punto azul delante del asunto (el tema solo lo pintaba de gris) */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread .notification-message {
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread .notification-message::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 7px !important;
+  height: 7px !important;
+  margin: 0 7px 2px 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-500) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .content-item-footer {
+  margin: 3px 0 0 41px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .content-item-footer .timestamp {
+  margin: 0 !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.selected .content-item-footer .timestamp {
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .view-more {
+  position: static !important;
+  display: inline-block !important;
+  margin: 6px 0 0 41px !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .view-more:hover {
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+  text-decoration: none !important;
+}
+
+/* ---------- Lectura (derecha) ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header {
+  flex: none !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 1px 12px !important;
+  height: auto !important;
+  padding: 15px 22px !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header .image-container {
+  grid-row: span 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  float: none !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header .image-container i,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header .image-container img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 17px !important;
+  margin: 0 !important;
+  font-size: 15px !important;
+  color: inherit !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header .subject-container {
+  display: block !important;
+  max-width: none !important;
+  height: auto !important;
+  padding: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header .timestamp {
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  color: var(--muted) !important;
+}
+
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  padding: 24px 26px !important;
+  font-size: 14.5px !important;
+  line-height: 1.65 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content > * {
+  max-width: 760px !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content p {
+  margin: 0 0 12px !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content strong,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content b {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content ul,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content ol {
+  margin: 0 0 14px !important;
+  padding-left: 20px !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content li {
+  margin-bottom: 10px !important;
+}
+/* Los enlaces del aviso ("Ir a actividad") como pastilla, no texto suelto */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content a {
+  display: inline-block !important;
+  margin-top: 2px !important;
+  padding: 6px 13px !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content a:hover {
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+}
+/* Avisos en texto plano: el <pre> del tema se lee como código */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-family: var(--font-body) !important;
+  font-size: 14.5px !important;
+  color: inherit !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+/* Pie con la acción del aviso */
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .footer {
+  flex: none !important;
+  height: auto !important;
+  padding: 13px 22px !important;
+  border-top: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+  text-align: right !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .footer a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 18px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-decoration: none !important;
+  box-shadow: var(--sh-1) !important;
+  transition: background .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .footer a::after {
+  content: "→" !important;
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .footer a:hover {
+  background: var(--blue-600) !important;
+  box-shadow: var(--sh-2) !important;
+  color: #fff !important;
+}
+
+/* ---------- Vacíos ---------- */
+/* El tema esconde las zonas vacías con :empty; las reglas de arriba les ponen
+   display, así que hay que repetir el escondite. */
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content:empty,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content:empty,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header:empty {
+  display: none !important;
+}
+/* El aviso "no hay nada" queda centrado en la tarjeta, no colgando abajo */
+:root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .empty-text {
+  flex: 1 1 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  font-size: 13.5px !important;
+  text-align: center !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content:empty + .empty-text,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content:empty + .empty-text {
+  display: flex !important;
+  padding-top: 24px !important;
+}
+
+/* ---------- Barras de scroll finas ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content::-webkit-scrollbar,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content::-webkit-scrollbar { width: 8px !important; }
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content::-webkit-scrollbar-thumb,
+:root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content::-webkit-scrollbar-thumb {
+  background: #cfdaea !important;
+  border-radius: 999px !important;
+}
+
+/* ---------- Modo deslizante (≤ 979px) ---------- */
+/* Debajo de 979px el tema saca una zona a la vez con .show-content-area: se
+   respeta el mecanismo y solo se rehace el botón "Atrás". */
+@media (max-width: 979px) {
+  :root[data-ivw="on"] #page-message-output-popup-notifications .notification-area .content-area {
+    bottom: 0 !important;
+    height: auto !important;
+  }
+  :root[data-ivw="on"] #page-message-output-popup-notifications .content-area .toggle-mode {
+    float: none !important;
+    width: auto !important;
+    height: auto !important;
+    line-height: normal !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+    padding: 8px 12px !important;
+  }
+  :root[data-ivw="on"] #page-message-output-popup-notifications .content-area .toggle-mode .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    background: var(--blue-50) !important;
+    color: var(--blue-700) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+  }
+  :root[data-ivw="on"] #page-message-output-popup-notifications .content-area .toggle-mode .btn::before {
+    content: "‹" !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+  }
+  :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .header {
+    display: grid !important;
+    width: auto !important;
+    padding: 12px 16px !important;
+  }
+}
+
+/* ---------- Cargando la bandeja ---------- */
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area.loading .loading-icon {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] #page-message-output-popup-notifications .control-area.loading .loading-icon i {
+  font-size: 20px !important;
+  color: inherit !important;
+}

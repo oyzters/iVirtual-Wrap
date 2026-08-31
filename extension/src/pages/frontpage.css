@@ -1,6 +1,8 @@
 /* ============================================================
    FRONTPAGE / INICIO  —  body#page-site-index
    Hero = slider Adaptable (#main-slider .flexslider) con banners jpg.
+   Para invitado (body.notloggedin) el DOM real está casi vacío: enhance.js
+   inyecta #ivw-guest y marca los contenedores vacíos con data-ivw-empty.
    ============================================================ */
 
 :root[data-ivw="on"] #page-site-index #page { background: var(--canvas) !important; }
@@ -13,6 +15,9 @@
   border: 0 !important;
   box-shadow: none !important;
 }
+
+/* Contenedores sin nada dentro → fuera (los huecos blancos de la portada) */
+:root[data-ivw="on"] #page-site-index [data-ivw-empty="1"] { display: none !important; }
 
 /* ---------- Nav superior como pills (igual que dashboard) ---------- */
 :root[data-ivw="on"] #page-site-index .navbar,
@@ -38,21 +43,68 @@
 }
 
 /* ---------- HERO: slider enmarcado ---------- */
+:root[data-ivw="on"] #page-site-index .slidewrap {
+  padding: 0 16px !important;
+  background: transparent !important;
+}
 :root[data-ivw="on"] #page-site-index #main-slider,
 :root[data-ivw="on"] #page-site-index .flexslider {
   max-width: 1180px !important;
-  margin: 20px auto 26px !important;
+  margin: 16px auto 0 !important;
   border-radius: var(--r-xl) !important;
   overflow: hidden !important;
   box-shadow: var(--sh-3) !important;
   border: 1px solid var(--line) !important;
-  background: var(--surface) !important;
+  background: var(--blue-900) !important;
+  /* la altura la manda la imagen: sin esto Flexslider deja franja blanca
+     del alto del banner más grande */
+  height: auto !important;
+  min-height: 0 !important;
 }
+:root[data-ivw="on"] #page-site-index .flexslider .slides,
+:root[data-ivw="on"] #page-site-index .flexslider .slides > li {
+  height: auto !important;
+  min-height: 0 !important;
+  position: relative !important;
+}
+/* Todos los banners al mismo lienzo → cero hueco al cambiar de slide */
 :root[data-ivw="on"] #page-site-index .flexslider .slides img {
   border-radius: 0 !important;
   display: block !important;
   width: 100% !important;
   height: auto !important;
+  aspect-ratio: 1180 / 290 !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Caption sobre degradado (antes: texto suelto encima de la foto) */
+:root[data-ivw="on"] #page-site-index .flex-caption {
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  background: linear-gradient(to top, rgba(8, 42, 102, .82), rgba(8, 42, 102, 0)) !important;
+  padding: 42px 26px 18px !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+:root[data-ivw="on"] #page-site-index .flex-caption,
+:root[data-ivw="on"] #page-site-index .flex-caption h1,
+:root[data-ivw="on"] #page-site-index .flex-caption h2,
+:root[data-ivw="on"] #page-site-index .flex-caption h3,
+:root[data-ivw="on"] #page-site-index .flex-caption h4,
+:root[data-ivw="on"] #page-site-index .flex-caption h5,
+:root[data-ivw="on"] #page-site-index .flex-caption a {
+  color: #fff !important;
+}
+:root[data-ivw="on"] #page-site-index .flex-caption a {
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+/* Caption sin texto: no pintar el degradado */
+:root[data-ivw="on"] #page-site-index .flex-caption:empty,
+:root[data-ivw="on"] #page-site-index .flex-caption:has(.text_to_html:empty) {
+  display: none !important;
 }
 
 /* Flechas prev/next → círculos modernos */
@@ -96,6 +148,187 @@
   box-shadow: 0 0 0 2px var(--blue-600) !important;
 }
 
+/* ============================================================
+   #ivw-guest — bloque de bienvenida para visitantes (inyectado)
+   Oculto por defecto: solo existe con el wrap encendido.
+   ============================================================ */
+#ivw-guest { display: none; }
+:root[data-ivw="on"] #ivw-guest { display: block !important; }
+
+:root[data-ivw="on"] #ivw-guest .ivw-guest-inner {
+  max-width: 1180px;
+  margin: 20px auto 26px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, .85fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+/* --- Columna izquierda: mensaje + CTA --- */
+:root[data-ivw="on"] #ivw-guest .ivw-guest-main {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(26, 115, 199, .28) 0%, rgba(8, 42, 102, 0) 55%),
+    linear-gradient(135deg, var(--blue-800) 0%, var(--blue-900) 100%);
+  color: #fff;
+  border-radius: var(--r-xl);
+  padding: 30px 34px;
+  box-shadow: var(--sh-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-eyebrow {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #bcd9f5;
+  background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .18);
+  padding: 5px 11px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+:root[data-ivw="on"] #ivw-guest h1 {
+  font-family: var(--font-head) !important;
+  color: #fff !important;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  margin: 0 0 12px;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-main > p {
+  color: #d5e6f8;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 0 0 22px;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  text-decoration: none !important;
+  transition: transform .06s ease, background .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-btn:active { transform: translateY(1px); }
+:root[data-ivw="on"] #ivw-guest .ivw-btn-primary {
+  background: #fff;
+  color: var(--blue-800) !important;
+  box-shadow: 0 6px 18px rgba(3, 20, 48, .28);
+}
+:root[data-ivw="on"] #ivw-guest .ivw-btn-primary:hover {
+  background: var(--blue-50);
+  box-shadow: 0 10px 26px rgba(3, 20, 48, .34);
+}
+:root[data-ivw="on"] #ivw-guest .ivw-btn-ghost {
+  background: rgba(255, 255, 255, .08);
+  border-color: rgba(255, 255, 255, .35);
+  color: #fff !important;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-btn-ghost:hover {
+  background: rgba(255, 255, 255, .16);
+  border-color: #fff;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-note {
+  margin: 0;
+  font-size: 14px;
+  color: #a8c6e6;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-note a {
+  color: #fff !important;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Columna derecha: accesos rápidos --- */
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-2);
+  padding: 22px 20px;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links h2 {
+  font-family: var(--font-head) !important;
+  font-size: 15px !important;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: var(--ink) !important;
+  margin: 0 0 12px;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links li + li { margin-top: 4px; }
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: var(--r);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+  transition: background .12s ease, color .12s ease;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links a:hover {
+  background: var(--blue-50);
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-ql-icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--blue-50);
+  color: var(--blue-700);
+  transition: background .12s ease, color .12s ease;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links a:hover .ivw-ql-icon {
+  background: var(--blue-700);
+  color: #fff;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-ql-icon svg { width: 18px; height: 18px; }
+:root[data-ivw="on"] #ivw-guest .ivw-ql-go {
+  margin-left: auto;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  transition: transform .12s ease, color .12s ease;
+}
+:root[data-ivw="on"] #ivw-guest .ivw-ql-go svg { width: 16px; height: 16px; }
+:root[data-ivw="on"] #ivw-guest .ivw-guest-links a:hover .ivw-ql-go {
+  color: var(--blue-700);
+  transform: translateX(2px);
+}
+
+@media (max-width: 860px) {
+  :root[data-ivw="on"] #ivw-guest .ivw-guest-inner { grid-template-columns: 1fr; }
+  :root[data-ivw="on"] #ivw-guest .ivw-guest-main { padding: 26px 22px; }
+}
+
 /* ---------- Bloques como tarjetas ---------- */
 :root[data-ivw="on"] #page-site-index .block {
   background: var(--surface) !important;
@@ -112,3 +345,198 @@
   font-size: 16px !important;
 }
 :root[data-ivw="on"] #page-site-index .block a { color: var(--blue-700) !important; }
+
+/* ============================================================
+   "MIS CURSOS" (#frontpage-course-list) — con sesión iniciada
+   El tema los pinta como paneles con borde cyan, título en una línea
+   recortada, imagen vacía cuando el curso no tiene portada y un botón
+   "Curso ›" centrado. Aquí pasan a la misma tarjeta que el buscador.
+   ============================================================ */
+:root[data-ivw="on"] #frontpage-course-list {
+  /* width:100% obligatorio: #page es flex column y un item con márgenes
+     laterales auto se encoge al contenido en vez de estirarse. */
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin: 6px auto 32px !important;
+  padding: 0 16px !important;
+}
+:root[data-ivw="on"] #frontpage-course-list > h2 {
+  font-family: var(--font-head) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 0 14px !important;
+}
+
+/* Rejilla propia (adiós .col-md-4) */
+:root[data-ivw="on"] #frontpage-course-list .courses,
+:root[data-ivw="on"] .frontpage-course-list-enrolled {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)) !important;
+  gap: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Tarjeta */
+:root[data-ivw="on"] #frontpage-course-list .coursebox {
+  position: relative !important;
+  display: flex !important;
+  flex: none !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+  transition: transform .12s ease, box-shadow .15s ease, border-color .15s ease !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebox:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh-2) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .panel-body {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+/* Portada 16:9 (la generada la arma enhance.js con .ivw-thumb) */
+:root[data-ivw="on"] #frontpage-course-list .cimbox {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+:root[data-ivw="on"] #frontpage-course-list .coursebox-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  padding: 14px 16px 8px !important;
+}
+
+/* Título a dos líneas + toda la tarjeta clickeable */
+:root[data-ivw="on"] #frontpage-course-list .coursebox-content > a { text-decoration: none !important; }
+:root[data-ivw="on"] #frontpage-course-list .coursebox-content > a::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebox h3 {
+  font-family: var(--font-head) !important;
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  max-width: none !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebox:hover h3 { color: var(--blue-700) !important; }
+
+/* Resumen + profesores */
+:root[data-ivw="on"] #frontpage-course-list .summary {
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .summary > span {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin-bottom: 6px !important;
+}
+:root[data-ivw="on"] #frontpage-course-list ul.teachers {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] #frontpage-course-list ul.teachers li { margin: 0 !important; }
+:root[data-ivw="on"] #frontpage-course-list ul.teachers a {
+  position: relative !important;
+  z-index: 1 !important;
+  color: var(--ink-2) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+:root[data-ivw="on"] #frontpage-course-list ul.teachers a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .ivw-teacher-label {
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+}
+
+/* Botón "Curso ›" → pastilla discreta, alineada al pie */
+:root[data-ivw="on"] #frontpage-course-list .text-center {
+  margin-top: auto !important;
+  padding: 4px 16px 14px !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebtn,
+:root[data-ivw="on"] #frontpage-course-list .coursebtn.btn-info {
+  position: relative !important;
+  z-index: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: var(--blue-50) !important;
+  border: 0 !important;
+  color: var(--blue-700) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 8px 15px !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebtn:hover {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .coursebtn i { font-size: 11px !important; }
+
+/* "Todos los cursos" ocupa la fila completa */
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink {
+  grid-column: 1 / -1 !important;
+  text-align: center !important;
+  margin: 6px 0 0 !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 9px 18px !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink .btn:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  text-decoration: none !important;
+}
