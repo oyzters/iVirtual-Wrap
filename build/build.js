@@ -54,6 +54,11 @@ const USERSCRIPT_HEADER = `// ==UserScript==
 // @version      0.1.0
 // @description  Interfaz limpia y moderna sobre iVirtual (Moodle) de ITSON. Corre sobre tu propia sesión; sin servidor ni credenciales.
 // @author       Oyzters
+// @icon         https://raw.githubusercontent.com/oyzters/iVirtual-Wrap/main/extension/icons/icon-128.png
+// @homepageURL  https://github.com/oyzters/iVirtual-Wrap
+// @supportURL   https://github.com/oyzters/iVirtual-Wrap/issues
+// @downloadURL  https://raw.githubusercontent.com/oyzters/iVirtual-Wrap/main/userscript/ivirtual-wrap.user.js
+// @updateURL    https://raw.githubusercontent.com/oyzters/iVirtual-Wrap/main/userscript/ivirtual-wrap.user.js
 // @match        https://ivirtual.itson.edu.mx/*
 // @match        https://apps9.itson.edu.mx/PortalSistemas*
 // @match        https://apps9.itson.edu.mx/eres*
