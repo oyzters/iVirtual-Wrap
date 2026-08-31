@@ -1894,3 +1894,67 @@
 @container (max-width: 560px) {
   :root[data-ivw="on"] .filemanager .fp-viewbar { display: none !important; }
 }
+
+/* ============================================================
+   SELECTOR DE ARCHIVOS EN SILENCIO  +  FICHAS DE REPOSITORIO
+   El "Selector de archivos" de Moodle es un paso intermedio: elegir
+   repositorio, pulsar "Seleccionar archivo" y, de vuelta, confirmar la subida.
+   enhance.js lo usa como motor y marca <html class="ivw-fp-silent"> mientras
+   hace ese recorrido, así que el diálogo no llega a verse: el usuario solo ve
+   su explorador. Los repositorios que listaba salen como fichas en la barra
+   del gestor.
+   ============================================================ */
+:root[data-ivw="on"].ivw-fp-silent .moodle-dialogue-base .moodle-dialogue.filepicker,
+:root[data-ivw="on"].ivw-fp-silent .moodle-dialogue-lightbox,
+:root[data-ivw="on"].ivw-fp-silent .yui3-widget-mask {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ---------- Fichas de repositorio ---------- */
+/* Con fichas, el empuje a la derecha lo hacen ellas: así quedan pegadas a
+   "Nueva carpeta" y el selector de vista sigue cerrando la barra. */
+:root[data-ivw="on"] .filemanager .filemanager-toolbar:has(.ivw-fp-repos) .fp-toolbar {
+  margin-right: 0 !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repos {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin: 0 auto 0 4px !important;   /* a la derecha de Subir archivo / Nueva carpeta */
+  padding-left: 10px !important;
+  border-left: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 30px !important;
+  padding: 0 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background .15s ease, border-color .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo:active { transform: translateY(1px) !important; }
+
+/* En un gestor estrecho las fichas se van con el selector de vista */
+@container (max-width: 560px) {
+  :root[data-ivw="on"] .filemanager .ivw-fp-repos {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+}
