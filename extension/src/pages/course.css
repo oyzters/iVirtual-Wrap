@@ -1918,55 +1918,10 @@
 
 /* ============================================================
    EDITAR ENVÍO  (#page-mod-assign-editsubmission)
-   En una sola columna la pantalla desperdicia el ancho: la tarjeta de subida
-   se estira 1500 px para una zona de arrastre y dos botones, y el enunciado
-   —lo que hay que consultar mientras subes— queda debajo del pliegue. En
-   pantallas anchas se parte en dos: enunciado a la izquierda, envío a la
-   derecha, fijo mientras se lee.
+   Una sola columna, ancha: el enunciado arriba y el envío debajo. Se probó a
+   dos columnas y el salto de la lectura al panel lateral costaba más de lo que
+   ahorraba, sobre todo con el editor de texto en línea dentro de la tarjeta.
    ============================================================ */
-@media (min-width: 1180px) {
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission #region-main {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) clamp(400px, 34%, 520px) !important;
-    column-gap: 26px !important;
-    align-items: start !important;
-  }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission #region-main > h2 {
-    grid-column: 1 / -1 !important;
-    grid-row: 1 !important;
-  }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .activity-header > .activity-information {
-    grid-column: 1 / -1 !important;
-    grid-row: 2 !important;
-  }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .activity-header > .activity-description {
-    grid-column: 1 !important;
-    grid-row: 3 !important;
-    margin-top: 0 !important;
-  }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .ivw-pdf {
-    grid-column: 1 !important;
-    grid-row: 4 !important;
-  }
-  /* La tarjeta de envío acompaña al enunciado mientras se lee */
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission #region-main > [role="main"] {
-    grid-column: 2 !important;
-    grid-row: 3 !important;
-    position: sticky !important;
-    top: 78px !important;
-  }
-  /* Los botones cierran la tarjeta, no una franja suelta a media pantalla */
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .ivw-btnrow {
-    padding: 0 !important;
-    margin-top: 14px !important;
-  }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .ivw-btnrow > * { flex: 1 1 auto !important; }
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .ivw-btnrow input[type="submit"],
-  :root[data-ivw="on"] body#page-mod-assign-editsubmission .ivw-btnrow button {
-    width: 100% !important;
-    justify-content: center !important;
-  }
-}
 
 /* ---------- La tarjeta de envío, en cualquier ancho ---------- */
 /* Un marco basta: la tarjeta del formulario ya encuadra, y el gestor dentro

@@ -1910,6 +1910,7 @@
       portalSistemas,
       courseActivities,
       assignPdfPreview,
+      filemanagerQuickPick,
       headerOffset,
       portalInicio,
       calendarioAnual,
@@ -1939,6 +1940,69 @@
         console.warn("[ivw] falló " + (fns[i].name || "una mejora") + ":", e);
       }
     }
+  }
+
+  /* Subir un archivo sin fricción ----------
+     La zona de arrastre parece un botón pero Moodle no le engancha nada: el
+     selector de archivos solo se abre desde el botón "Subir archivo", y desde
+     ahí todavía hay que elegir el repositorio y pulsar "Seleccionar archivo".
+     Aquí el clic en la zona abre ese diálogo y, en cuanto aparece, elige el
+     repositorio de subida y dispara el explorador del sistema.
+
+     El sondeo es corto a propósito: Chrome solo deja abrir el explorador
+     mientras dure la activación del clic (unos segundos). Si no llega a
+     tiempo, el diálogo se queda abierto y el usuario sigue a mano. */
+  function visible(el) {
+    return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  }
+
+  function pickerUpload(intentos) {
+    if (intentos > 45) return;                       // ~4 s
+    // Moodle deja diálogos de selector montados y ocultos: vale el que se ve.
+    var dlgs = document.querySelectorAll(".moodle-dialogue.filepicker, .file-picker, [data-region='filepicker']");
+    var dlg = null;
+    for (var d = 0; d < dlgs.length; d++) {
+      if (visible(dlgs[d])) { dlg = dlgs[d]; break; }
+    }
+    if (dlg) {
+      var inputs = dlg.querySelectorAll('input[type="file"]');
+      for (var n = 0; n < inputs.length; n++) {
+        if (inputs[n].dataset.ivwPicked) return;
+        inputs[n].dataset.ivwPicked = "1";
+        inputs[n].click();
+        return;
+      }
+      // Todavía en otro repositorio ("Archivos recientes", "Archivos privados"…)
+      var repos = dlg.querySelectorAll(".fp-repo-name, .fp-repo a");
+      for (var i = 0; i < repos.length; i++) {
+        if (!/^subir/i.test(textOf(repos[i]))) continue;
+        if (repos[i].dataset.ivwRepo) break;
+        repos[i].dataset.ivwRepo = "1";
+        repos[i].click();
+        break;
+      }
+    }
+    setTimeout(function () { pickerUpload(intentos + 1); }, 90);
+  }
+
+  function filemanagerQuickPick() {
+    // El escuchador va en el documento: el gestor lo pinta el JS de Moodle
+    // después, y así no importa quién llegue primero.
+    if (window.__ivwQuickPick) return;
+    window.__ivwQuickPick = 1;
+
+    document.addEventListener("click", function (ev) {
+      if (!ev.target.closest) return;
+      var zona = ev.target.closest(".fm-empty-container, .filemanager .dndupload-message");
+      if (!zona) return;
+      var fm = zona.closest(".filemanager");
+      var add = fm && fm.querySelector(".fp-btn-add a, .fp-btn-add button");
+      if (!add) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      add.click();
+      pickerUpload(0);
+    }, true);
   }
 
   function run() {
@@ -1978,6 +2042,7 @@
     moodleChrome: moodleChrome,
     topnavLinks: topnavLinks,
     topnavDropdowns: topnavDropdowns,
+    filemanagerQuickPick: filemanagerQuickPick,
     langMenu: langMenu,
     guestFrontpage: guestFrontpage,
     courseSearchCards: courseSearchCards,

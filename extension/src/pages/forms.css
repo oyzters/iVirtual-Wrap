@@ -1652,6 +1652,7 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  cursor: pointer !important;   /* el wrap sí abre el selector desde aquí */
 }
 /* Los botones de la barra no parten su nombre en dos líneas */
 :root[data-ivw="on"] .filemanager .fp-toolbar > div > a.btn { white-space: nowrap !important; }
