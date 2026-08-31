@@ -1,6 +1,7 @@
 // iVirtual Wrap — content script
-// Aplica/quita el reskin poniendo un atributo en <html>. Toda la CSS de wrap.css
-// vive bajo [data-ivw="on"], así togglear el atributo enciende/apaga todo sin recargar.
+// Aplica/quita el reskin poniendo un atributo en <html>. Toda la CSS vive bajo
+// [data-ivw="on"], así togglear el atributo enciende/apaga todo sin recargar.
+// La reestructura de DOM vive en enhance.js (compartida con userscript/bookmarklet).
 
 const ROOT = document.documentElement;
 const ATTR = "data-ivw";
@@ -15,9 +16,19 @@ function pageKey() {
   const h = location.hostname;
   const p = location.pathname;
   if (h.indexOf("apps9") !== -1 && /CambioPass/i.test(p)) return "recupera";
+  if (h.indexOf("apps9") !== -1 && /MesaAyuda/i.test(p)) return "mesaayuda";
+  if (h.indexOf("apps9") !== -1 && /PortalSistemas\/PortalSistemas/i.test(p)) return "portalsistemas";
+  if (h.indexOf("apps9") !== -1 && /^\/PortalSistemas(\/(Inicio.*)?)?$/i.test(p)) return "portalinicio";
+  if (h.indexOf("apps9") !== -1 && /^\/eres/i.test(p)) return "eres";
+  if (h.indexOf("apps11") !== -1 && /CalendarioAnual/i.test(p)) return "calendario-anual";
+  if (h.indexOf("apps11") !== -1 && /CalendarioEscolar/i.test(p)) return "calendario-escolar";
   return "";
 }
 ROOT.setAttribute("data-ivw-page", pageKey());
+// El calendario escolar tiene una vista reducida (/Calendario/Prototipo) que la
+// portada del Portal de Sistemas embebe en un <iframe>: mismo markup, pero sin
+// sitio para el layout a pantalla completa.
+if (/\/Prototipo/i.test(location.pathname)) ROOT.setAttribute("data-ivw-view", "prototipo");
 
 // Inyectar Google Fonts (el sitio no manda CSP → carga sin problema)
 function injectFonts() {
@@ -33,7 +44,7 @@ function injectFonts() {
   font.id = "ivw-fonts";
   font.rel = "stylesheet";
   font.href =
-    "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap";
+    "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Figtree:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap";
   (document.head || document.documentElement).append(pre1, pre2, font);
 }
 injectFonts();
@@ -45,6 +56,11 @@ function isOn() {
 function apply(enabled) {
   ROOT.setAttribute(ATTR, enabled ? "on" : "off");
   updateBadge();
+  // Los arreglos que van como estilo inline se revierten al apagar
+  if (typeof ivwEnhance !== "undefined") {
+    if (enabled) ivwEnhance.rerun();
+    else ivwEnhance.clearInline();
+  }
   log("apply", enabled ? "ON" : "OFF");
 }
 
@@ -84,78 +100,10 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && KEY in changes) apply(changes[KEY].newValue);
 });
 
-// --- Fixes de DOM/JS que la CSS sola no cubre ---
-function runDomFixes() {
-  if (!isOn()) return;
-  document.querySelectorAll('img[src^="http://ivirtual.itson.edu.mx"]').forEach((el) => {
-    el.src = el.src.replace(/^http:/, "https:");
-  });
-}
-
-// --- Reestructura del header de Moodle: subir tabs al topbar, ocultar "Vista estándar" ---
-function moodleChrome() {
-  if (location.hostname.indexOf("ivirtual") === -1) return;
-
-  // Ocultar "Vista estándar" / "Vista compacta"
-  document.querySelectorAll("a,button,span,li,div").forEach((el) => {
-    const txt = (el.textContent || "").trim();
-    if (el.children.length <= 1 && /^Vista\s+(est[aá]ndar|compacta)$/i.test(txt)) {
-      const w = el.closest("li,.nav-item,a,button,div") || el;
-      w.setAttribute("data-ivw-hide", "1");
-    }
-  });
-
-  // Mover el menú de tabs (Inicio/Tablero/Cursos/Eventos) al topbar
-  const userNav = document.querySelector("#adaptable-user-nav");
-  const topbarInner = userNav ? userNav.parentElement : null;
-  if (topbarInner) {
-    let mainMenu = null;
-    document.querySelectorAll("ul.navbar-nav").forEach((ul) => {
-      if (ul.id === "adaptable-user-nav" || ul.dataset.ivwMoved) return;
-      if (/Inicio|Tablero|Cursos|Eventos/i.test(ul.textContent || "")) mainMenu = mainMenu || ul;
-    });
-    // Mover el buscador de escritorio (.headersearch vive en #page-header oculto) al topbar
-    const search = document.querySelector(".headersearch");
-    if (search && !search.dataset.ivwMoved) {
-      search.dataset.ivwMoved = "1";
-      search.classList.add("ivw-search");
-      userNav.insertBefore(search, userNav.firstChild);
-    }
-
-    if (mainMenu && !mainMenu.dataset.ivwMoved) {
-      const oldBar = mainMenu.closest("nav,.navbar");
-      mainMenu.dataset.ivwMoved = "1";
-      mainMenu.classList.add("ivw-topnav");
-      topbarInner.insertBefore(mainMenu, userNav);
-      // Ocultar la barra vieja completa (.btco-hover-menu: nav de tabs vacío +
-      // controles "Pantalla completa"/"Vista estándar"). Proteger el topbar.
-      if (oldBar) {
-        oldBar.setAttribute("data-ivw-hide", "1");
-        const barWrap = oldBar.parentElement;
-        if (barWrap && barWrap !== topbarInner && !barWrap.querySelector("#adaptable-user-nav")) {
-          barWrap.setAttribute("data-ivw-hide", "1");
-        }
-      }
-    }
-  }
-
-  // Ocultar cualquier lupa suelta que NO esté en el buscador bueno (.ivw-search)
-  // (después de mover .headersearch para no ocultar la buena)
-  document.querySelectorAll("i.fa-magnifying-glass").forEach((ic) => {
-    if (ic.closest(".ivw-search")) return;
-    const w = ic.closest("button,a,li");
-    if (w) w.setAttribute("data-ivw-hide", "1");
-  });
-
-  // Borrar del DOM el buscador móvil y los toggles opensearch (no solo ocultar)
-  document.querySelectorAll(".navbarsearchsocial, [data-action='opensearch']").forEach((el) => el.remove());
-}
-
 function onReady() {
   makeBadge();
-  runDomFixes();
-  moodleChrome();
-  setTimeout(moodleChrome, 600); // reintento por si el menú se arma con JS
+  ivwEnhance.run();
+  setTimeout(() => ivwEnhance.run(), 600); // reintento: parte del header se arma con JS
 }
 
 if (document.readyState === "loading") {
