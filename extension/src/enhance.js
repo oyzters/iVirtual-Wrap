@@ -1188,6 +1188,16 @@
         common.classList.add("ivw-btnrow");
       }
 
+      // Cancelar va primero; la acción principal cierra la fila (el CSS lee
+      // data-ivw-btn para ordenarlas).
+      for (var o = 0; o < cells.length; o++) {
+        var btn = cells[o].matches(BTN_SEL) ? cells[o] : cells[o].querySelector(BTN_SEL);
+        var nombre = btn ? (btn.getAttribute("name") || "") : "";
+        var texto = btn ? (btn.value || textOf(btn)) : "";
+        var esCancel = /(^|_)cancel$/i.test(nombre) || /^cancelar$/i.test((texto || "").trim());
+        cells[o].setAttribute("data-ivw-btn", esCancel ? "cancel" : "main");
+      }
+
       setInline(row, {
         display: "flex", "flex-wrap": "wrap", "align-items": "center",
         "justify-content": "flex-start", gap: "10px", width: "100%",

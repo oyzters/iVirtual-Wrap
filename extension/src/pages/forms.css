@@ -275,7 +275,6 @@
   background: var(--surface) !important;
   color: var(--blue-700) !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message,
 :root[data-ivw="on"] .filemanager .fp-content .dndupload-target,
 :root[data-ivw="on"] .dndupload-target {
   border: 2px dashed var(--blue-100) !important;
@@ -1079,6 +1078,21 @@
   box-shadow: none !important;
 }
 
+/* --- Orden de la botonera: Cancelar a la izquierda, la acción a la derecha ---
+   Moodle saca primero el submit y luego Cancelar; en el wrap la acción
+   principal cierra la fila, que es donde se busca. enhance.js marca cada celda
+   con data-ivw-btn; el :has cubre las botoneras que no pasan por ahí. */
+:root[data-ivw="on"] .ivw-btnrow > [data-ivw-btn="cancel"],
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > *:has(input[name="cancel"]),
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > input[name="cancel"],
+:root[data-ivw="on"] .mform .fitem_actionbuttons > *:has(input[name="cancel"]),
+:root[data-ivw="on"] .mform .fitem_actionbuttons input[name="cancel"] { order: 1 !important; }
+:root[data-ivw="on"] .ivw-btnrow > [data-ivw-btn="main"],
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > *:has(input[type="submit"]:not([name="cancel"])),
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > input[type="submit"]:not([name="cancel"]),
+:root[data-ivw="on"] .mform .fitem_actionbuttons > *:has(input[type="submit"]:not([name="cancel"])),
+:root[data-ivw="on"] .mform .fitem_actionbuttons input[type="submit"]:not([name="cancel"]) { order: 2 !important; }
+
 /* --- Fila de botones: una sola línea, sin float ni márgenes del tema --- */
 :root[data-ivw="on"] .ivw-btnrow {
   display: flex !important;
@@ -1576,42 +1590,158 @@
   background: transparent !important;
   box-shadow: none !important;
 }
-:root[data-ivw="on"] .filemanager .fm-empty-container,
+/* Ojo con el `display` de estas dos: el tema las enseña y esconde según el
+   estado (.fm-noitems para la caja vacía, .dndupload-ready mientras arrastras
+   para el objetivo de suelte) y ambas son overlays absolutos dentro del
+   contenedor. Forzarles display las dejaba pintadas siempre, encima de los
+   archivos ya subidos. Aquí solo se pintan; quién se ve lo decide el tema. */
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container,
 :root[data-ivw="on"] .filemanager .dndupload-target {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 148px !important;
   padding: 18px !important;
   border: 2px dashed var(--blue-100) !important;
   border-radius: var(--r) !important;
   background: var(--blue-50) !important;
   color: var(--ink-2) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   cursor: pointer !important;
   transition: border-color .15s ease, background .15s ease !important;
 }
-:root[data-ivw="on"] .filemanager .fm-empty-container:hover {
+/* El objetivo de suelte se pinta sobre la lista: fondo sólido para que no se
+   lea el contenido por debajo, y el azul de arrastre activo. */
+:root[data-ivw="on"] .filemanager .dndupload-target {
+  background: #e6f0fb !important;
+  border-color: var(--blue-300) !important;
+  z-index: 2 !important;
+}
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container:hover {
   border-color: var(--blue-300) !important;
   background: #e6f0fb !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message {
+/* Centrado del contenido. El display solo se toca en los estados en los que el
+   tema ya enseña la caja (.fm-noitems para la vacía, .dndupload-ready mientras
+   arrastras), nunca en el selector suelto. */
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container,
+:root[data-ivw="on"] .dndupload-ready .dndupload-target,
+:root[data-ivw="on"] .filemanager-container.dndupload-over .dndupload-target {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 6px !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  color: var(--ink-2) !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 18px !important;
+  text-align: center !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message::after {
+/* La flecha va en el flujo: el tema la ancla arriba en absoluto y el texto
+   quedaba debajo de la caja */
+:root[data-ivw="on"] .filemanager .dndupload-arrow {
+  position: static !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0 4px !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-arrow i { font-size: 30px !important; }
+:root[data-ivw="on"] .filemanager .dndupload-message,
+:root[data-ivw="on"] .filemanager .dndupload-target { color: var(--ink-2) !important; }
+:root[data-ivw="on"] .filemanager.fm-noitems .dndupload-message {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+/* Los botones de la barra no parten su nombre en dos líneas */
+:root[data-ivw="on"] .filemanager .fp-toolbar > div > a.btn { white-space: nowrap !important; }
+:root[data-ivw="on"] .filemanager.fm-noitems .dndupload-message::after {
   content: "o pulsa aquí para elegirlo desde tu equipo";
+  display: block;
+  margin-top: 4px;
   font-size: 12px;
   font-weight: 400;
   color: var(--muted);
 }
 :root[data-ivw="on"] .filemanager .dndupload-arrow i,
 :root[data-ivw="on"] .filemanager .dndupload-arrow { color: var(--blue-300) !important; }
+
+/* ---------- La lista cuando ya hay archivos ---------- */
+:root[data-ivw="on"] .filemanager .fp-content {
+  min-height: 150px !important;
+  padding: 4px !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  padding: 6px !important;
+}
+/* Cada archivo, una ficha: el tema los suelta con float y el nombre absoluto,
+   que se montaba sobre la ficha de al lado. */
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file {
+  float: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 148px !important;
+  margin: 0 !important;
+  padding: 12px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file:hover {
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file > a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 1 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail img {
+  max-width: 48px !important;
+  max-height: 48px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail:hover {
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-filename-field {
+  position: static !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  width: 100% !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-filename {
+  display: block !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+  color: var(--ink) !important;
+  overflow-wrap: anywhere !important;
+}
 
 /* Tipos aceptados: fichas, no una lista suelta */
 :root[data-ivw="on"] body[id^="page-mod-assign"] .felement > p {
