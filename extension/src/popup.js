@@ -8,6 +8,8 @@
   function render(enabled) {
     toggle.checked = enabled;
     label.textContent = enabled ? "ON" : "OFF";
+    // el punto de estado se pinta desde la clase del body
+    document.body.classList.toggle("on", !!enabled);
   }
 
   function storageGet(defaults, cb) {

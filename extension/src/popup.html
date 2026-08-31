@@ -3,19 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <style>
-    :root { color-scheme: light dark; }
+    /* Mismo lenguaje que el wrap: Figtree, azules iVirtual y esquinas suaves. */
+    :root {
+      --blue-700: #0b5cad;
+      --blue-600: #1461bd;
+      --blue-50: #eef5fc;
+      --ink: #0f1b2d;
+      --ink-2: #38465c;
+      --muted: #6b7891;
+      --line: #e5eaf2;
+    }
+    * { box-sizing: border-box; }
     body {
-      width: 240px;
+      width: 268px;
       margin: 0;
       padding: 16px;
-      font: 14px/1.4 "Segoe UI", system-ui, sans-serif;
-      background: #ffffff;
-      color: #1a1f26;
+      font: 14px/1.45 "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #fff;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
     }
-    h1 { font-size: 15px; margin: 0 0 2px; }
-    p.sub { margin: 0 0 14px; font-size: 12px; color: #5b6673; }
-    .row { display: flex; align-items: center; justify-content: space-between; }
-    .switch { position: relative; width: 46px; height: 26px; }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .brand img { width: 34px; height: 34px; border-radius: 9px; }
+    h1 { font-size: 15px; font-weight: 800; letter-spacing: -.01em; margin: 0; }
+    p.sub { margin: 1px 0 0; font-size: 12px; color: var(--muted); }
+
+    .card {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--blue-50);
+    }
+    .card .label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+    .switch { position: relative; width: 46px; height: 26px; flex: none; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider {
       position: absolute; inset: 0; cursor: pointer;
@@ -23,25 +44,50 @@
     }
     .slider::before {
       content: ""; position: absolute; height: 20px; width: 20px;
-      left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s;
+      left: 3px; top: 3px; background: #fff; border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(15,27,45,.25); transition: .2s;
     }
-    input:checked + .slider { background: #0b5cad; }
+    input:checked + .slider { background: var(--blue-700); }
     input:checked + .slider::before { transform: translateX(20px); }
-    .state { margin-top: 12px; font-size: 12px; color: #5b6673; }
-    .state b { color: #0b5cad; }
+    input:focus-visible + .slider { box-shadow: 0 0 0 3px rgba(26,115,199,.35); }
+
+    .state {
+      display: flex; align-items: center; gap: 7px;
+      margin-top: 12px; font-size: 12px; color: var(--muted);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: #c7ced6; }
+    body.on .dot { background: var(--blue-600); }
+    .state b { color: var(--blue-700); font-weight: 700; }
+
+    footer {
+      margin-top: 14px; padding-top: 11px; border-top: 1px solid var(--line);
+      font-size: 11.5px; color: var(--muted);
+    }
+    footer a { color: var(--blue-700); font-weight: 600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>iVirtual Wrap</h1>
-  <p class="sub">Reskin del front de iVirtual</p>
-  <div class="row">
-    <span>Activar wrap</span>
+  <div class="brand">
+    <img src="../icons/icon-128.png" alt="" />
+    <div>
+      <h1>iVirtual Wrap</h1>
+      <p class="sub">Interfaz moderna para iVirtual</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="label">Activar wrap</span>
     <label class="switch">
-      <input type="checkbox" id="toggle" />
+      <input type="checkbox" id="toggle" aria-label="Activar wrap" />
       <span class="slider"></span>
     </label>
   </div>
-  <div class="state">Estado: <b id="stateLabel">—</b></div>
+
+  <div class="state"><span class="dot"></span>Estado: <b id="stateLabel">—</b></div>
+
+  <footer>Corre sobre tu sesión, sin servidor · <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">Código</a></footer>
+
   <script src="storage.js"></script>
   <script src="popup.js"></script>
 </body>
