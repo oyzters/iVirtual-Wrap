@@ -11,6 +11,21 @@ const CSS_ORDER = [
   "pages/frontpage.css",
   "pages/dashboard.css",
   "pages/recuperapassword.css",
+  "pages/mesaayuda.css",
+  "pages/portalsistemas.css",
+  "pages/portalinicio.css",
+  "pages/eres.css",
+  "pages/calendarioescolar.css",
+  "pages/coursesearch.css",
+  "pages/profile.css",
+  "pages/tables.css",
+  "pages/forms.css",
+  "pages/messaging.css",
+  "pages/notifications.css",
+  "pages/calendar.css",
+  "pages/course.css",
+  "pages/attendance.css",
+  "pages/reportbuilder.css",
   "pages/chrome.css",
 ];
 
@@ -23,7 +38,14 @@ const css = CSS_ORDER.map((f) => "/* " + f + " */\n" + read(path.join(SRC, f))).
 // 2) core con CSS embebido
 const coreSrc = read(path.join(__dirname, "core.js"));
 if ((coreSrc.match(/__IVW_CSS__/g) || []).length !== 1) throw new Error("core.js debe tener el marcador __IVW_CSS__ exactamente 1 vez");
-const core = coreSrc.split("__IVW_CSS__").join(JSON.stringify(css));
+if ((coreSrc.match(/__IVW_ENHANCE__/g) || []).length !== 1) throw new Error("core.js debe tener el marcador __IVW_ENHANCE__ exactamente 1 vez");
+// page-combos.js va aparte en la extensión (content script "world": "MAIN",
+// porque su CSP no deja inyectar inline); aquí ya corremos en la página, así
+// que basta con acompañarlo: es un IIFE con su propia guarda por ruta.
+const enhance = read(path.join(SRC, "enhance.js")) + "\n" + read(path.join(SRC, "page-combos.js"));
+const core = coreSrc
+  .split("__IVW_CSS__").join(JSON.stringify(css))
+  .split("__IVW_ENHANCE__").join(enhance);
 
 // 3) userscript
 const USERSCRIPT_HEADER = `// ==UserScript==
@@ -33,7 +55,10 @@ const USERSCRIPT_HEADER = `// ==UserScript==
 // @description  Interfaz limpia y moderna sobre iVirtual (Moodle) de ITSON. Corre sobre tu propia sesión; sin servidor ni credenciales.
 // @author       Oyzters
 // @match        https://ivirtual.itson.edu.mx/*
-// @match        https://apps9.itson.edu.mx/PortalSistemas/CambioPass/*
+// @match        https://apps9.itson.edu.mx/PortalSistemas*
+// @match        https://apps9.itson.edu.mx/eres*
+// @match        https://apps9.itson.edu.mx/MesaAyudaITSON/*
+// @match        https://apps11.itson.edu.mx/CalendarioEscolar/*
 // @run-at       document-idle
 // @grant        none
 // @license      MIT
