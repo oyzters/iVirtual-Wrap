@@ -1472,6 +1472,7 @@
 
 /* La caja del gestor */
 :root[data-ivw="on"] .filemanager {
+  container-type: inline-size !important;
   display: flex !important;
   flex-direction: column !important;
   padding: 0 !important;
@@ -1503,12 +1504,16 @@
 :root[data-ivw="on"] .filemanager .filemanager-toolbar {
   display: flex !important;
   align-items: center !important;
+  flex-wrap: wrap !important;
   gap: 8px !important;
   padding: 0 !important;
 }
+/* En una columna estrecha (el envío de una tarea al lado del enunciado) los
+   cuatro botones no caben en una línea: envuelven en vez de salirse. */
 :root[data-ivw="on"] .filemanager .fp-toolbar {
   display: flex !important;
   align-items: center !important;
+  flex-wrap: wrap !important;
   gap: 8px !important;
   padding: 0 !important;
   margin-right: auto !important;
@@ -1668,8 +1673,8 @@
   background: var(--surface) !important;
 }
 :root[data-ivw="on"] .filemanager .fp-iconview {
-  display: flex !important;
-  flex-wrap: wrap !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
   gap: 10px !important;
   padding: 6px !important;
 }
@@ -1681,7 +1686,7 @@
   flex-direction: column !important;
   align-items: center !important;
   gap: 8px !important;
-  width: 148px !important;
+  width: auto !important;
   margin: 0 !important;
   padding: 12px 10px !important;
   border: 1px solid var(--line) !important;
@@ -1854,4 +1859,37 @@
 :root[data-ivw="on"] .form-autocomplete-suggestions [aria-selected="true"] {
   background: var(--blue-50) !important;
   color: var(--blue-700) !important;
+}
+
+/* ============================================================
+   FICHAS ANIDADAS  —  mform mete un <fieldset> dentro de otro (por ejemplo
+   "Envíos de archivo" dentro de "Añadir envío") y el interior repetía marco,
+   sombra y relleno: tres bordes concéntricos alrededor del mismo control.
+   El de dentro se queda solo con su rótulo.
+   ============================================================ */
+:root[data-ivw="on"] .mform fieldset fieldset {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform fieldset fieldset > .fcontainer,
+:root[data-ivw="on"] #region-main .mform fieldset fieldset > .fcontainer {
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .mform fieldset fieldset > .fcontainer > .fitem,
+:root[data-ivw="on"] #region-main .mform fieldset fieldset > .fcontainer > .fitem {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+
+/* El selector de vista (iconos / detalles / árbol) se va cuando el gestor
+   queda estrecho —el envío de una tarea al lado del enunciado—: ahí los
+   cuatro botones de acción ya ocupan dos líneas. */
+@container (max-width: 560px) {
+  :root[data-ivw="on"] .filemanager .fp-viewbar { display: none !important; }
 }
