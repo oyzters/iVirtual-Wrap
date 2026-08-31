@@ -1,0 +1,307 @@
+/* ============================================================
+   MESA DE AYUDA  ·  apps9.itson.edu.mx/MesaAyudaITSON/*
+   La pantalla pública de tickets: un banner enorme a sangre, el formulario
+   metido en un `margin: 0 15%` inline y el captcha suelto en el medio con
+   `<center>`. Aquí pasa a ser una sola columna centrada: banner recortado,
+   tarjeta de formulario, caja de captcha y los teléfonos como dos fichas.
+   Todo bajo [data-ivw-page="mesaayuda"], que pone content.js.
+   ============================================================ */
+
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] body {
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- Banner: fuera ----------
+   La ilustración a sangre ocupaba media ventana antes de llegar al
+   formulario y no aporta nada al trámite. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] body > img[src*="Banner"] { display: none !important; }
+
+/* Los <br> sueltos que el sitio usa de separador */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] body > br,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA > br { display: none !important; }
+
+/* ---------- Columna central ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .container {
+  max-width: 760px !important;
+  padding: 44px 16px 48px !important;
+}
+/* El formulario trae `margin: 0 15%` como estilo inline: en pantalla ancha
+   lo dejaba estrecho y descentrado respecto al resto. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #SolicitudMesaAyuda {
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* ---------- Tarjeta del formulario ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .FormSolicitud {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-xl) !important;
+  box-shadow: var(--sh-2) !important;
+  padding: 26px 26px 28px !important;
+}
+/* El título es hermano de la tarjeta, no va dentro: queda como encabezado
+   de la pantalla, alineado con el borde de la tarjeta. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] h2.TituloSolicitud {
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em !important;
+  text-align: left !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- Campos ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field { margin-top: 16px !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field ~ .form-field { margin-top: 16px !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field > label:first-child,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field > label:first-child b {
+  display: block !important;
+  margin-bottom: 6px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field input,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field textarea,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox {
+  width: 100% !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  padding: 11px 13px !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  color: var(--ink) !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field textarea,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #areaDesc {
+  min-height: 150px !important;
+  resize: vertical !important;
+  line-height: 1.5 !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field input:focus,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field textarea:focus,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox:focus {
+  outline: 0 !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field input::placeholder,
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox::placeholder { color: var(--muted) !important; }
+
+/* El asterisco de obligatorio, en el azul de marca */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field > label:first-child b { color: var(--ink-2) !important; }
+
+/* Aviso permanente del correo: el sitio lo manda en rojo con estilo inline,
+   pero no es un error, es una indicación. Baja a texto de ayuda. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field label[style*="red"]:not([id]) {
+  display: block !important;
+  margin: 6px 0 0 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+}
+/* Los errores de validación (se rellenan por JS) sí en rojo, como aviso. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field label[id^="error"]:not(:empty) {
+  display: block !important;
+  margin: 8px 0 0 !important;
+  padding: 7px 10px !important;
+  border-radius: var(--r-sm) !important;
+  background: #fdecea !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: var(--danger) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #request_description_hint {
+  margin: 7px 0 0 !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+
+/* ---------- Captcha ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .captcha {
+  margin-top: 22px !important;
+  padding: 16px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-50) !important;
+  font-weight: 400 !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #dCaptcha label {
+  display: block !important;
+  margin-bottom: 12px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #captcha {
+  display: inline-block !important;
+  padding: 4px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #captcha canvas { display: block !important; }
+/* El botón de recargar es un <span> con un icono Font Awesome que esta
+   página no carga: se veía un hueco. Se dibuja el símbolo con CSS. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin: 10px 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha:hover {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha i { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha::before { content: "\21BB"; line-height: 1; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox {
+  width: 180px !important;
+  text-align: center !important;
+  letter-spacing: .12em !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #dCaptcha br { display: none !important; }
+/* El sitio apila captcha, botón e input con <center> y <br>: aquí es una
+   columna de verdad, centrada y con separaciones parejas. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #dCaptcha > center {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha { margin: 0 !important; }
+
+/* ---------- Enviar ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnEnviar.btn {
+  width: 100% !important;
+  max-width: 280px !important;
+  margin-top: 6px !important;
+  padding: 12px 20px !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--blue-700) !important;
+  box-shadow: 0 6px 16px rgba(11, 92, 173, .25) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  transition: background .15s ease, transform .1s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnEnviar.btn:hover { background: var(--blue-800) !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnEnviar.btn:active { transform: translateY(1px) !important; }
+
+/* ---------- Contacto: dos fichas ----------
+   El sitio los maqueta con etiquetas inclinadas (`transform: skew(-20deg)`)
+   y `width: inherit`, que en pantalla ancha las estiraba media fila. */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA > div:not([id]) > .row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 14px !important;
+  max-width: 620px !important;
+  margin: 26px auto 0 !important;
+  line-height: 1.5 !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA .row > .col-lg-2 { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA .row > .col-lg-4 {
+  flex: none !important;
+  max-width: none !important;
+  padding: 16px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA .row > .col-lg-4 br { display: none !important; }
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA .row > .col-lg-4 > label {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0 0 10px !important;
+  padding: 4px 14px !important;
+  border-radius: 999px !important;
+  transform: none !important;
+  font-family: var(--font-body) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .MAclass {
+  display: block !important;
+  margin: 2px 0 !important;
+  padding: 7px 10px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .MAclass:hover {
+  margin: 2px 0 !important;   /* el sitio le mete margin lateral en :hover y bailaba */
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+}
+
+/* ---------- Modal de mensajes ---------- */
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-content {
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-3) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-header {
+  border-bottom: 1px solid var(--line) !important;
+  padding: 16px 20px !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-title {
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-body {
+  padding: 18px 20px !important;
+  font-size: 14px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-footer {
+  border-top: 1px solid var(--line) !important;
+  padding: 14px 20px !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-footer .btn {
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  padding: 10px 22px !important;
+  background: var(--blue-700) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"][data-ivw-page="mesaayuda"] .modal-footer .btn:hover { background: var(--blue-800) !important; }
+
+/* ---------- Pantallas chicas ---------- */
+@media (max-width: 640px) {
+  :root[data-ivw="on"][data-ivw-page="mesaayuda"] .container { padding: 28px 12px 36px !important; }
+  :root[data-ivw="on"][data-ivw-page="mesaayuda"] .FormSolicitud { padding: 20px 16px 22px !important; }
+  :root[data-ivw="on"][data-ivw-page="mesaayuda"] .SolicitudMA > div:not([id]) > .row { grid-template-columns: 1fr !important; }
+  :root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnEnviar.btn { max-width: none !important; }
+}

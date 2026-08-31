@@ -5,7 +5,9 @@
 /* Ocultar lo marcado por JS (Vista estándar/compacta, barra vieja de tabs) */
 :root[data-ivw="on"] [data-ivw-hide="1"] { display: none !important; }
 
-/* Quitar el banner grande (logos + diagonal) en páginas internas */
+/* Quitar el banner grande (logos + diagonal). Va en todas las páginas: su
+   único contenido útil (.headersearch) ya se movió al topbar. */
+:root[data-ivw="on"] #page-header.main-header-row,
 :root[data-ivw="on"] #page-site-index #page-header,
 :root[data-ivw="on"] #page-my-index #page-header {
   display: none !important;
@@ -38,6 +40,20 @@
   color: var(--blue-700) !important;
   text-decoration: none !important;
 }
+/* Apartado en el que estás: pastilla azul, para saber dónde te encuentras */
+:root[data-ivw="on"] .ivw-topnav .nav-link[data-ivw-current] {
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] .ivw-topnav .nav-link[data-ivw-current] i,
+:root[data-ivw="on"] .ivw-topnav .nav-link[data-ivw-current] .fa { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .ivw-topnav .nav-link:active { transform: translateY(1px) !important; }
+:root[data-ivw="on"] .ivw-topnav .nav-link:focus-visible {
+  outline: 0 !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .25) !important;
+}
+:root[data-ivw="on"] .ivw-topnav .nav-link { cursor: pointer !important; }
 :root[data-ivw="on"] .ivw-topnav .nav-link i,
 :root[data-ivw="on"] .ivw-topnav .nav-link .fa,
 :root[data-ivw="on"] #page-navbar .ivw-topnav .nav-link i {
@@ -96,8 +112,10 @@
   padding-bottom: .35rem !important;
 }
 
-/* Ocultar la barra sobrante de zoom (#main-navbar: Pantalla completa/Vista estándar) */
-:root[data-ivw="on"] #main-navbar { display: none !important; }
+/* Ocultar la barra sobrante de zoom (#main-navbar: Pantalla completa/Vista estándar).
+   Acotada a Moodle: la portada del Portal de Sistemas (apps9) usa ese mismo id
+   para su menú principal, y sin el ancestro se quedaba sin navegación. */
+:root[data-ivw="on"] #page-wrapper #main-navbar { display: none !important; }
 
 /* Ocultar el buscador móvil duplicado (usamos el de escritorio movido al topbar) */
 :root[data-ivw="on"] .navbarsearchsocial { display: none !important; }
@@ -117,13 +135,33 @@
   display: inline-flex !important;
   align-items: center !important;
   align-self: center !important;
-  margin: 0 8px 0 0 !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 18px 0 0 !important;
   order: -1 !important;   /* a la izquierda del resto de iconos */
 }
-:root[data-ivw="on"] .ivw-search .simplesearchform { position: static !important; }
+/* Nada del buscador puede salirse de su hueco: el tema y el JS de Moodle lo
+   tratan como un desplegable (posición absoluta, ancho al 100% del navbar) y
+   en páginas con muchos iconos —el foro trae además el globo de idioma— eso
+   lo dejaba montado sobre la campana. */
+:root[data-ivw="on"] .ivw-search,
+:root[data-ivw="on"] .ivw-search .simplesearchform,
+:root[data-ivw="on"] .ivw-search .collapse,
+:root[data-ivw="on"] .ivw-search .searchform-navbar,
+:root[data-ivw="on"] .ivw-search .input-group {
+  position: static !important;
+  float: none !important;
+  inset: auto !important;
+  transform: none !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
 :root[data-ivw="on"] .ivw-search .collapse {
   display: block !important;   /* mostrar el form siempre */
-  position: static !important;
+  height: auto !important;
+  visibility: visible !important;
+  overflow: visible !important;
 }
 /* ocultar el botón lupa toggle y la X de cerrar */
 :root[data-ivw="on"] .ivw-search [data-action="opensearch"],
@@ -140,17 +178,35 @@
   overflow: hidden !important;
   background: var(--surface) !important;
 }
+/* Al escribir, el buscador solo cambia el tono del borde: nada de halo ni
+   del contorno azul que dibuja el navegador. */
 :root[data-ivw="on"] .ivw-search .input-group:focus-within {
-  border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 3px rgba(26,115,199,.15) !important;
+  border-color: var(--blue-300) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .ivw-search .form-control:focus,
+:root[data-ivw="on"] .ivw-search .form-control:focus-visible,
+:root[data-ivw="on"] .ivw-search .btn-submit:focus,
+:root[data-ivw="on"] .ivw-search .btn-submit:focus-visible {
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
 :root[data-ivw="on"] .ivw-search .form-control {
   border: 0 !important;
   border-radius: 0 !important;
   padding: .42rem .9rem !important;
-  min-width: 190px !important;
+  width: 210px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 auto !important;
   box-shadow: none !important;
   background: transparent !important;
+}
+/* El grupo es el que manda el ancho, y puede encogerse hasta 150px */
+:root[data-ivw="on"] .ivw-search .input-group {
+  flex: 0 1 auto !important;
+  min-width: 150px !important;
 }
 :root[data-ivw="on"] .ivw-search .btn-submit {
   border: 0 !important;
@@ -359,8 +415,8 @@
   font-weight: 700 !important;
 }
 
-/* Ocultar el botón/menú de idioma del header (no el del login, que es .login-languagemenu) */
-:root[data-ivw="on"] .langmenu,
+/* Menú de idioma del header: se queda el globo (gris, como campana y mensajes)
+   y se esconde solo el texto "Español - México (es_mx)", que rompía la línea. */
 :root[data-ivw="on"] .langdesc {
   display: none !important;
 }
@@ -408,7 +464,12 @@
   padding: 0 !important;
   height: auto !important;
 }
-:root[data-ivw="on"] #header1 #adaptable-user-nav { margin-left: auto !important; } /* a la derecha */
+:root[data-ivw="on"] #header1 #adaptable-user-nav {
+  margin-left: auto !important;  /* a la derecha */
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
 /* Cada item de ambas listas centrado, misma caja */
 :root[data-ivw="on"] #header1 .ivw-topnav > li,
 :root[data-ivw="on"] #header1 #adaptable-user-nav > li,
@@ -423,10 +484,58 @@
 /* matar el my-auto que descentra */
 :root[data-ivw="on"] #header1 .my-auto { margin-top: 0 !important; margin-bottom: 0 !important; }
 
-/* Ocultar el globo de idioma de forma definitiva */
-:root[data-ivw="on"] #header1 .fa-globe { display: none !important; }
-:root[data-ivw="on"] #header1 li.langmenu,
-:root[data-ivw="on"] #header1 a[title="Idioma"] { display: none !important; }
+/* Globo de idioma: mismo botón redondo que campana y mensajes.
+   El tema lo pinta blanco con un selector muy específico
+   (#adaptable-page-header-wrapper #header1 .nav-link > .fa), de ahí el
+   !important sobre el color. */
+:root[data-ivw="on"] #header1 li.langmenu > .nav-link,
+:root[data-ivw="on"] #header1 a[title="Idioma"].nav-link {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  justify-content: center !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] #header1 li.langmenu > .nav-link:hover {
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] #header1 li.langmenu > .nav-link i,
+:root[data-ivw="on"] #header1 a[title="Idioma"] i,
+:root[data-ivw="on"] #header1 .fa-globe {
+  margin: 0 !important;
+  font-size: 17px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] #header1 li.langmenu > .nav-link:hover i {
+  color: var(--blue-700) !important;
+}
+/* Sin la flecha del desplegable: los vecinos son iconos a secas */
+:root[data-ivw="on"] #header1 li.langmenu > .nav-link.dropdown-toggle::after {
+  display: none !important;
+}
+
+/* Su desplegable lo abre enhance.js con `.ivw-open` (el del tema colgaba del
+   JS de Bootstrap y el menú que dibuja el wrap no lo tiene). */
+:root[data-ivw="on"] #adaptable-user-nav li.langmenu { position: relative !important; }
+:root[data-ivw="on"] #adaptable-user-nav li.langmenu > .dropdown-menu { display: none !important; }
+:root[data-ivw="on"] #adaptable-user-nav li.langmenu.ivw-open > .dropdown-menu {
+  display: block !important;
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  left: auto !important;
+  min-width: 230px !important;
+  z-index: 1080 !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav li.langmenu.ivw-open > .nav-link {
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav li.langmenu.ivw-open > .nav-link i {
+  color: var(--blue-700) !important;
+}
 
 /* FIX pill: centrar verticalmente el input dentro de .ivw-search (medía 72px con el input arriba) */
 :root[data-ivw="on"] .ivw-search,
@@ -441,3 +550,1223 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* ============================================================
+   MARCA EN EL TOPBAR (#ivw-brand, inyectado por enhance.js)
+   El lado izquierdo de la barra quedaba vacío al quitar el banner.
+   ============================================================ */
+#ivw-brand { display: none; }
+:root[data-ivw="on"] #ivw-brand {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-right: 18px !important;
+  padding: 4px 6px 4px 4px !important;
+  border-radius: 999px !important;
+  text-decoration: none !important;
+  flex: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] #ivw-brand:hover { background: var(--blue-50) !important; text-decoration: none !important; }
+:root[data-ivw="on"] #ivw-brand .ivw-brand-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-900));
+  color: #fff;
+  font: 800 13px/1 var(--font-head);
+  letter-spacing: -.02em;
+  box-shadow: var(--sh-1);
+}
+:root[data-ivw="on"] #ivw-brand .ivw-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+:root[data-ivw="on"] #ivw-brand .ivw-brand-text strong {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+:root[data-ivw="on"] #ivw-brand .ivw-brand-text small {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  :root[data-ivw="on"] #ivw-brand .ivw-brand-text { display: none; }
+  :root[data-ivw="on"] #ivw-brand { margin-right: 8px !important; }
+}
+
+/* ---------- Topbar fijo arriba ---------- */
+:root[data-ivw="on"] #header1 {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1030 !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: 0 1px 0 rgba(15, 27, 45, .04), 0 6px 18px -12px rgba(15, 27, 45, .35) !important;
+}
+:root[data-ivw="on"] #header1 .container { max-width: 1180px !important; }
+
+/* ---------- Botón "Ingresar" (visitante) ---------- */
+:root[data-ivw="on"] .btn-login,
+:root[data-ivw="on"] a.btn-login {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: linear-gradient(180deg, var(--blue-600), var(--blue-700)) !important;
+  color: #fff !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  letter-spacing: .01em !important;
+  height: 38px !important;
+  padding: 0 1.25rem !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  box-shadow: 0 1px 2px rgba(8, 42, 102, .28), 0 6px 16px -8px rgba(8, 42, 102, .6) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  transition: filter .15s ease, box-shadow .15s ease, transform .06s ease !important;
+}
+/* Flechita: señala que sale de la portada hacia el login */
+:root[data-ivw="on"] .btn-login::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-left: 1px;
+  opacity: .85;
+  transition: transform .15s ease;
+}
+:root[data-ivw="on"] .btn-login:hover {
+  filter: brightness(1.08) !important;
+  box-shadow: 0 2px 4px rgba(8, 42, 102, .3), 0 10px 22px -8px rgba(8, 42, 102, .7) !important;
+  text-decoration: none !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .btn-login:hover::after { transform: rotate(45deg) translate(2px, -2px); }
+:root[data-ivw="on"] .btn-login:active { transform: translateY(1px) !important; }
+:root[data-ivw="on"] .btn-login:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .28) !important;
+}
+
+/* ============================================================
+   LAYOUT: el footer se va SIEMPRE al fondo (antes quedaba a media
+   página cuando el contenido era corto, con una franja vacía debajo)
+   ============================================================ */
+:root[data-ivw="on"] html, :root[data-ivw="on"] body { min-height: 100% !important; }
+:root[data-ivw="on"] #page,
+:root[data-ivw="on"] #page.drawers {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
+}
+:root[data-ivw="on"] #page-footer { margin-top: auto !important; }
+
+/* ---------- Footer ---------- */
+:root[data-ivw="on"] #page-footer {
+  background: linear-gradient(135deg, var(--blue-900) 0%, #061d38 100%) !important;
+  border-top: 0 !important;
+  color: #93b3d4 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] #page-footer .info,
+:root[data-ivw="on"] #page-footer .container2 {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 18px 0 !important;
+}
+:root[data-ivw="on"] #page-footer .container { max-width: 1180px !important; }
+:root[data-ivw="on"] #page-footer .row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  row-gap: 6px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #page-footer .col-md-8,
+:root[data-ivw="on"] #page-footer .col-md-4 { padding: 0 !important; }
+
+/* El tema manda el crédito con estilo inline (blanco, bold, centrado):
+   aquí baja a línea de pie discreta, alineada a la izquierda. */
+:root[data-ivw="on"] #page-footer h5,
+:root[data-ivw="on"] #page-footer .text_to_html h5 {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  letter-spacing: .01em !important;
+  color: #93b3d4 !important;
+  text-align: left !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #page-footer p,
+:root[data-ivw="on"] #page-footer div { color: #93b3d4 !important; }
+:root[data-ivw="on"] #page-footer a {
+  color: #d6e6f7 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  transition: color .15s ease !important;
+}
+:root[data-ivw="on"] #page-footer a:hover { color: #fff !important; text-decoration: underline !important; text-underline-offset: 3px !important; }
+:root[data-ivw="on"] #page-footer .col-md-4 { text-align: right !important; }
+:root[data-ivw="on"] #page-footer .row:last-child:not(:has(*:not(:empty))) { display: none !important; }
+@media (max-width: 767px) {
+  :root[data-ivw="on"] #page-footer .row { flex-direction: column !important; }
+  :root[data-ivw="on"] #page-footer h5,
+  :root[data-ivw="on"] #page-footer .col-md-4 { text-align: center !important; }
+}
+
+/* ---------- Botón "volver arriba": fuera ----------
+   El tema deja en el pie `<div id="back-to-top">` y su JS lo engancha así:
+   se muestra cuando `$("#page").scrollTop() > 150` y al pulsarlo hace
+   `$("#page").animate({scrollTop: 0})`. Pero `#page` es un div sin scroll
+   propio (el desplazamiento vive en la ventana), así que su scrollTop es
+   siempre 0: el botón nunca se muestra por sí solo y al pulsarlo no pasa
+   nada. Antes se veía únicamente porque el wrap lo forzaba a `display:flex`.
+   Se oculta en lugar de dejar un botón muerto ocupando la esquina. */
+:root[data-ivw="on"] #back-to-top { display: none !important; }
+
+/* ============================================================
+   CAJÓN DE BLOQUES (drawer derecho)
+   El tema lo deja como una columna cruda: cabecera de 60px vacía con la ✕
+   suelta encima del contenido, barra de scroll gris de 12px, bloques sin
+   caja y listas con `float` (los iconos de "enviar mensaje" acababan en su
+   propia línea, sueltos a la derecha). Aquí el cajón pasa a ser un panel
+   con cabecera propia, tarjetas y listas en fila.
+   El ancho se queda en los 315px del tema: es el mismo valor con el que el
+   tema desplaza el contenido al abrirlo, y tocarlo descuadraría la página.
+   ============================================================ */
+
+/* ---------- Pestaña que lo abre ---------- */
+:root[data-ivw="on"] .drawer-toggles .drawer-toggler .btn {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-right: 0 !important;
+  border-radius: 12px 0 0 12px !important;
+  box-shadow: var(--sh-2) !important;
+  color: var(--blue-700) !important;
+  width: 34px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .drawer-toggles .drawer-toggler .btn:hover {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+
+/* ---------- El panel ---------- */
+:root[data-ivw="on"] .drawer.drawer-right {
+  background: var(--canvas) !important;
+  border-left: 1px solid var(--line) !important;
+  box-shadow: -16px 0 38px rgba(10, 42, 102, .10) !important;
+}
+
+/* Cabecera: 46px en vez de 60, con rótulo y la ✕ como botón redondo.
+   Se queda fija arriba; antes el contenido pasaba por debajo al hacer
+   scroll y los nombres se leían detrás del botón. */
+:root[data-ivw="on"] .drawer .drawerheader {
+  height: 46px !important;
+  min-height: 46px !important;
+  padding: 0 10px 0 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: var(--canvas) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+/* Rótulo sólo en el cajón de bloques: el de la izquierda (índice del curso)
+   trae su propio título dentro de .drawerheadercontent. */
+:root[data-ivw="on"] .drawer.drawer-right .drawerheader:has(.drawerheadercontent.hidden)::before,
+:root[data-ivw="on"] .drawer.drawer-right .drawerheader:has(.drawerheadercontent:empty)::before {
+  content: "Bloques";
+  font-family: var(--font-head) !important;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: auto;
+}
+:root[data-ivw="on"] .drawer .drawerheader .drawertoggle.btn {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+  color: var(--ink-2) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .drawer .drawerheader .drawertoggle.btn:hover {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .drawer .drawerheader .drawertoggle.btn i { font-size: 14px !important; }
+
+/* Contenido: respira, y la barra de scroll deja de ser gris marengo. */
+:root[data-ivw="on"] .drawer .drawercontent {
+  background: var(--canvas) !important;
+  height: calc(100% - 46px) !important;
+  padding: 12px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #c3cee0 transparent !important;
+}
+:root[data-ivw="on"] .drawer .drawercontent::-webkit-scrollbar { width: 8px !important; }
+:root[data-ivw="on"] .drawer .drawercontent::-webkit-scrollbar-track { background: transparent !important; }
+:root[data-ivw="on"] .drawer .drawercontent::-webkit-scrollbar-thumb {
+  background-color: #c9d5e6 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+:root[data-ivw="on"] .drawer .drawercontent::-webkit-scrollbar-thumb:hover { background-color: #a9bcd8 !important; }
+:root[data-ivw="on"] .drawer .drawercontent .block-region { padding: 0 !important; }
+
+/* ---------- Cada bloque, una tarjeta ---------- */
+:root[data-ivw="on"] .drawer .block {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 0 !important;
+  margin: 0 0 12px !important;
+}
+:root[data-ivw="on"] .drawer .block .header {
+  position: relative !important;
+  padding: 12px 14px 10px !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .drawer .block .header .title h2 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .drawer .block .header .title h2::before {
+  color: var(--blue-600) !important;
+  font-size: 13px !important;
+  padding-right: 0 !important;
+}
+/* El control de colapsar que el tema inyecta por JS: chico, gris y a la
+   derecha, en vez de por delante del título. */
+:root[data-ivw="on"] .drawer .block .header .block-action,
+:root[data-ivw="on"] .drawer .block .header .block_action {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  color: var(--muted) !important;
+  opacity: .55 !important;
+  transition: opacity .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .drawer .block .header:hover .block-action { opacity: 1 !important; }
+:root[data-ivw="on"] .drawer .block .header .block-action:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .drawer .block > .content {
+  padding: 12px 14px 14px !important;
+  font-size: 13px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .drawer .block > .content .no-overflow { overflow: visible !important; }
+
+/* ---------- Bloque HTML "Soporte a usuarios": la tabla, en filas ---------- */
+:root[data-ivw="on"] .drawer .block_html table { width: 100% !important; margin: 0 !important; }
+:root[data-ivw="on"] .drawer .block_html th,
+:root[data-ivw="on"] .drawer .block_html td {
+  border: 0 !important;
+  padding: 5px 6px !important;
+  vertical-align: middle !important;
+  text-align: left !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .drawer .block_html th { width: 34px !important; }
+:root[data-ivw="on"] .drawer .block_html img { width: 26px !important; height: 26px !important; }
+:root[data-ivw="on"] .drawer .block_html td a { font-size: 13px !important; color: var(--ink-2) !important; }
+:root[data-ivw="on"] .drawer .block_html td a strong { font-weight: 600 !important; }
+:root[data-ivw="on"] .drawer .block_html tr:hover td a { color: var(--blue-700) !important; }
+/* El bloque lo mantiene el equipo del sitio a mano y arrastra filas vacías
+   y saltos de línea al final: fuera, o dejan un hueco muerto en la tarjeta. */
+:root[data-ivw="on"] .drawer .block_html tr:not(:has(a)):not(:has(img)) { display: none !important; }
+:root[data-ivw="on"] .drawer .block_html br,
+:root[data-ivw="on"] .drawer .block_html p:empty { display: none !important; }
+
+:root[data-ivw="on"] .drawer .block_html tr:hover th,
+:root[data-ivw="on"] .drawer .block_html tr:hover td { background: var(--blue-50) !important; }
+
+/* ---------- Navegación: árbol legible, con jerarquía visible ---------- */
+:root[data-ivw="on"] .drawer .block_navigation .block_tree,
+:root[data-ivw="on"] .drawer .block_navigation .block_tree ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding-left: 0 !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .block_tree ul ul {
+  margin-left: 9px !important;
+  padding-left: 9px !important;
+  border-left: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation li { margin: 0 !important; padding: 0 !important; list-style: none !important; background-image: none !important; }
+:root[data-ivw="on"] .drawer .block_navigation .tree_item,
+:root[data-ivw="on"] .drawer .block_navigation p.tree_item.hasicon {
+  margin: 1px 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  background-image: none !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .tree_item > a,
+:root[data-ivw="on"] .drawer .block_navigation .tree_item > span {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 8px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  color: var(--ink-2) !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .tree_item > a:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .active_tree_node > a,
+:root[data-ivw="on"] .drawer .block_navigation .current_branch > .tree_item > a {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  font-weight: 600 !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .navicon {
+  color: var(--blue-500) !important;
+  font-size: 11px !important;
+  width: 14px !important;
+}
+/* El chevron de las ramas lo pinta el tema como `p::before`. Con el enlace
+   convertido en fila flex se iba a un renglón propio y cada rama medía el
+   doble: la fila la lleva ahora el propio `p` y el chevron es un item más. */
+:root[data-ivw="on"] .drawer .block_navigation p.tree_item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation p.tree_item::before {
+  flex: 0 0 auto !important;
+  width: 14px !important;
+  margin: 0 !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .drawer .block_navigation .tree_item > a,
+:root[data-ivw="on"] .drawer .block_navigation .tree_item > span {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* ---------- Usuarios en línea: una fila por persona ----------
+   El tema los coloca con `float`, así que el icono de mensaje se descolgaba
+   a su propia línea. Fila flex: avatar, nombre y acción, siempre alineados. */
+:root[data-ivw="on"] .drawer .block_online_users .content .info {
+  text-align: left !important;
+  margin: 0 0 8px !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .list { list-style: none !important; margin: 0 !important; padding: 0 !important; }
+:root[data-ivw="on"] .drawer .block_online_users .list li.listentry {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  clear: none !important;
+  padding: 4px 6px !important;
+  border-radius: var(--r-sm) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .list li.listentry:not(:first-child) { padding-top: 4px !important; }
+:root[data-ivw="on"] .drawer .block_online_users .list li.listentry:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .drawer .block_online_users .listentry .user {
+  float: none !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .user a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12.5px !important;
+  line-height: 1.25 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .user a:hover { color: var(--blue-700) !important; text-decoration: none !important; }
+:root[data-ivw="on"] .drawer .block_online_users .listentry .userinitials,
+:root[data-ivw="on"] .drawer .block_online_users .listentry .userpicture {
+  flex: 0 0 auto !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+  object-fit: cover !important;
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .message,
+:root[data-ivw="on"] .drawer .block_online_users .listentry .uservisibility {
+  float: none !important;
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .message a,
+:root[data-ivw="on"] .drawer .block_online_users .listentry .uservisibility a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: var(--r-sm) !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .message a:hover,
+:root[data-ivw="on"] .drawer .block_online_users .listentry .uservisibility a:hover {
+  background: var(--blue-100) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .drawer .block_online_users .listentry .otherusers {
+  margin-left: 0 !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+
+/* ---------- Eventos próximos ---------- */
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event {
+  padding: 9px 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event:last-of-type { border-bottom: 0 !important; padding-bottom: 2px !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event .activityiconcontainer { margin-right: 10px !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event .activityiconcontainer img.icon { width: 18px !important; height: 18px !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event h4 { margin: 0 0 2px !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event h4 a {
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event h4 a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event .date,
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event .date a {
+  font-size: 11.5px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .event .date a:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .drawer .block_calendar_upcoming .footer {
+  padding: 10px 14px !important;
+  border-top: 1px solid var(--line) !important;
+  font-size: 12.5px !important;
+}
+
+/* ---------- Bloques vacíos (insignias sin nada que mostrar) ---------- */
+:root[data-ivw="on"] .drawer .block_badges > .content { color: var(--muted) !important; font-size: 12.5px !important; }
+
+/* ---------- Topbar en pantallas chicas: el buscador cede espacio ---------- */
+@media (max-width: 720px) {
+  :root[data-ivw="on"] #header1 .navbar-collapse { gap: 8px !important; }
+  :root[data-ivw="on"] #header1 #adaptable-user-nav { min-width: 0 !important; flex: 1 1 auto !important; }
+  :root[data-ivw="on"] .ivw-search {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin-right: 8px !important;
+  }
+  :root[data-ivw="on"] .ivw-search .simplesearchform,
+  :root[data-ivw="on"] .ivw-search form.searchform-navbar,
+  :root[data-ivw="on"] .ivw-search .collapse,
+  :root[data-ivw="on"] .ivw-search .input-group { width: 100% !important; min-width: 0 !important; }
+  :root[data-ivw="on"] .ivw-search .form-control {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  :root[data-ivw="on"] .btn-login {
+    flex: none !important;
+    padding: .5rem .95rem !important;
+  }
+}
+
+/* ============================================================
+   TOPBAR v2 — una sola fila, sin amontonar
+   Con sesión iniciada entran marca + 4 tabs + buscador + campana +
+   mensajes + nombre + avatar: en 1180px no cabía y las tabs se iban
+   a un segundo renglón. Aquí se ensancha el contenedor, se prohíbe el
+   wrap y cada grupo recibe su ancho.
+   ============================================================ */
+:root[data-ivw="on"] #header1 .container {
+  max-width: 1440px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+:root[data-ivw="on"] #header1 .navbar.btco-hover-menu { padding: 5px 0 !important; }
+:root[data-ivw="on"] #header1 .navbar-collapse {
+  gap: 6px !important;
+  min-width: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+/* --- Tabs: nunca envuelven; si no caben, scrollean sin barra visible --- */
+:root[data-ivw="on"] .ivw-topnav {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  min-width: 0 !important;
+  margin: 0 10px 0 0 !important;
+  gap: 2px !important;
+}
+:root[data-ivw="on"] .ivw-topnav::-webkit-scrollbar { display: none !important; }
+:root[data-ivw="on"] .ivw-topnav > li { flex: none !important; }
+:root[data-ivw="on"] .ivw-topnav .nav-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  font-size: 14.5px !important;
+  padding: .5rem .78rem !important;
+  border-radius: 10px !important;
+}
+:root[data-ivw="on"] .ivw-topnav .nav-link i { font-size: 15px !important; width: auto !important; }
+:root[data-ivw="on"] .ivw-topnav .nav-link.active,
+:root[data-ivw="on"] .ivw-topnav .active > .nav-link {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+
+/* --- Bloque derecho: buscador + iconos + usuario --- */
+:root[data-ivw="on"] #header1 #adaptable-user-nav {
+  flex: none !important;
+  gap: 2px !important;
+  margin-left: auto !important;
+}
+:root[data-ivw="on"] .ivw-search {
+  flex: 0 1 230px !important;
+  min-width: 150px !important;
+  margin: 0 6px 0 0 !important;
+}
+:root[data-ivw="on"] .ivw-search .input-group,
+:root[data-ivw="on"] .ivw-search .form-control {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Campana y mensajes → botones redondos de 38px */
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-toggle,
+:root[data-ivw="on"] #adaptable-user-nav .nav-link.popover-region-toggle {
+  position: relative !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  justify-content: center !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-toggle:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] #adaptable-user-nav .popover-region-toggle i { font-size: 17px !important; }
+
+/* Contador de no leídos → pastilla roja sobre el icono */
+:root[data-ivw="on"] #adaptable-user-nav .count-container {
+  position: absolute !important;
+  top: 3px !important;
+  right: 3px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  padding: 0 4px !important;
+  border-radius: 999px !important;
+  background: var(--danger) !important;
+  color: #fff !important;
+  font: 700 10px/16px var(--font-body) !important;
+  text-align: center !important;
+  border: 2px solid var(--surface) !important;
+  box-sizing: content-box !important;
+}
+
+/* Usuario: pastilla con avatar + nombre truncado */
+:root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger { margin-left: 6px !important; }
+:root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger .dropdown-toggle {
+  gap: 8px !important;
+  padding: 4px 10px 4px 6px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+  transition: background .15s ease, border-color .15s ease !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger .dropdown-toggle:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .userbutton { flex-direction: row-reverse !important; gap: 8px !important; }
+:root[data-ivw="on"] #adaptable-user-nav .userbutton .usertext {
+  max-width: 170px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] #adaptable-user-nav .userpicture,
+:root[data-ivw="on"] #adaptable-user-nav .userbutton img {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--line) !important;
+  object-fit: cover !important;
+}
+
+/* Pantallas medianas: primero cae el nombre, luego el texto de la marca */
+@media (max-width: 1200px) {
+  :root[data-ivw="on"] #adaptable-user-nav .userbutton .usertext { display: none !important; }
+  :root[data-ivw="on"] #adaptable-user-nav .action-menu-trigger .dropdown-toggle { padding: 4px 6px !important; }
+}
+@media (max-width: 980px) {
+  :root[data-ivw="on"] #ivw-brand .ivw-brand-text { display: none !important; }
+  :root[data-ivw="on"] .ivw-topnav .nav-link { padding: .5rem .55rem !important; font-size: 14px !important; }
+  :root[data-ivw="on"] .ivw-search { flex-basis: 190px !important; }
+}
+
+/* Sin sesión no hay tabs: la barra se alinea con el contenido (1180) */
+:root[data-ivw="on"] body.notloggedin #header1 .container {
+  max-width: 1180px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Cierre: la marca de "ocultar" debe ganarle a TODO lo de arriba.
+   Reglas como `#header1 .ivw-topnav > li` puntúan (1,3,1); el atributo
+   repetido sube a (1,4,0) y gana sin recurrir a estilos inline (que
+   sobrevivirían al apagar el wrap). */
+:root[data-ivw="on"] [data-ivw-hide="1"][data-ivw-hide="1"],
+:root[data-ivw="on"] #header1 [data-ivw-hide="1"][data-ivw-hide="1"],
+:root[data-ivw="on"] #page [data-ivw-hide="1"][data-ivw-hide="1"],
+:root[data-ivw="on"] #page-wrapper [data-ivw-hide="1"][data-ivw-hide="1"],
+:root[data-ivw="on"] #adaptable-user-nav [data-ivw-hide="1"][data-ivw-hide="1"] {
+  display: none !important;
+}
+
+/* ============================================================
+   BOTONES — comportamiento uniforme (última palabra de la cascada)
+   Regla: el texto NUNCA cambia de color al pasar el mouse (el tema lo
+   ponía en negro en varios botones); lo que cambia es el botón, que se
+   oscurece un poco. Sólidos = texto blanco siempre; suaves = texto azul.
+   ============================================================ */
+
+/* --- Sólidos (fondo azul, texto blanco) --- */
+:root[data-ivw="on"] .btn-login,
+:root[data-ivw="on"] .btn-primary,
+:root[data-ivw="on"] .ivw-tl-item .btn,
+:root[data-ivw="on"] #page-course-search .simplesearchform .btn.search-icon,
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon,
+:root[data-ivw="on"] #page-course-search .pagination .page-item.active .page-link,
+:root[data-ivw="on"] #ivw-guest .ivw-btn-ghost,
+:root[data-ivw="on"] #frontpage-course-list .coursebtn:hover {
+  color: #fff !important;
+}
+:root[data-ivw="on"] .btn-login:hover,
+:root[data-ivw="on"] .btn-login:focus,
+:root[data-ivw="on"] .btn-login:active,
+:root[data-ivw="on"] .btn-primary:hover,
+:root[data-ivw="on"] .btn-primary:focus,
+:root[data-ivw="on"] .btn-primary:active,
+:root[data-ivw="on"] .ivw-tl-item .btn:hover,
+:root[data-ivw="on"] .ivw-tl-item .btn:focus,
+:root[data-ivw="on"] #page-course-search .simplesearchform .btn.search-icon:hover,
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon:hover,
+:root[data-ivw="on"] #page-course-search .pagination .page-item.active .page-link:hover,
+:root[data-ivw="on"] #ivw-guest .ivw-btn-ghost:hover {
+  color: #fff !important;
+  filter: brightness(.93) !important;   /* el botón se oscurece, no el texto */
+  text-decoration: none !important;
+}
+/* Fondo estable en hover: el cambio lo hace el filtro, no otro color */
+:root[data-ivw="on"] .btn-login:hover { background: linear-gradient(180deg, var(--blue-600), var(--blue-700)) !important; }
+:root[data-ivw="on"] .ivw-tl-item .btn:not(.ivw-btn-soft):hover { background: var(--blue-700) !important; }
+:root[data-ivw="on"] #page-course-search .simplesearchform .btn.search-icon:hover,
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon:hover {
+  background: var(--blue-700) !important;
+}
+
+/* --- Suaves (fondo claro, texto azul; nunca negro) --- */
+:root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft,
+:root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft:hover,
+:root[data-ivw="on"] .block_timeline .btn-secondary,
+:root[data-ivw="on"] .block_timeline .btn-secondary:hover,
+:root[data-ivw="on"] .block_timeline .dropdown-toggle,
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:hover,
+:root[data-ivw="on"] #frontpage-course-list .coursebtn,
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink .btn,
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink .btn:hover,
+:root[data-ivw="on"] #page-course-search .paging-showall a,
+:root[data-ivw="on"] #page-course-search .paging-showall a:hover,
+:root[data-ivw="on"] #page-course-search .pagination .page-link:hover,
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions .collapseexpand,
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions .collapseexpand:hover,
+:root[data-ivw="on"] .course_category_tree .paging a,
+:root[data-ivw="on"] .course_category_tree .paging a:hover {
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft:hover,
+:root[data-ivw="on"] .block_timeline .btn-secondary:hover,
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:hover,
+:root[data-ivw="on"] .block_timeline .dropdown > .btn:hover,
+:root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:hover,
+:root[data-ivw="on"] #frontpage-course-list .coursebtn:hover,
+:root[data-ivw="on"] #frontpage-course-list .paging-morelink .btn:hover,
+:root[data-ivw="on"] #page-course-search .paging-showall a:hover,
+:root[data-ivw="on"] #page-course-search .pagination .page-link:hover,
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions .collapseexpand:hover,
+:root[data-ivw="on"] .course_category_tree .paging a:hover {
+  filter: brightness(.96) !important;
+}
+/* Los filtros del timeline mantienen su color de texto en hover */
+:root[data-ivw="on"] .block_timeline .dropdown-toggle:hover,
+:root[data-ivw="on"] .block_timeline .dropdown > .btn:hover,
+:root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:hover,
+:root[data-ivw="on"] .block_timeline .btn-secondary:hover {
+  color: var(--blue-700) !important;
+}
+/* "Curso ›" de la portada: se vuelve sólido, texto blanco */
+:root[data-ivw="on"] #frontpage-course-list .coursebtn:hover {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+
+/* ============================================================
+   MENÚS: LA MARCA DE SELECCIÓN NO PISA EL TEXTO
+   El tema dibuja el ✓ del elemento activo con `position:absolute; left:.4rem`
+   contando con el relleno de 1.5rem de Bootstrap. En cuanto un menú usa un
+   relleno menor (el de la línea de tiempo, por ejemplo) el icono cae encima
+   de la primera palabra. Aquí el icono se ancla al propio elemento y todos
+   los del menú reservan ese hueco, para que la lista quede alineada.
+   ============================================================ */
+/* Solo cuando el tema dibuja de verdad la palomita (aria-current /
+   aria-selected): con `.active` a secas no hay icono y el hueco sobraría. */
+:root[data-ivw="on"] .dropdown-menu:has(.dropdown-item[aria-current="true"]) .dropdown-item,
+:root[data-ivw="on"] .dropdown-menu:has(.dropdown-item[aria-selected="true"]) .dropdown-item {
+  position: relative !important;
+  padding-left: 32px !important;
+}
+:root[data-ivw="on"] .dropdown-menu:has(.dropdown-item[aria-current="true"]) .dropdown-header,
+:root[data-ivw="on"] .dropdown-menu:has(.dropdown-item[aria-selected="true"]) .dropdown-header {
+  padding-left: 32px !important;
+}
+:root[data-ivw="on"] .dropdown-item[aria-current="true"]::before,
+:root[data-ivw="on"] .dropdown-item[aria-selected="true"]::before {
+  left: 11px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: inherit !important;
+}
+
+/* ============================================================
+   MENÚS DESPLEGABLES DEL SITIO
+   Varios menús (el selector de vista del calendario, por ejemplo) se quedaban
+   con el estilo crudo: sin caja propia, pegados al contenido de abajo, y con
+   el verde de marca del tema en el elemento activo. Aquí todos comparten la
+   misma tarjeta y la misma paleta. El menú de usuario y el panel de filtros
+   del constructor de reportes traen los suyos y quedan fuera.
+   ============================================================ */
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) {
+  padding: 6px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-3) !important;
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) > li { list-style: none !important; }
+/* Sin esto el menú se pinta por debajo de las tarjetas que tiene delante */
+:root[data-ivw="on"] .dropdown-menu.show:not(.filters-dropdown) { z-index: 1050 !important; }
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item {
+  border-radius: var(--r-sm) !important;
+  padding: 8px 12px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--ink-2) !important;
+  white-space: normal !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus-within {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+/* El activo: azul del wrap, no el verde del tema */
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item.active,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:active,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-current="true"],
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-selected="true"] {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-header {
+  padding: 8px 12px 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-divider {
+  margin: 6px 4px !important;
+  border-top: 1px solid var(--line) !important;
+}
+
+
+/* ============================================================
+   MENÚS: BLINDAJE CONTRA EL VERDE DEL TEMA
+   Adaptable pinta `.dropdown-item:hover/:focus/:focus-within` con su verde
+   (#00796b) y encima repite la regla en varios bloques, incluido el del
+   elemento activo (`[aria-current]:hover`) y el color de los `span`/iconos
+   de dentro. Con una sola regla de hover no basta: en cuanto el elemento
+   trae texto envuelto o está marcado como actual, vuelve a asomar el verde.
+   Aquí se cubren todos esos casos con la paleta del wrap: fondo azul muy
+   claro y texto azul, y azul sólido para el elemento seleccionado.
+   Fuera quedan el panel de filtros del constructor de reportes
+   (.filters-dropdown) y el "Salir" del menú de usuario, que van en rojo.
+   ============================================================ */
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover:not([href*="logout"]),
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus:not([href*="logout"]),
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus-within:not([href*="logout"]) {
+  background: var(--blue-50) !important;
+  background-color: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  outline: 0 !important;
+}
+/* El texto de dentro (span/a/small) también: el tema lo fuerza a blanco y
+   sobre fondo claro desaparecería. */
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover span,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover a,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover small,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:hover i,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus span,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus a,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item:focus-within span {
+  color: inherit !important;
+}
+/* El seleccionado se queda azul sólido aunque lo pases por encima. */
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-current="true"]:hover,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-current="true"]:focus,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-current="true"]:focus-within,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-selected="true"]:hover,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item.active:hover {
+  background: var(--blue-800) !important;
+  background-color: var(--blue-800) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-current="true"]:hover span,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item[aria-selected="true"]:hover span,
+:root[data-ivw="on"] .dropdown-menu:not(.filters-dropdown) .dropdown-item.active:hover span {
+  color: #fff !important;
+}
+/* "Salir" del menú de usuario: su rojo manda sobre el bloque de arriba. */
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item[href*="logout"]:hover,
+:root[data-ivw="on"] #adaptable-user-nav .dropdown-item[href*="logout"]:focus {
+  background: #fdecea !important;
+  background-color: #fdecea !important;
+  color: var(--danger) !important;
+}
+
+/* El botón que abre el menú: el tema lo pinta gris pizarra (o verde) mientras
+   está abierto. Con el wrap se queda en la misma familia azul del resto. */
+:root[data-ivw="on"] .dropdown.show > .btn.dropdown-toggle:not(.btn-primary),
+:root[data-ivw="on"] .show > .btn-outline-secondary.dropdown-toggle,
+:root[data-ivw="on"] .btn-outline-secondary.dropdown-toggle:not(:disabled):not(.disabled):active,
+:root[data-ivw="on"] .btn-outline-secondary.dropdown-toggle:not(:disabled):not(.disabled).active,
+:root[data-ivw="on"] .btn-outline-secondary.dropdown-toggle:hover {
+  background: var(--blue-700) !important;
+  background-color: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .show > .btn-outline-secondary.dropdown-toggle:focus,
+:root[data-ivw="on"] .btn-outline-secondary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 3px rgba(11, 92, 173, .25) !important;
+}
+/* El panel de filtros del constructor de reportes conserva su botón propio. */
+:root[data-ivw="on"] .reportbuilder-wrapper .dropdown.show > .btn.dropdown-toggle:not(.btn-primary) {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+/* Los filtros de la línea de tiempo van en versión suave: al abrirlos se
+   marcan con el azul claro, no con el azul sólido. */
+:root[data-ivw="on"] .block_timeline .dropdown.show > .btn.dropdown-toggle,
+:root[data-ivw="on"] .block_timeline .show > .btn-outline-secondary.dropdown-toggle {
+  background: var(--blue-50) !important;
+  background-color: var(--blue-50) !important;
+  border-color: var(--blue-100) !important;
+  color: var(--blue-700) !important;
+}
+
+/* ============================================================
+   RUTA DE NAVEGACIÓN (breadcrumb)
+   El tema la pinta como una barra gris (#f5f5f5) con los enlaces en el
+   color de marca y separadores de Font Awesome sueltos: pesa más que el
+   título de la página que hay justo debajo. Aquí baja a lo que es —una
+   ruta— y el último tramo, la página actual, es el único con peso.
+   ============================================================ */
+:root[data-ivw="on"] #page-navbar {
+  width: 100% !important;
+  margin: 12px 0 2px !important;
+}
+:root[data-ivw="on"] #page-navbar .breadcrumb,
+:root[data-ivw="on"] .breadcrumb {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .breadcrumb li {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  text-shadow: none !important;
+}
+:root[data-ivw="on"] .breadcrumb li > span[itemscope],
+:root[data-ivw="on"] .breadcrumb li > span > span[itemprop="title"] {
+  display: block !important;
+  min-width: 0 !important;
+}
+:root[data-ivw="on"] .breadcrumb li a,
+:root[data-ivw="on"] .breadcrumb li > span:not([itemscope]) {
+  display: block !important;
+  max-width: 260px !important;
+  padding: 5px 9px !important;
+  border-radius: var(--r-sm) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.3 !important;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .breadcrumb li a:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+/* Separadores: el tema usa un icono de Font Awesome por tramo. Se apaga y
+   el chevron lo dibuja la propia lista, así no depende de que la fuente de
+   iconos haya cargado. */
+:root[data-ivw="on"] .breadcrumb li i.separator,
+:root[data-ivw="on"] .breadcrumb li .separator { display: none !important; }
+:root[data-ivw="on"] .breadcrumb li + li::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+  margin: 0 2px;
+  background: #bcc6d6;
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.3 5.3 8 6.6l5.4 5.4L8 17.4l1.3 1.3 6.7-6.7z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.3 5.3 8 6.6l5.4 5.4L8 17.4l1.3 1.3 6.7-6.7z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+/* La página en la que estás: sin caja, con peso */
+:root[data-ivw="on"] .breadcrumb li:last-child a,
+:root[data-ivw="on"] .breadcrumb li[aria-current="page"] a,
+:root[data-ivw="on"] .breadcrumb li a[aria-current="page"],
+:root[data-ivw="on"] .breadcrumb li.lastli span {
+  max-width: 420px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  cursor: default !important;
+}
+:root[data-ivw="on"] .breadcrumb li:last-child a:hover,
+:root[data-ivw="on"] .breadcrumb li a[aria-current="page"]:hover {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+/* Casita en el primer tramo: se reconoce antes que la palabra "Inicio" */
+:root[data-ivw="on"] .breadcrumb li:first-child a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+:root[data-ivw="on"] .breadcrumb li:first-child a::before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+/* ============================================================
+   CAJONES LATERALES: AL RAS DE LA BARRA SUPERIOR
+   El tema los deja en `top: 0`, así que el cajón arranca por detrás de la
+   barra superior: su cabecera queda a la misma altura que el menú y se
+   pisan. Aquí bajan hasta donde termina la barra —el alto real lo mide
+   enhance.js y lo publica en `--ivw-header-h`, con 56px de respaldo— y su
+   alto se recorta lo mismo para que el pie del cajón no se salga.
+   ============================================================ */
+:root[data-ivw="on"] .drawer.drawer-left,
+:root[data-ivw="on"] .drawer.drawer-right,
+:root[data-ivw="on"] .drawer.drawer-primary {
+  top: var(--ivw-header-h, 56px) !important;
+  height: calc(100vh - var(--ivw-header-h, 56px)) !important;
+  max-height: calc(100vh - var(--ivw-header-h, 56px)) !important;
+}
+/* El contenido del cajón ocupa lo que queda bajo su propia cabecera */
+:root[data-ivw="on"] .drawer .drawercontent { height: calc(100% - 46px) !important; }
+/* La pestaña que abre/cierra los cajones también baja */
+:root[data-ivw="on"] .drawer-toggles { top: calc(var(--ivw-header-h, 56px) + 12px) !important; }
+
+/* ---------- Abrir y cerrar los cajones, con suavidad ----------
+   El tema anima el cajón (0.2s) pero no el contenido, que salta de golpe a
+   su nueva posición: el conjunto se ve a tirones. Aquí ambos se mueven con
+   la misma curva y la misma duración. */
+:root[data-ivw="on"] #page.drawers,
+:root[data-ivw="on"] .drawers {
+  transition: margin-left .3s cubic-bezier(.4, 0, .2, 1),
+              margin-right .3s cubic-bezier(.4, 0, .2, 1),
+              padding-left .3s cubic-bezier(.4, 0, .2, 1),
+              padding-right .3s cubic-bezier(.4, 0, .2, 1) !important;
+}
+:root[data-ivw="on"] .drawer {
+  transition: left .3s cubic-bezier(.4, 0, .2, 1),
+              right .3s cubic-bezier(.4, 0, .2, 1),
+              transform .3s cubic-bezier(.4, 0, .2, 1),
+              visibility .3s linear !important;
+}
+:root[data-ivw="on"] .drawer-toggles .drawer-toggler {
+  transition: left .3s cubic-bezier(.4, 0, .2, 1),
+              right .3s cubic-bezier(.4, 0, .2, 1),
+              opacity .2s ease !important;
+}
+/* Quien pida menos movimiento, no lo tiene */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ivw="on"] #page.drawers,
+  :root[data-ivw="on"] .drawers,
+  :root[data-ivw="on"] .drawer,
+  :root[data-ivw="on"] .drawer-toggles .drawer-toggler { transition: none !important; }
+}
+
+/* ---------- Desplegables del menú principal ----------
+   Los abre enhance.js marcando el <li> con `.ivw-open`; el tema los abría
+   con su CSS de hover, que dejó de alcanzar al mover el menú al topbar.
+   Nada de la cadena de contenedores puede recortarlos. */
+:root[data-ivw="on"] #header1,
+:root[data-ivw="on"] #header1 .container,
+:root[data-ivw="on"] #header1 .navbar,
+:root[data-ivw="on"] #header1 .navbar-collapse,
+:root[data-ivw="on"] .ivw-topnav { overflow: visible !important; }
+:root[data-ivw="on"] .ivw-topnav .nav-item { position: relative !important; }
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu { display: none !important; }
+:root[data-ivw="on"] .ivw-topnav .ivw-open > .dropdown-menu {
+  display: block !important;
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  left: 0 !important;
+  right: auto !important;
+  z-index: 1080 !important;
+  min-width: 250px !important;
+  max-height: min(70vh, 560px) !important;
+  overflow-y: auto !important;
+  animation: ivw-menu-in .12s ease-out;
+}
+/* Submenú (Secciones): se abre al lado, no debajo */
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .ivw-open > .dropdown-menu {
+  top: -6px !important;
+  left: calc(100% + 4px) !important;
+}
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .nav-item,
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu li { position: relative !important; }
+/* Chevron del que está abierto */
+:root[data-ivw="on"] .ivw-topnav .ivw-open > .nav-link {
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .dropdown-item .menutitle,
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .nav-link .menutitle { font-size: 13.5px !important; }
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .dropdown-item i,
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .dropdown-item img.icon {
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 8px !important;
+  color: var(--blue-600) !important;
+}
+/* El item que despliega "Secciones" dentro del menú */
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .nav-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .ivw-topnav .dropdown-menu .nav-link:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+
+/* El aviso "Los bloques en esta área solamente serán visibles a usuarios que
+   pueden editar bloques en esta página" y su región vacía: solo tienen
+   sentido en modo edición, y en la vista normal dejan un bloque muerto. */
+:root[data-ivw="on"] .hidden-blocks,
+:root[data-ivw="on"] #block-region-hidden { display: none !important; }

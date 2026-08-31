@@ -1,0 +1,483 @@
+/* ============================================================
+   CAJÓN DE MENSAJERÍA  (.message-app dentro del drawer derecho)
+   El tema deja la cabecera con un <h2> de 32px, los botones de icono con el
+   relleno turquesa de marca y las burbujas como bloques grises pegados. Aquí
+   el cajón usa el mismo lenguaje que el panel de notificaciones: 420px,
+   cabecera con borde, cuerpo sobre el lienzo y burbujas con jerarquía.
+   ============================================================ */
+
+/* ---------- El cajón ---------- */
+:root[data-ivw="on"] .drawer:has(.message-app) {
+  /* Panel de altura completa, igual que el de notificaciones: el tema lo deja
+     colgando a 60px y quedaba desalineado con la barra del wrap. */
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: min(420px, 100vw) !important;
+  max-width: none !important;
+  border-left: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: -22px 0 48px -24px rgba(10, 42, 102, .45) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .message-app {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  font-family: var(--font-body) !important;
+  color: var(--ink) !important;
+  background: var(--surface) !important;
+}
+
+/* ---------- Cabecera "Mensajería" ---------- */
+:root[data-ivw="on"] .message-app .bg-messageheader {
+  flex: none !important;
+  padding: 14px 10px 14px 18px !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .message-app .bg-messageheader h2 {
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  line-height: 1.2 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .message-app .closewidget a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .message-app .closewidget a:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+
+/* ---------- Botones de icono: sin el relleno de marca del tema ---------- */
+:root[data-ivw="on"] .message-app .btn-icon,
+:root[data-ivw="on"] .message-app .btn-link.btn-icon,
+:root[data-ivw="on"] .message-app [data-route-back] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .message-app .btn-icon:hover,
+:root[data-ivw="on"] .message-app .btn-link.btn-icon:hover,
+:root[data-ivw="on"] .message-app [data-route-back]:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .message-app .btn-icon i,
+:root[data-ivw="on"] .message-app .btn-link.btn-icon i,
+:root[data-ivw="on"] .message-app [data-route-back] i {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  color: inherit !important;
+}
+
+/* ---------- Cabecera de la conversación ---------- */
+:root[data-ivw="on"] .message-app .header-container > div {
+  padding: 10px 10px 10px 12px !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .message-app .header-container img.rounded-circle {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: cover !important;
+  border: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .message-app .header-container strong {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: var(--ink) !important;
+}
+/* "En línea" / estado, con punto de color */
+:root[data-ivw="on"] .message-app .header-container p {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 1px 0 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .message-app .header-container p::before {
+  content: "" !important;
+  width: 7px !important;
+  height: 7px !important;
+  flex: none !important;
+  border-radius: 999px !important;
+  background: var(--ok) !important;
+}
+/* Destacado: estrella ámbar discreta, no el azul de enlace */
+:root[data-ivw="on"] .message-app [data-region="favourite-icon-container"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  color: #d99400 !important;
+}
+:root[data-ivw="on"] .message-app [data-region="favourite-icon-container"] i {
+  font-size: 12px !important;
+  color: inherit !important;
+}
+
+/* ---------- Cuerpo: hilo de mensajes ---------- */
+:root[data-ivw="on"] .message-app .body-container {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .message-app .content-message-container { padding: 12px 12px 4px !important; }
+
+/* Aviso del espacio personal: una nota, no un párrafo suelto en cursiva */
+:root[data-ivw="on"] .message-app [data-region="self-conversation-message-container"] {
+  margin: 0 2px 12px !important;
+  padding: 12px 14px !important;
+  background: var(--blue-50) !important;
+  border: 1px solid var(--blue-100) !important;
+  border-radius: var(--r) !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] .message-app [data-region="self-conversation-message-container"] p:first-child {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .message-app [data-region="self-conversation-message-container"] p {
+  margin: 0 !important;
+  font-style: normal !important;
+  font-size: 12.5px !important;
+  line-height: 1.5 !important;
+  color: var(--ink-2) !important;
+}
+
+:root[data-ivw="on"] .message-app .message {
+  max-width: 86% !important;
+  margin: 0 0 10px !important;
+  padding: 9px 12px !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  box-shadow: var(--sh-1) !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+}
+:root[data-ivw="on"] .message-app .message .tail { display: none !important; }
+:root[data-ivw="on"] .message-app .message.send {
+  margin-left: auto !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  border-bottom-right-radius: 5px !important;
+}
+:root[data-ivw="on"] .message-app .message.received {
+  margin-right: auto !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-bottom-left-radius: 5px !important;
+}
+:root[data-ivw="on"] .message-app .message.send a { color: #fff !important; text-decoration: underline !important; }
+/* En los mensajes propios la hora va debajo del texto, no colgada del borde
+   superior: el markup la trae primero, así que la columna se invierte. */
+:root[data-ivw="on"] .message-app .message.send { flex-direction: column-reverse !important; }
+:root[data-ivw="on"] .message-app .message.send > .d-flex:first-of-type {
+  margin: 4px 0 0 !important;
+}
+:root[data-ivw="on"] .message-app .message > .d-flex:first-of-type { margin-bottom: 3px !important; }
+:root[data-ivw="on"] .message-app .message .time {
+  line-height: 1 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  opacity: .75 !important;
+}
+:root[data-ivw="on"] .message-app .message.received .time { color: var(--muted) !important; opacity: 1 !important; }
+:root[data-ivw="on"] .message-app .message.received h6 {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .message-app .message.received img.rounded-circle {
+  width: 24px !important;
+  height: 24px !important;
+  border: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .message-app .message [data-region="text-container"] { margin: 0 !important; }
+:root[data-ivw="on"] .message-app .message [data-region="text-container"] p:last-child { margin-bottom: 0 !important; }
+/* Día / separador de fechas */
+:root[data-ivw="on"] .message-app [data-region="day-container"] .timestamp,
+:root[data-ivw="on"] .message-app .timestamp {
+  display: inline-block !important;
+  margin: 2px auto 10px !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  color: var(--ink-2) !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+}
+
+/* ---------- Pie: redacción ---------- */
+:root[data-ivw="on"] .message-app .footer-container {
+  flex: none !important;
+  padding: 10px 12px 12px !important;
+  background: var(--surface) !important;
+  border-top: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .message-app .footer-container > div { border: 0 !important; }
+:root[data-ivw="on"] .message-app [data-region="send-message-txt"] {
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .message-app [data-region="send-message-txt"]::placeholder { color: var(--muted) !important; }
+:root[data-ivw="on"] .message-app [data-region="send-message-txt"]:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  outline: 0 !important;
+}
+/* Enviar: el único botón con color; emojis se queda neutro */
+:root[data-ivw="on"] .message-app .btn-icon[data-action="send-message"],
+:root[data-ivw="on"] .message-app .btn[data-action="send-message"] {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .message-app .btn-icon[data-action="send-message"]:hover,
+:root[data-ivw="on"] .message-app .btn[data-action="send-message"]:hover {
+  background: var(--blue-800) !important;
+  color: #fff !important;
+}
+
+/* ---------- Bandeja: secciones y conversaciones ---------- */
+:root[data-ivw="on"] .message-app .view-overview-body { background: var(--surface) !important; }
+:root[data-ivw="on"] .message-app .section,
+:root[data-ivw="on"] .message-app .section .card-header {
+  background: var(--surface) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .message-app .overview-section-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 11px 14px !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--ink-2) !important;
+  font-family: var(--font-head) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em !important;
+  text-transform: none !important;
+}
+:root[data-ivw="on"] .message-app .overview-section-toggle:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .message-app .overview-section-toggle i {
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .message-app .overview-section-toggle small { color: var(--muted) !important; font-weight: 600 !important; }
+:root[data-ivw="on"] .message-app [data-region="section-unread-count-container"],
+:root[data-ivw="on"] .message-app [data-region="unread-count"] {
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] .message-app .lazy-load-list { border: 0 !important; }
+:root[data-ivw="on"] .message-app .list-group-item {
+  padding: 10px 14px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .message-app .list-group-item + .list-group-item { box-shadow: inset 0 1px 0 var(--line) !important; }
+:root[data-ivw="on"] .message-app .list-group-item:hover,
+:root[data-ivw="on"] .message-app .list-group-item:focus { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .message-app .list-group-item img.rounded-circle {
+  width: 38px !important;
+  height: 38px !important;
+  object-fit: cover !important;
+  border: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .message-app .list-group-item strong {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .message-app .list-group-item .last-message,
+:root[data-ivw="on"] .message-app .list-group-item p {
+  margin: 1px 0 0 !important;
+  font-size: 12.5px !important;
+  font-weight: 400 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .message-app [data-region="last-message-date"] {
+  position: static !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--muted) !important;
+  white-space: nowrap !important;
+}
+:root[data-ivw="on"] .message-app .list-group-item > .d-flex.align-self-stretch {
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding-left: 8px !important;
+}
+/* Punto de conectado: anclado a la esquina del avatar */
+:root[data-ivw="on"] .message-app .list-group-item { position: relative !important; }
+:root[data-ivw="on"] .message-app .contact-status {
+  position: absolute !important;
+  left: 42px !important;
+  top: 34px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .message-app .contact-status.online {
+  background: var(--ok) !important;
+  box-shadow: 0 0 0 2px var(--surface) !important;
+}
+:root[data-ivw="on"] .message-app .contact-status i { display: none !important; }
+
+/* ---------- Buscar (bandeja y vista de búsqueda) ---------- */
+:root[data-ivw="on"] .message-app .simplesearchform {
+  width: 100% !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  overflow: hidden !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .message-app .simplesearchform:focus-within {
+  border-color: var(--blue-500) !important;
+  background: var(--surface) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+}
+:root[data-ivw="on"] .message-app .simplesearchform .form-control {
+  height: 38px !important;
+  padding: 0 6px 0 14px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .message-app .simplesearchform .form-control::placeholder { color: var(--muted) !important; }
+:root[data-ivw="on"] .message-app .simplesearchform .btn,
+:root[data-ivw="on"] .message-app .simplesearchform .btn-submit {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 999px 999px 0 !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .message-app .simplesearchform .btn:hover { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .message-app .simplesearchform .btn i { font-size: 14px !important; color: inherit !important; }
+
+/* Enlace "Contactos" de la bandeja */
+:root[data-ivw="on"] .message-app .header-container [data-region="view-overview"] .text-end a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 8px !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .message-app .header-container [data-region="view-overview"] .text-end a:hover {
+  background: var(--blue-50) !important;
+}
+
+:root[data-ivw="on"] .message-app [data-region="search-input"],
+:root[data-ivw="on"] .message-app .view-search input[type="text"] {
+  height: 38px !important;
+  padding: 0 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .message-app [data-region="search-input"]:focus {
+  border-color: var(--blue-500) !important;
+  background: var(--surface) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  outline: 0 !important;
+}
+
+/* ---------- "Verlo todo" ---------- */
+:root[data-ivw="on"] .message-app .footer-container [data-region="view-overview"] {
+  padding: 10px !important;
+}
+:root[data-ivw="on"] .message-app .footer-container [data-region="view-overview"] a {
+  display: block !important;
+  padding: 9px 12px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .message-app .footer-container [data-region="view-overview"] a:hover {
+  background: var(--blue-50) !important;
+}
+
+/* ---------- Barras de scroll finas dentro del cajón ---------- */
+:root[data-ivw="on"] .message-app *::-webkit-scrollbar { width: 8px !important; }
+:root[data-ivw="on"] .message-app *::-webkit-scrollbar-thumb {
+  background: #cfdaea !important;
+  border-radius: 999px !important;
+}
+:root[data-ivw="on"] .message-app *::-webkit-scrollbar-track { background: transparent !important; }

@@ -1,0 +1,682 @@
+/* ============================================================
+   CURSOS — buscador (#page-course-search) y catálogo de categorías
+   (#page-course-index-category)
+   Moodle escupe los resultados como una lista plana: título suelto,
+   imagen a la izquierda, "Profesor:" repetido por cada docente y la
+   categoría como texto. Aquí se convierte en rejilla de tarjetas.
+   El JS (enhance.js) solo sube la imagen a primer hijo de .coursebox.
+   ============================================================ */
+
+:root[data-ivw="on"] #page-course-search #region-main,
+:root[data-ivw="on"] #page-course-index #region-main {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* ---------- Encabezado + buscador grande ---------- */
+:root[data-ivw="on"] #page-course-search #region-main > [role="main"] > .simplesearchform {
+  max-width: 620px !important;
+  margin: 4px 0 18px !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .input-group {
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  overflow: hidden !important;
+  box-shadow: var(--sh-1) !important;
+  height: 46px !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .input-group:focus-within {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .form-control {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+  padding: 0 1rem !important;
+  height: 100% !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .btn.search-icon {
+  display: inline-flex !important;   /* el tema lo esconde en esta vista */
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 0 !important;
+  background: var(--blue-700) !important;
+  border: 0 !important;
+  color: #fff !important;
+  padding: 0 20px !important;
+  height: 100% !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .btn.search-icon:hover {
+  background: var(--blue-600) !important;
+}
+:root[data-ivw="on"] #page-course-search #region-main .simplesearchform .btn.search-icon i {
+  display: inline-block !important;
+  color: #fff !important;
+}
+
+:root[data-ivw="on"] #page-course-search #region-main > [role="main"] > h2 {
+  font-family: var(--font-head) !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  color: var(--ink) !important;
+  margin: 0 0 4px !important;
+}
+
+/* Fondo de la vista y banner sobrante */
+:root[data-ivw="on"] #page-course-search #page,
+:root[data-ivw="on"] #page-course-index #page { background: var(--canvas) !important; }
+:root[data-ivw="on"] #page-course-search #maincontainer,
+:root[data-ivw="on"] #page-course-search #page-content { background: transparent !important; }
+
+/* ---------- Rejilla ---------- */
+:root[data-ivw="on"] .ivw-course-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)) !important;
+  gap: 18px !important;
+  align-items: stretch !important;
+  margin: 18px 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+/* Paginación y "mostrar todos" ocupan la fila completa */
+:root[data-ivw="on"] .ivw-course-grid > nav.pagination,
+:root[data-ivw="on"] .ivw-course-grid > .paging,
+:root[data-ivw="on"] .ivw-course-grid > .paging-showall,
+:root[data-ivw="on"] .ivw-course-grid > .alert {
+  grid-column: 1 / -1 !important;
+}
+
+/* ---------- Tarjeta ---------- */
+:root[data-ivw="on"] .ivw-course-grid .coursebox,
+:root[data-ivw="on"] .ivw-course-grid .coursebox {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 0 0 14px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  transition: transform .12s ease, box-shadow .15s ease, border-color .15s ease !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh-2) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* Imagen de portada (el JS la sube a primer hijo) */
+:root[data-ivw="on"] .ivw-course-grid .coursebox > .courseimage,
+:root[data-ivw="on"] .ivw-course-grid .coursebox > .courseimage {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 12px !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox > .courseimage img {
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+/* La copia vieja que quedaba dentro de .content ya no va */
+:root[data-ivw="on"] .ivw-course-grid .coursebox .content .courseimage { display: none !important; }
+
+:root[data-ivw="on"] .ivw-course-grid .coursebox > .info,
+:root[data-ivw="on"] .ivw-course-grid .coursebox > .content {
+  padding: 0 16px !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox .content .d-flex { display: block !important; }
+
+/* Título: 2 líneas máximo y toda la tarjeta clickeable */
+:root[data-ivw="on"] .ivw-course-grid .coursebox h3.coursename {
+  font-family: var(--font-head) !important;
+  font-size: 15.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  margin: 0 0 10px !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox h3.coursename a {
+  color: var(--ink) !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox h3.coursename a::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox:hover h3.coursename a { color: var(--blue-700) !important; }
+/* Los links internos siguen siendo clickeables por encima de la capa */
+:root[data-ivw="on"] .ivw-course-grid .coursebox .teachers a,
+:root[data-ivw="on"] .ivw-course-grid .coursebox .coursecat a {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Resumen: 3 líneas */
+:root[data-ivw="on"] .ivw-course-grid .coursebox .summary {
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: var(--muted) !important;
+  margin: 0 0 10px !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox .summary p { margin: 0 !important; }
+:root[data-ivw="on"] .ivw-course-grid .coursebox .summary .no-overflow {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* Profesores: una sola línea "Profesor(es): A · B · C" */
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers {
+  list-style: none !important;
+  /* 2 líneas máximo: un curso con 4 profesores estiraba toda la fila */
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  color: var(--ink-2) !important;
+  line-height: 1.5 !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers li {
+  display: inline !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers li:not(:last-child)::after {
+  content: " · " !important;
+  color: var(--muted) !important;
+}
+/* La etiqueta "Profesor:" solo la primera vez */
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers li:not(:first-child) .font-weight-bold {
+  display: none !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers .font-weight-bold {
+  font-weight: 600 !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers a {
+  color: var(--ink-2) !important;
+  font-weight: 500 !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox ul.teachers a:hover { color: var(--blue-700) !important; }
+
+/* Categoría → chip al pie de la tarjeta */
+:root[data-ivw="on"] .ivw-course-grid .coursebox .coursecat {
+  margin-top: auto !important;
+  padding-top: 4px !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox .coursecat .font-weight-bold { display: none !important; }
+:root[data-ivw="on"] .ivw-course-grid .coursebox .coursecat a {
+  display: inline-flex !important;
+  align-items: center !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border-radius: 999px !important;
+  padding: 5px 11px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+:root[data-ivw="on"] .ivw-course-grid .coursebox .coursecat a:hover {
+  background: var(--blue-100) !important;
+  text-decoration: none !important;
+}
+
+/* Coincidencia resaltada — sin padding: metía un espacio dentro de la palabra */
+:root[data-ivw="on"] #page-course-search .highlight,
+:root[data-ivw="on"] #page-course-index-category .highlight,
+:root[data-ivw="on"] span.highlight {
+  background: #fff3c4 !important;
+  color: inherit !important;
+  border-radius: 2px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 0 1px #fff3c4 !important;
+  text-decoration: inherit !important;
+}
+
+/* ---------- Paginación ---------- */
+:root[data-ivw="on"] #page-course-search .pagination {
+  margin: 6px 0 !important;
+  gap: 4px !important;
+}
+:root[data-ivw="on"] #page-course-search .pagination .page-item { margin: 0 !important; }
+:root[data-ivw="on"] #page-course-search .pagination .page-link {
+  min-width: 38px !important;
+  height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  background: var(--surface) !important;
+  color: var(--ink-2) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+  transition: background .12s ease, color .12s ease, border-color .12s ease !important;
+}
+:root[data-ivw="on"] #page-course-search .pagination .page-link:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border-color: var(--blue-300) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] #page-course-search .pagination .page-item.active .page-link {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] #page-course-search .pagination .page-item.disabled .page-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--muted) !important;
+}
+
+/* "Mostrar todos los N" → botón secundario centrado */
+:root[data-ivw="on"] #page-course-search .paging-showall {
+  text-align: center !important;
+  margin: 4px 0 !important;
+}
+:root[data-ivw="on"] #page-course-search .paging-showall a {
+  display: inline-flex !important;
+  align-items: center !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+}
+:root[data-ivw="on"] #page-course-search .paging-showall a:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  text-decoration: none !important;
+}
+
+/* Sin resultados */
+:root[data-ivw="on"] #page-course-search .courses .alert,
+:root[data-ivw="on"] #page-course-search #region-main .alert {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  color: var(--ink-2) !important;
+  padding: 18px 20px !important;
+  box-shadow: var(--sh-1) !important;
+}
+
+@media (max-width: 640px) {
+  :root[data-ivw="on"] .ivw-course-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ============================================================
+   CATÁLOGO DE CATEGORÍAS — body#page-course-index-category
+   Moodle lo deja como una lista de enlaces azules sueltos sobre un
+   panel blanco enorme, con el <select> de categorías recortado a media
+   línea. Aquí: barra de acciones, categorías como filas-tarjeta en dos
+   columnas y jerarquía indentada al expandir.
+   ============================================================ */
+:root[data-ivw="on"] #page-course-index-category #page { background: var(--canvas) !important; }
+:root[data-ivw="on"] #page-course-index-category #region-main,
+:root[data-ivw="on"] #page-course-index-category #maincontainer,
+:root[data-ivw="on"] #page-course-index-category #page-content {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* ---------- Barra de acciones (selector + buscador) ---------- */
+:root[data-ivw="on"] #page-course-index-category #action_bar {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  padding: 14px 16px !important;
+  margin: 4px 0 16px !important;
+}
+:root[data-ivw="on"] #page-course-index-category #action_bar .row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] #page-course-index-category #action_bar .navitem {
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 0 1 auto !important;
+}
+/* El <select> venía con altura fija y el texto cortado a la mitad */
+:root[data-ivw="on"] #page-course-index-category select.urlselect,
+:root[data-ivw="on"] #page-course-index-category .custom-select {
+  height: 44px !important;
+  min-width: 320px !important;
+  max-width: 460px !important;
+  line-height: 1.4 !important;
+  padding: 0 34px 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 10px !important;
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  font-size: 14px !important;
+  font-family: var(--font-body) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] #page-course-index-category select.urlselect:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  outline: none !important;
+}
+:root[data-ivw="on"] #page-course-index-category .urlselect form { margin: 0 !important; }
+:root[data-ivw="on"] #page-course-index-category .urlselect.text-truncate,
+:root[data-ivw="on"] #page-course-index-category .navitem .text-truncate {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  width: auto !important;
+}
+
+/* Buscador de la barra: misma pastilla que en los resultados */
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .input-group {
+  height: 44px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .input-group:focus-within {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+}
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .form-control {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-width: 200px !important;
+  padding: 0 1rem !important;
+  height: 100% !important;
+}
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--blue-700) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+  padding: 0 18px !important;
+  height: 100% !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon:hover { background: var(--blue-600) !important; }
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon i {
+  display: inline-block !important;
+  color: #fff !important;
+}
+
+/* ---------- "Expandir todo" ---------- */
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+  position: static !important;
+}
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions .collapseexpand {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] #page-course-index-category .collapsible-actions .collapseexpand:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  text-decoration: none !important;
+}
+
+/* ---------- Árbol de categorías ---------- */
+:root[data-ivw="on"] .course_category_tree {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+/* Nivel raíz en dos columnas; los niveles hijos siguen en lista */
+:root[data-ivw="on"] .course_category_tree > .content > .subcategories {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)) !important;
+  gap: 10px !important;
+  align-items: start !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .course_category_tree .category:hover {
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .course_category_tree .category > .info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 12px 14px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .course_category_tree .category h3.categoryname {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: var(--font-body) !important;
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  background: none !important;   /* el tema pinta aquí la flechita */
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category h3.categoryname a {
+  color: var(--ink) !important;
+  display: block !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .course_category_tree .category:hover > .info h3.categoryname a { color: var(--blue-700) !important; }
+
+/* Chevron propio para las que tienen hijos (gira al expandir) */
+:root[data-ivw="on"] .course_category_tree .category.with_children > .info::before {
+  content: "" !important;
+  flex: none !important;
+  width: 7px !important;
+  height: 7px !important;
+  margin-left: 2px !important;
+  border-right: 2px solid var(--blue-600) !important;
+  border-bottom: 2px solid var(--blue-600) !important;
+  transform: rotate(-45deg) !important;
+  transition: transform .15s ease !important;
+}
+:root[data-ivw="on"] .course_category_tree .category.with_children.collapsed > .info::before {
+  transform: rotate(-45deg) !important;
+}
+:root[data-ivw="on"] .course_category_tree .category.with_children:not(.collapsed) > .info::before {
+  transform: rotate(45deg) !important;
+}
+/* Las hojas se alinean con las que sí tienen flecha */
+:root[data-ivw="on"] .course_category_tree .category:not(.with_children) > .info { padding-left: 33px !important; }
+
+/* Contenido expandido: subcategorías indentadas con guía vertical */
+:root[data-ivw="on"] .course_category_tree .category > .content {
+  padding: 0 14px 12px 30px !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category > .content:empty { padding: 0 !important; }
+:root[data-ivw="on"] .course_category_tree .category .subcategories {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .category {
+  border: 0 !important;
+  border-left: 2px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .category:hover {
+  border-left-color: var(--blue-300) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .category > .info { padding: 7px 10px !important; }
+:root[data-ivw="on"] .course_category_tree .category .category h3.categoryname { font-size: 14px !important; font-weight: 500 !important; }
+
+/* ---------- Cursos dentro de una categoría ---------- */
+:root[data-ivw="on"] .course_category_tree .category .courses {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  margin: 6px 0 0 !important;
+  padding: 0 !important;
+  border-top: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 9px 2px !important;
+  margin: 0 !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox:last-child { border-bottom: 0 !important; }
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox:hover { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .course_category_tree .category .courses .coursename,
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox h3 {
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses .coursename a { color: var(--ink-2) !important; }
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox:hover .coursename a { color: var(--blue-700) !important; }
+:root[data-ivw="on"] .course_category_tree .category .courses .courseimage,
+:root[data-ivw="on"] .course_category_tree .category .courses .ivw-thumb { display: none !important; }
+:root[data-ivw="on"] .course_category_tree .category .courses .teachers,
+:root[data-ivw="on"] .course_category_tree .category .courses .summary {
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+  margin: 2px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .course_category_tree .categorypicker,
+:root[data-ivw="on"] #page-course-index-category .categorynumber { color: var(--muted) !important; }
+
+/* Categoría abierta: ocupa la fila completa (en una celda de 330px los
+   nombres de curso se partían en tres líneas) y lista los cursos en columnas */
+:root[data-ivw="on"] .course_category_tree > .content > .subcategories > .category.with_children:not(.collapsed) {
+  grid-column: 1 / -1 !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+  column-gap: 22px !important;
+  align-items: start !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 9px 6px !important;
+}
+:root[data-ivw="on"] .course_category_tree .category .courses .coursebox .info {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+/* Icono "ⓘ" de más información */
+:root[data-ivw="on"] .course_category_tree .courses .moreinfo {
+  flex: none !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .course_category_tree .courses .moreinfo a,
+:root[data-ivw="on"] .course_category_tree .courses .moreinfo i {
+  color: var(--muted) !important;
+  font-size: 13px !important;
+}
+:root[data-ivw="on"] .course_category_tree .courses .moreinfo a:hover,
+:root[data-ivw="on"] .course_category_tree .courses .moreinfo a:hover i {
+  color: var(--blue-700) !important;
+}
+
+/* El tema centra los nombres de curso dentro del árbol */
+:root[data-ivw="on"] .course_category_tree .courses,
+:root[data-ivw="on"] .course_category_tree .courses .coursebox,
+:root[data-ivw="on"] .course_category_tree .courses .coursename,
+:root[data-ivw="on"] .course_category_tree .courses .info {
+  text-align: left !important;
+}
+/* "Ver más" / paginación dentro de una categoría */
+:root[data-ivw="on"] .course_category_tree .paging,
+:root[data-ivw="on"] .course_category_tree .paging-morelink {
+  grid-column: 1 / -1 !important;
+  text-align: center !important;
+  padding: 10px 0 2px !important;
+}
+:root[data-ivw="on"] .course_category_tree .paging a,
+:root[data-ivw="on"] .course_category_tree .paging .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .course_category_tree .paging a:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  text-decoration: none !important;
+}

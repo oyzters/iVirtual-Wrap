@@ -7,28 +7,98 @@
     "default_title": "iVirtual Wrap",
     "default_popup": "src/popup.html"
   },
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "https://ivirtual.itson.edu.mx/*",
-    "https://apps9.itson.edu.mx/PortalSistemas/CambioPass/*"
+    "https://apps9.itson.edu.mx/PortalSistemas*",
+    "https://apps9.itson.edu.mx/eres*",
+    "https://apps9.itson.edu.mx/MesaAyudaITSON/*",
+    "https://apps11.itson.edu.mx/CalendarioEscolar/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://ivirtual.itson.edu.mx/*",
-        "https://apps9.itson.edu.mx/PortalSistemas/CambioPass/*"
+        "https://apps9.itson.edu.mx/PortalSistemas*",
+        "https://apps9.itson.edu.mx/eres*",
+        "https://apps9.itson.edu.mx/MesaAyudaITSON/*"
       ],
-      "js": ["src/storage.js", "src/content.js"],
+      "js": [
+        "src/storage.js",
+        "src/enhance.js",
+        "src/content.js"
+      ],
       "css": [
         "src/base.css",
         "src/pages/login.css",
         "src/pages/dashboard.css",
         "src/pages/frontpage.css",
         "src/pages/recuperapassword.css",
+        "src/pages/mesaayuda.css",
+        "src/pages/portalsistemas.css",
+        "src/pages/portalinicio.css",
+        "src/pages/eres.css",
+        "src/pages/calendarioescolar.css",
+        "src/pages/coursesearch.css",
+        "src/pages/profile.css",
+        "src/pages/tables.css",
+        "src/pages/forms.css",
+        "src/pages/messaging.css",
+        "src/pages/notifications.css",
+        "src/pages/calendar.css",
+        "src/pages/course.css",
+        "src/pages/attendance.css",
+        "src/pages/reportbuilder.css",
         "src/pages/chrome.css"
       ],
       "run_at": "document_start",
       "all_frames": false
+    },
+    {
+      "matches": [
+        "https://apps11.itson.edu.mx/CalendarioEscolar/*"
+      ],
+      "js": [
+        "src/storage.js",
+        "src/enhance.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/base.css",
+        "src/pages/login.css",
+        "src/pages/dashboard.css",
+        "src/pages/frontpage.css",
+        "src/pages/recuperapassword.css",
+        "src/pages/mesaayuda.css",
+        "src/pages/portalsistemas.css",
+        "src/pages/portalinicio.css",
+        "src/pages/eres.css",
+        "src/pages/calendarioescolar.css",
+        "src/pages/coursesearch.css",
+        "src/pages/profile.css",
+        "src/pages/tables.css",
+        "src/pages/forms.css",
+        "src/pages/messaging.css",
+        "src/pages/notifications.css",
+        "src/pages/calendar.css",
+        "src/pages/reportbuilder.css",
+        "src/pages/chrome.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://apps11.itson.edu.mx/CalendarioEscolar/*"
+      ],
+      "js": [
+        "src/page-combos.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
     }
   ]
 }

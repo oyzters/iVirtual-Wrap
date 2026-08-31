@@ -1,0 +1,697 @@
+/* ============================================================
+   CALENDARIO  (.maincalendar: bloque del tablero y vista de mes)
+   El tema deja la rejilla como una tabla desnuda —celdas de 180px, números
+   sueltos, eventos como texto con un punto delante— y la barra de meses en
+   una línea de enlaces con flechas ◄ ►. Aquí es una rejilla con cabecera
+   propia, día actual marcado y cada evento en su pastilla.
+   ============================================================ */
+
+:root[data-ivw="on"] .maincalendar,
+:root[data-ivw="on"] .maincalendar .calendarwrapper { background: transparent !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth { width: 100% !important; margin: 0 !important; }
+
+/* ---------- Barra: curso + nuevo evento ---------- */
+:root[data-ivw="on"] .maincalendar .header.d-flex {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 2px 2px 12px !important;
+  border: 0 !important;
+  background: transparent !important;
+  /* La barra recortaba el menú del selector de vista, que cuelga por debajo */
+  overflow: visible !important;
+}
+:root[data-ivw="on"] .maincalendar select.cal_courses_flt,
+:root[data-ivw="on"] .maincalendar select.custom-select {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-width: 280px !important;
+  margin: 0 auto 0 0 !important;
+  padding: 0 34px 0 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background-color: var(--surface) !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7891' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 15px 15px !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink) !important;
+  line-height: 36px !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .maincalendar select.cal_courses_flt:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  outline: 0 !important;
+}
+:root[data-ivw="on"] .maincalendar [data-action="new-event-button"] {
+  float: none !important;
+  flex: none !important;
+  height: 38px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .maincalendar [data-action="new-event-button"]:hover { background: var(--blue-800) !important; }
+
+/* ---------- Navegación de meses ---------- */
+:root[data-ivw="on"] .maincalendar .calendar-controls {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .maincalendar .calendar-controls .hide { display: none !important; }
+:root[data-ivw="on"] .maincalendar .calendar-controls .current {
+  flex: 1 1 auto !important;
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  text-align: center !important;
+  text-transform: capitalize !important;
+}
+:root[data-ivw="on"] .maincalendar .calendar-controls .arrow_link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: none !important;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+  text-transform: capitalize !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .maincalendar .calendar-controls .arrow_link:hover { background: var(--blue-50) !important; }
+/* Los ◄ ► del tema se cambian por chevrones dibujados */
+:root[data-ivw="on"] .maincalendar .calendar-controls .arrow { display: none !important; }
+:root[data-ivw="on"] .maincalendar .calendar-controls .arrow_link::before,
+:root[data-ivw="on"] .maincalendar .calendar-controls .arrow_link::after {
+  content: "" !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-top: 2px solid currentColor !important;
+  border-right: 2px solid currentColor !important;
+}
+:root[data-ivw="on"] .maincalendar .calendar-controls .previous::before { transform: rotate(-135deg) !important; }
+:root[data-ivw="on"] .maincalendar .calendar-controls .previous::after { content: none !important; }
+:root[data-ivw="on"] .maincalendar .calendar-controls .next::after { transform: rotate(45deg) !important; }
+:root[data-ivw="on"] .maincalendar .calendar-controls .next::before { content: none !important; }
+
+/* ---------- Rejilla ---------- */
+:root[data-ivw="on"] .maincalendar table.calendarmonth {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  table-layout: fixed !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth thead th {
+  width: 14.28% !important;
+  padding: 10px 6px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  text-align: center !important;
+}
+/* El nombre largo del día existe solo para lectores de pantalla */
+:root[data-ivw="on"] .maincalendar .calendarmonth th .sr-only,
+:root[data-ivw="on"] .maincalendar .calendarmonth td .sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+:root[data-ivw="on"] .maincalendar .calendarmonth td {
+  height: 96px !important;
+  padding: 6px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  border-left: 1px solid var(--line) !important;
+  vertical-align: top !important;
+  text-align: left !important;
+  background: var(--surface) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth tr > td:first-child { border-left: 0 !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth tbody tr:first-child td { border-top: 0 !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth td.weekend { background: #fafcff !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth td.dayblank { background: var(--canvas) !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth td.today { background: var(--blue-50) !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth td.clickable:hover { background: var(--blue-50) !important; }
+
+/* Número del día */
+:root[data-ivw="on"] .maincalendar .calendarmonth td .d-none.d-md-block,
+:root[data-ivw="on"] .maincalendar .calendarmonth td > div { text-align: left !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth a.day {
+  display: inline-block !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth .day-number-circle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 25px !important;
+  height: 25px !important;
+  padding: 0 6px !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--ink-2) !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+  line-height: 1 !important;
+  transition: background .12s ease, color .12s ease !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth a.day:hover .day-number-circle {
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth td.today .day-number-circle {
+  background: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth td.weekend .day-number-circle { color: var(--muted) !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth td.today.weekend .day-number-circle { color: #fff !important; }
+
+/* ---------- Eventos del día ---------- */
+:root[data-ivw="on"] .maincalendar .calendarmonth [data-region="day-content"] ul {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  margin: 5px 0 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth [data-region="event-item"] { margin: 0 !important; line-height: 1.2 !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth [data-region="event-item"] > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  max-width: 100% !important;
+  padding: 3px 7px !important;
+  border: 1px solid rgba(11, 92, 173, .12) !important;
+  border-radius: 6px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+  overflow: hidden !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth [data-region="event-item"] > a:hover {
+  background: var(--blue-100) !important;
+  color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth .eventname {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+/* El tema hace del enlace un inline-block de una línea */
+:root[data-ivw="on"] .maincalendar .calendarmonth ul li > a {
+  display: flex !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth [data-region="event-item"] > a { align-items: flex-start !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar-circle { margin-top: 5px !important; }
+/* El punto de color dice de qué tipo es el evento */
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar-circle {
+  flex: none !important;
+  width: 6px !important;
+  height: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-500) !important;
+}
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar_event_user { background: var(--ok) !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar_event_site { background: #7a5cd6 !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar_event_category { background: var(--warn) !important; }
+:root[data-ivw="on"] .maincalendar .calendarmonth .calendar_event_group { background: #0f8ca8 !important; }
+
+/* En el tablero el bloque es más estrecho: celdas algo más bajas */
+:root[data-ivw="on"] .block_calendar_month .calendarmonth td { height: 84px !important; }
+
+/* Selector de vista (Mes / Semana / Día) de la página completa.
+   Su contenedor no es un `.dropdown`, así que el menú no tenía respecto a qué
+   colocarse y salía flotando sobre la lista de eventos. */
+:root[data-ivw="on"] [data-region="view-selector"] { position: relative !important; }
+/* Selector de vista (Mes / Semana / Día) de la página completa */
+:root[data-ivw="on"] [data-region="view-selector"] .btn {
+  height: 38px !important;
+  margin: 0 10px 0 0 !important;
+  padding: 0 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  color: var(--ink-2) !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] [data-region="view-selector"] .btn:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* ---------- Pie del bloque ---------- */
+:root[data-ivw="on"] .block_calendar_month .footer .bottom {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 10px 0 2px !important;
+}
+:root[data-ivw="on"] .block_calendar_month .footer-link a {
+  display: inline-block !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: var(--blue-700) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .block_calendar_month .footer-link a:hover { background: var(--blue-50) !important; }
+
+/* ---------- Vista de mes a página completa ---------- */
+:root[data-ivw="on"] #page-calendar-view .maincalendar .calendarmonth td { height: 128px !important; }
+:root[data-ivw="on"] #page-calendar-view .maincalendar .calendarmonth [data-region="event-item"] > a { font-size: 12px !important; }
+:root[data-ivw="on"] #page-calendar-view .calendar-controls .current { font-size: 20px !important; }
+
+/* ---------- Pantallas chicas ---------- */
+@media (max-width: 760px) {
+  :root[data-ivw="on"] .maincalendar .calendarmonth td { height: 62px !important; padding: 4px !important; }
+  :root[data-ivw="on"] .maincalendar .calendarmonth thead th { font-size: 10px !important; padding: 8px 2px !important; }
+  :root[data-ivw="on"] .maincalendar .calendarmonth .day-number-circle {
+    min-width: 22px !important;
+    height: 22px !important;
+    font-size: 11.5px !important;
+  }
+  :root[data-ivw="on"] .maincalendar .header.d-flex { flex-wrap: wrap !important; }
+  :root[data-ivw="on"] .maincalendar select.cal_courses_flt { max-width: none !important; width: 100% !important; }
+}
+
+/* ============================================================
+   EVENTOS PRÓXIMOS  (/calendar/view.php?view=upcoming)
+   Cada evento venía como una banda de color a todo el ancho con el título a
+   28px, y debajo cuatro filas de rejilla Bootstrap con el icono en una
+   columna suelta. Aquí es una ficha: acento de color por tipo, cabecera
+   compacta y los datos como pares icono/valor alineados.
+   ============================================================ */
+
+:root[data-ivw="on"] #page-calendar-view .maincalendar .heightcontainer,
+:root[data-ivw="on"] .maincalendar .eventlist {
+  max-width: 1040px !important;
+  margin-inline: auto !important;
+}
+/* El título de la vista deja de ir centrado */
+:root[data-ivw="on"] .maincalendar h2.current {
+  margin: 4px 0 6px !important;
+  font-family: var(--font-head) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  text-align: left !important;
+}
+
+:root[data-ivw="on"] .maincalendar .eventlist .event { margin: 0 0 14px !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .event > .card {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-1) !important;
+  overflow: hidden !important;
+}
+
+/* ---------- Cabecera del evento ---------- */
+:root[data-ivw="on"] .maincalendar .eventlist .card-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  padding: 13px 16px !important;
+  background: var(--surface) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: inset 3px 0 0 var(--blue-500) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-header.calendar_event_user { box-shadow: inset 3px 0 0 var(--ok) !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-header.calendar_event_site { box-shadow: inset 3px 0 0 #7a5cd6 !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-header.calendar_event_category { box-shadow: inset 3px 0 0 var(--warn) !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-header.calendar_event_group { box-shadow: inset 3px 0 0 #0f8ca8 !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-header > .d-inline-block { display: block !important; margin: 0 !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-header img.icon {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 2px 0 0 !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-header h3.name {
+  display: block !important;
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-header .commands {
+  order: 9 !important;
+  float: none !important;
+  margin-left: auto !important;
+}
+
+/* ---------- Cuerpo: pares icono / dato ---------- */
+:root[data-ivw="on"] .maincalendar .eventlist .card-body { padding: 6px 16px 14px !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row {
+  display: grid !important;
+  grid-template-columns: 20px minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 8px 0 !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row + .row { border-top: 1px solid var(--line) !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row > .col-1,
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row > .col-11 {
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+  padding: 0 !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row > .col-1 i {
+  margin: 2px 0 0 !important;
+  font-size: 13px !important;
+  color: var(--muted) !important;
+}
+/* La fecha (primera fila) manda: se lee como el dato principal */
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row:first-child > .col-11 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row:first-child > .col-11 a { color: var(--blue-700) !important; }
+
+/* Descripción del profesor: caja aparte, con su HTML domado */
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row > .description-content,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content {
+  max-width: 100% !important;
+  padding: 12px 14px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--canvas) !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: var(--ink-2) !important;
+  overflow-x: auto !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content > *:first-child { margin-top: 0 !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .description-content > *:last-child { margin-bottom: 0 !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table {
+  width: 100% !important;
+  margin: 10px 0 !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  overflow: hidden !important;
+  background: var(--surface) !important;
+  font-size: 12.5px !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table td,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table th {
+  padding: 8px 10px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  vertical-align: top !important;
+  text-align: left !important;
+  background: transparent !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table tr:first-child td,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table th {
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  font-weight: 700 !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table tr:first-child td *,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table th * {
+  color: var(--blue-800) !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table tr:last-child td { border-bottom: 0 !important; }
+/* Anchos en línea del HTML pegado por el profesor */
+:root[data-ivw="on"] .maincalendar .eventlist .description-content table,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content img { max-width: 100% !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .description-content p { max-width: 100% !important; }
+/* Texto pegado desde Word: márgenes y sangrías negativas que se salían de la caja */
+:root[data-ivw="on"] .maincalendar .eventlist .description-content p,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content div {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-indent: 0 !important;
+  text-align: left !important;
+  line-height: 1.6 !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .description-content ol,
+:root[data-ivw="on"] .maincalendar .eventlist .description-content ul { margin: 6px 0 !important; padding-left: 20px !important; }
+:root[data-ivw="on"] .maincalendar .eventlist .description-content li { margin: 2px 0 !important; }
+
+/* Curso al que pertenece: pastilla, como en el resto del wrap */
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row:last-child > .col-11 a {
+  display: inline-block !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  color: var(--blue-800) !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-body > .row:last-child > .col-11 a:hover { background: var(--blue-100) !important; }
+
+/* ---------- Pie: la acción del evento ---------- */
+:root[data-ivw="on"] .maincalendar .eventlist .card-footer {
+  padding: 12px 16px !important;
+  border-top: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-footer a.card-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .maincalendar .eventlist .card-footer a.card-link:hover { background: var(--blue-800) !important; }
+
+
+
+/* ============================================================
+   MODAL DE RESUMEN DE EVENTO
+   El que abre el calendario y el bloque de próximos eventos al pulsar un
+   evento (`.summary-modal-container`). Se acota con :has() al modal que lo
+   contiene: `.modal-header`/`.modal-body`/`.modal-footer` son de Bootstrap y
+   los usan todos los diálogos de Moodle.
+   ============================================================ */
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) {
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-3) !important;
+  overflow: hidden !important;
+}
+
+/* ---------- Cabecera ---------- */
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 16px 18px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--blue-50) !important;
+}
+/* Misma clave de color que la lista de eventos: una barra según el tipo. */
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header.calendar_event_course { box-shadow: inset 4px 0 0 var(--blue-700) !important; }
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header.calendar_event_user { box-shadow: inset 4px 0 0 var(--ok) !important; }
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header.calendar_event_site { box-shadow: inset 4px 0 0 #7a5cd6 !important; }
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header.calendar_event_category { box-shadow: inset 4px 0 0 var(--warn) !important; }
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header.calendar_event_group { box-shadow: inset 4px 0 0 #0f8ca8 !important; }
+
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-title {
+  margin: 0 !important;
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: var(--blue-900) !important;
+}
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header .close {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin: 0 0 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-size: 15px !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-header .close:hover {
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+}
+
+/* ---------- Cuerpo: una fila por dato, icono a la izquierda ---------- */
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-body {
+  padding: 16px 18px !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .summary-modal-container .container-fluid { padding: 0 !important; }
+:root[data-ivw="on"] .summary-modal-container .row {
+  display: flex !important;
+  align-items: flex-start !important;
+  margin: 0 0 12px !important;
+}
+:root[data-ivw="on"] .summary-modal-container .row:last-child { margin-bottom: 0 !important; }
+:root[data-ivw="on"] .summary-modal-container .row > .col-1 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 30px !important;
+  width: 30px !important;
+  max-width: 30px !important;
+  height: 30px !important;
+  margin-right: 10px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .summary-modal-container .row > .col-1 .icon {
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 13px !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .summary-modal-container .row > .col-11 {
+  flex: 1 1 auto !important;
+  max-width: none !important;
+  padding: 0 !important;
+  min-height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  color: var(--ink) !important;
+}
+/* La descripción es texto largo: se alinea arriba, no al centro. */
+:root[data-ivw="on"] .summary-modal-container .row > .description-content {
+  display: block !important;
+  padding-top: 5px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .summary-modal-container .description-content p:first-child { margin-top: 0 !important; }
+:root[data-ivw="on"] .summary-modal-container .description-content p:last-child { margin-bottom: 0 !important; }
+/* Moodle apaga la fecha con `dimmed`: aquí es el dato principal de la fila. */
+:root[data-ivw="on"] .summary-modal-container .dimmed_text,
+:root[data-ivw="on"] .summary-modal-container .dimmed_text a.dimmed {
+  color: var(--ink) !important;
+  opacity: 1 !important;
+}
+:root[data-ivw="on"] .summary-modal-container a {
+  color: var(--blue-700) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .summary-modal-container a:hover { text-decoration: underline !important; }
+:root[data-ivw="on"] .summary-modal-container .dimmed_text strong {
+  margin: 0 4px !important;
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+}
+
+/* ---------- Pie: el enlace a la actividad, como botón ---------- */
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  padding: 14px 18px !important;
+  border-top: 1px solid var(--line) !important;
+  background: var(--canvas) !important;
+}
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-footer a {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  margin: 0 !important;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: background .15s ease !important;
+}
+:root[data-ivw="on"] .modal-content:has(.summary-modal-container) .modal-footer a:hover { background: var(--blue-800) !important; }

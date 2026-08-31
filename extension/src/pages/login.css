@@ -63,7 +63,7 @@
 :root[data-ivw="on"] #page-login-index .login-container::before {
   content: "iVirtual";
   display: block;
-  font-family: var(--font-body); /* Inter, igual que el texto de abajo */
+  font-family: var(--font-body); /* Figtree, igual que el texto de abajo */
   font-weight: 600;
   font-style: normal;
   font-size: 40px;

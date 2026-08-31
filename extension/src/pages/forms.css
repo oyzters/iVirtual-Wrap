@@ -1,0 +1,1727 @@
+/* ============================================================
+   FORMULARIOS DE MOODLE (mform)
+   Sirve a "Editar perfil" (/user/edit.php), preferencias y cualquier
+   otra página con form.mform. Moodle los deja con etiquetas y campos de
+   anchos distintos, selects que cortan el texto y secciones con un
+   cuadrito de color; aquí se vuelven fichas con filas parejas.
+   ============================================================ */
+:root[data-ivw="on"] #page-user-edit #page,
+:root[data-ivw="on"] #page-user-editadvanced #page,
+:root[data-ivw="on"] #page-user-preferences #page { background: var(--canvas) !important; }
+
+:root[data-ivw="on"] #page-user-edit #region-main,
+:root[data-ivw="on"] #page-user-editadvanced #region-main,
+:root[data-ivw="on"] #page-user-preferences #region-main {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] #page-user-edit #region-main > [role="main"],
+:root[data-ivw="on"] #page-user-editadvanced #region-main > [role="main"] {
+  max-width: 980px !important;
+  margin-inline: auto !important;
+}
+/* Título de la página */
+:root[data-ivw="on"] #page-user-edit #region-main h1,
+:root[data-ivw="on"] #page-user-edit #region-main h2,
+:root[data-ivw="on"] #page-user-editadvanced #region-main h2 {
+  font-family: var(--font-head) !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.02em !important;
+  color: var(--ink) !important;
+  margin: 6px 0 16px !important;
+}
+
+/* ---------- "Expandir todo" ---------- */
+:root[data-ivw="on"] .collapsible-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin: 0 0 10px !important;
+}
+:root[data-ivw="on"] .collapsible-actions .collapseexpand,
+:root[data-ivw="on"] .collapsible-actions a {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--blue-700) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  box-shadow: var(--sh-1) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .collapsible-actions a:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* ---------- Secciones del formulario ---------- */
+:root[data-ivw="on"] .mform fieldset,
+:root[data-ivw="on"] form.mform > fieldset {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--sh-1) !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .mform fieldset > legend:not(.sr-only):not(.visually-hidden):not(.accesshide),
+:root[data-ivw="on"] .mform legend.ftoggler {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  float: none !important;
+}
+:root[data-ivw="on"] .mform legend a.fheader,
+:root[data-ivw="on"] .mform legend > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 14px 18px !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--line) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .mform legend a.fheader:hover { background: var(--blue-50) !important; }
+/* El cuadrito de color del toggle → chevron discreto */
+:root[data-ivw="on"] .mform legend .ftoggler .icon,
+:root[data-ivw="on"] .mform legend a .icon,
+:root[data-ivw="on"] .mform legend a i {
+  color: var(--blue-600) !important;
+  background: transparent !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+}
+:root[data-ivw="on"] .mform .fcontainer { padding: 6px 18px 16px !important; }
+:root[data-ivw="on"] .mform fieldset.collapsed .fcontainer { padding: 0 !important; }
+
+/* ---------- Filas etiqueta / campo ---------- */
+:root[data-ivw="on"] .mform .fitem,
+:root[data-ivw="on"] .mform .form-group.row {
+  display: grid !important;
+  grid-template-columns: 220px minmax(0, 1fr) !important;
+  gap: 8px 20px !important;
+  align-items: start !important;
+  margin: 0 !important;
+  padding: 12px 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .mform .fcontainer > .fitem:last-child,
+:root[data-ivw="on"] .mform .fcontainer > .form-group:last-child { border-bottom: 0 !important; }
+:root[data-ivw="on"] .mform .col-form-label,
+:root[data-ivw="on"] .mform .fitemtitle {
+  max-width: none !important;
+  width: auto !important;
+  padding: 8px 0 0 !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  flex: none !important;
+}
+:root[data-ivw="on"] .mform .felement,
+:root[data-ivw="on"] .mform [class*="col-md-9"] {
+  max-width: none !important;
+  width: auto !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+
+/* ---------- Campos ---------- */
+:root[data-ivw="on"] .mform input[type="text"],
+:root[data-ivw="on"] .mform input[type="email"],
+:root[data-ivw="on"] .mform input[type="url"],
+:root[data-ivw="on"] .mform input[type="password"],
+:root[data-ivw="on"] .mform input[type="number"],
+:root[data-ivw="on"] .mform select,
+:root[data-ivw="on"] .mform textarea {
+  width: 100% !important;
+  max-width: 520px !important;
+  min-height: 42px !important;
+  height: auto !important;      /* los <select> venían con alto fijo y cortaban el texto */
+  line-height: 1.4 !important;
+  padding: 9px 12px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 10px !important;
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform select { padding-right: 34px !important; }
+:root[data-ivw="on"] .mform input:focus,
+:root[data-ivw="on"] .mform select:focus,
+:root[data-ivw="on"] .mform textarea:focus {
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  outline: none !important;
+}
+:root[data-ivw="on"] .mform .form-check,
+:root[data-ivw="on"] .mform .felement.fcheckbox { padding-top: 8px !important; }
+
+/* Texto de ayuda bajo el campo */
+:root[data-ivw="on"] .mform .form-text,
+:root[data-ivw="on"] .mform .felement .text-muted {
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+  margin-top: 4px !important;
+}
+
+/* Icono de ayuda (?) → botón redondo discreto */
+:root[data-ivw="on"] .mform a.btn-link[data-toggle="popover"],
+:root[data-ivw="on"] .mform .form-group a[data-container="body"],
+:root[data-ivw="on"] .mform .helptooltip a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 22px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--line) !important;
+  vertical-align: middle !important;
+}
+:root[data-ivw="on"] .mform a.btn-link[data-toggle="popover"]:hover {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] .mform a.btn-link[data-toggle="popover"] .icon,
+:root[data-ivw="on"] .mform a.btn-link[data-toggle="popover"] i {
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: inherit !important;
+}
+
+/* Campo obligatorio: punto rojo, no un icono de alerta grande */
+:root[data-ivw="on"] .mform .text-danger .icon,
+:root[data-ivw="on"] .mform img[alt="Requerido"],
+:root[data-ivw="on"] .mform .req {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 999px !important;
+  background: var(--danger) !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  overflow: hidden !important;
+  vertical-align: middle !important;
+  margin: 0 0 0 6px !important;
+}
+:root[data-ivw="on"] .mform .form-control-feedback,
+:root[data-ivw="on"] .mform .invalid-feedback {
+  color: var(--danger) !important;
+  font-size: 12.5px !important;
+  margin-top: 4px !important;
+}
+/* Nota "Requerido" al pie */
+:root[data-ivw="on"] .mform .fdescription.required,
+:root[data-ivw="on"] form .fdescription.required {
+  font-size: 12.5px !important;
+  color: var(--muted) !important;
+  padding: 4px 2px !important;
+}
+
+/* ---------- Editor de texto ---------- */
+:root[data-ivw="on"] .mform .editor_tiny_wrapper,
+:root[data-ivw="on"] .mform .tox-tinymce,
+:root[data-ivw="on"] .mform .editor_atto {
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+/* El editor y el gestor de archivos usan todo el ancho de la fila */
+:root[data-ivw="on"] .mform .felement.feditor,
+:root[data-ivw="on"] .mform .felement.ffilemanager { max-width: none !important; }
+:root[data-ivw="on"] .mform .tox .tox-editor-header,
+:root[data-ivw="on"] .mform .editor_atto_toolbar {
+  background: var(--canvas) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Selector de archivos ---------- */
+:root[data-ivw="on"] .filemanager,
+:root[data-ivw="on"] .filepicker {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .filemanager .fp-toolbar { padding: 8px !important; }
+:root[data-ivw="on"] .filemanager .fp-btn-add a,
+:root[data-ivw="on"] .filemanager .fp-toolbar .btn {
+  border-radius: 999px !important;
+  border: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-message,
+:root[data-ivw="on"] .filemanager .fp-content .dndupload-target,
+:root[data-ivw="on"] .dndupload-target {
+  border: 2px dashed var(--blue-100) !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-50) !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .filemanager-container,
+:root[data-ivw="on"] .filemanager .fp-content { background: var(--surface) !important; }
+
+/* ---------- Botonera ---------- */
+:root[data-ivw="on"] .mform #fgroup_id_buttonar,
+:root[data-ivw="on"] .mform .form-group.fitem_actionbuttons {
+  display: flex !important;
+  grid-template-columns: none !important;
+  gap: 10px !important;
+  justify-content: flex-start !important;
+  border: 0 !important;
+  padding: 16px 0 4px !important;
+}
+:root[data-ivw="on"] .mform #fgroup_id_buttonar .col-form-label { display: none !important; }
+:root[data-ivw="on"] .mform input[type="submit"],
+:root[data-ivw="on"] .mform button[type="submit"],
+:root[data-ivw="on"] .mform .btn-primary {
+  background: var(--blue-700) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  padding: 11px 22px !important;
+  box-shadow: var(--sh-1) !important;
+}
+/* "Cancelar" es secundario, no una acción destructiva */
+:root[data-ivw="on"] .mform #id_cancel,
+:root[data-ivw="on"] .mform input[name="cancel"],
+:root[data-ivw="on"] .mform .btn-secondary,
+:root[data-ivw="on"] .mform .btn-danger[name="cancel"] {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--ink-2) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 11px 22px !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform #id_cancel:hover,
+:root[data-ivw="on"] .mform .btn-secondary:hover {
+  background: var(--canvas) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--ink) !important;
+}
+
+@media (max-width: 760px) {
+  :root[data-ivw="on"] .mform .fitem,
+  :root[data-ivw="on"] .mform .form-group.row {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 4px !important;
+  }
+  :root[data-ivw="on"] .mform .col-form-label { padding-top: 0 !important; }
+}
+
+/* ============================================================
+   CORRECCIONES SOBRE EL TEMA (va al final: gana la cascada)
+   Adaptable pinta las cabeceras de sección con un bloque de color y
+   tipografía enorme, y deja que el gestor de archivos y la botonera se
+   desborden. Estos selectores son deliberadamente amplios.
+   ============================================================ */
+
+/* --- Cabecera de sección: sin bloque de color, título de 16px --- */
+:root[data-ivw="on"] .mform legend,
+:root[data-ivw="on"] .mform legend > *,
+:root[data-ivw="on"] .mform legend a,
+:root[data-ivw="on"] .mform legend a > *,
+:root[data-ivw="on"] .mform .ftoggler,
+:root[data-ivw="on"] .mform .ftoggler > * {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+:root[data-ivw="on"] .mform legend a,
+:root[data-ivw="on"] .mform legend a:hover,
+:root[data-ivw="on"] .mform .ftoggler a {
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  color: var(--ink) !important;
+  text-transform: none !important;
+}
+:root[data-ivw="on"] .mform legend a .icon,
+:root[data-ivw="on"] .mform legend a i,
+:root[data-ivw="on"] .mform .ftoggler .icon {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  color: var(--blue-600) !important;
+}
+:root[data-ivw="on"] .mform legend a::before,
+:root[data-ivw="on"] .mform legend a::after { content: none !important; }
+:root[data-ivw="on"] .mform legend a:hover { background: var(--blue-50) !important; }
+
+/* --- Iconos de estado junto a la etiqueta --- */
+:root[data-ivw="on"] .mform .form-label-addon {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-left: 6px !important;
+}
+:root[data-ivw="on"] .mform .icon.text-danger,
+:root[data-ivw="on"] .mform .text-danger > .icon,
+:root[data-ivw="on"] .mform [title="Requerido"] .icon {
+  width: 7px !important;
+  height: 7px !important;
+  min-width: 7px !important;
+  border-radius: 999px !important;
+  background: var(--danger) !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .mform a[data-toggle="popover"] .icon,
+:root[data-ivw="on"] .mform a[role="button"] .icon.text-info,
+:root[data-ivw="on"] .mform .icon.text-info {
+  width: 14px !important;
+  height: 14px !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+
+/* --- Nada se sale del ancho de la ficha --- */
+:root[data-ivw="on"] .mform,
+:root[data-ivw="on"] .mform fieldset,
+:root[data-ivw="on"] .mform .fcontainer,
+:root[data-ivw="on"] .mform .felement,
+/* ojo: sin excluir los controles, este max-width:100% pisaba el de 520px
+   y los <select> salían mucho más anchos que los inputs */
+:root[data-ivw="on"] .mform .felement > *:not(input):not(select):not(textarea) {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+:root[data-ivw="on"] .mform .felement input,
+:root[data-ivw="on"] .mform .felement select,
+:root[data-ivw="on"] .mform .felement textarea {
+  max-width: min(520px, 100%) !important;
+  box-sizing: border-box !important;
+}
+:root[data-ivw="on"] .mform .felement input[type="submit"],
+:root[data-ivw="on"] .mform .felement input[type="button"],
+:root[data-ivw="on"] .mform .felement input[type="checkbox"],
+:root[data-ivw="on"] .mform .felement input[type="radio"] {
+  max-width: none !important;
+  width: auto !important;
+}
+:root[data-ivw="on"] .filemanager,
+:root[data-ivw="on"] .filepicker,
+:root[data-ivw="on"] .filemanager-container,
+:root[data-ivw="on"] .fp-content,
+:root[data-ivw="on"] .mform .editor_tiny_wrapper,
+:root[data-ivw="on"] .mform .tox-tinymce {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+:root[data-ivw="on"] .filemanager .fp-restrictions,
+:root[data-ivw="on"] .mform .felement .fp-restrictions {
+  display: block !important;
+  text-align: left !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+  padding: 0 0 6px !important;
+  white-space: normal !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-target,
+:root[data-ivw="on"] .filemanager .fp-content .dndupload-target {
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+/* La página no debe scrollear en horizontal por culpa del formulario */
+:root[data-ivw="on"] #page-user-edit #region-main,
+:root[data-ivw="on"] #page-user-editadvanced #region-main { overflow-x: clip !important; }
+
+/* --- Botonera: los botones se estaban encimando --- */
+:root[data-ivw="on"] .mform #fgroup_id_buttonar,
+:root[data-ivw="on"] .mform #fgroup_id_buttonar .felement,
+:root[data-ivw="on"] .mform .fitem_actionbuttons .felement {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+:root[data-ivw="on"] .mform #fgroup_id_buttonar input,
+:root[data-ivw="on"] .mform #fgroup_id_buttonar button,
+:root[data-ivw="on"] .mform .fitem_actionbuttons input,
+:root[data-ivw="on"] .mform .fitem_actionbuttons button {
+  position: static !important;
+  float: none !important;
+  margin: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: none !important;
+}
+
+/* --- El título de sección va dentro de un <h3> anidado en el enlace: sin
+   esto conserva los 28px del tema aunque el <a> ya esté a 16px --- */
+:root[data-ivw="on"] .mform legend h1,
+:root[data-ivw="on"] .mform legend h2,
+:root[data-ivw="on"] .mform legend h3,
+:root[data-ivw="on"] .mform legend h4,
+:root[data-ivw="on"] .mform legend h5,
+:root[data-ivw="on"] .mform .ftoggler h3,
+:root[data-ivw="on"] .mform .fheader h3,
+:root[data-ivw="on"] .mform legend a h3 {
+  display: inline !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* --- Grupos de botones: el tema los deja con float y márgenes negativos,
+   y "Cancelar" se montaba encima del botón principal --- */
+:root[data-ivw="on"] .mform .fgroup,
+:root[data-ivw="on"] .mform [data-fieldtype="group"] > .felement,
+:root[data-ivw="on"] .mform .felement.fgroup {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+:root[data-ivw="on"] .mform .fgroup > *,
+:root[data-ivw="on"] .mform .fgroup input,
+:root[data-ivw="on"] .mform .fgroup button {
+  float: none !important;
+  position: static !important;
+  margin: 0 !important;
+}
+
+/* --- Nada de scroll horizontal: si un widget trae ancho fijo (el gestor de
+   archivos lo hace), el desborde se queda dentro de su fila --- */
+:root[data-ivw="on"] .mform .felement { overflow-x: auto !important; }
+:root[data-ivw="on"] .mform .filemanager,
+:root[data-ivw="on"] .mform .filemanager-container,
+:root[data-ivw="on"] .mform .fp-navbar,
+:root[data-ivw="on"] .mform .fp-pathbar,
+:root[data-ivw="on"] .mform .filemanager > div {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Campo de intereses (autocompletar) con el mismo ancho que el resto */
+:root[data-ivw="on"] .mform .form-autocomplete-downarrow,
+:root[data-ivw="on"] .mform .form-autocomplete-selection { margin: 0 0 6px !important; }
+:root[data-ivw="on"] .mform input.form-autocomplete-input {
+  width: 100% !important;
+  max-width: min(520px, 100%) !important;
+}
+
+/* ============================================================
+   DIÁLOGOS DE MOODLE  —  selector de archivos y afines
+   OJO: el picker usa un layout con posiciones absolutas calculadas por su
+   propio JS. Aquí NO se toca su estructura (nada de flex, anchos ni
+   paddings en sus paneles): solo la caja del diálogo y colores.
+   ============================================================ */
+/* Caja del diálogo: SOLO el elemento raíz se recorta y recentra.
+   Aplicarlo también a .moodle-dialogue-content desplazaba el interior. */
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue {
+  max-width: min(940px, 96vw) !important;
+  left: 50% !important;
+  right: auto !important;
+  /* centrado sin transform: un transform en el diálogo cambiaría el
+     contenedor de referencia de cualquier position:fixed interno */
+  margin-left: max(-470px, -48vw) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: 0 30px 70px -24px rgba(8, 42, 102, .5) !important;
+  /* La caja se ajusta a su contenido: Moodle le fija un alto por JS que no
+     coincide con el del picker y el panel de repositorios se salía por
+     abajo. Con height:auto + overflow:hidden nada asoma fuera del borde
+     (el título ya no sobresale: va con margin 0 y position static). */
+  height: auto !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-wrap,
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-content {
+  height: auto !important;
+  max-height: none !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-wrap {
+  border: 0 !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  overflow: visible !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-bd,
+:root[data-ivw="on"] .moodle-dialogue-base .file-picker {
+  border-radius: 0 0 var(--r-lg) var(--r-lg) !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-lightbox,
+:root[data-ivw="on"] .yui3-widget-mask {
+  background: rgba(8, 42, 102, .35) !important;
+  opacity: 1 !important;
+}
+
+/* Cabecera */
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd,
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd.yui3-widget-hd {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  background: var(--surface) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
+  padding: 14px 16px !important;
+  margin: 0 !important;
+  height: auto !important;
+  min-height: 56px !important;
+  max-height: none !important;
+  line-height: 1.35 !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  /* NADA de position:relative aquí: el botón de cerrar de YUI es absolute y
+     se posiciona respecto del diálogo; reanclarlo lo dejaba fuera de sitio */
+  position: static !important;
+}
+/* El tema fija el tamaño del título con reglas más específicas; se cubre
+   el encabezado entero para no depender de qué etiqueta usa */
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd h1,
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd h2,
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd h3,
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd .yui3-widget-hd-title,
+:root[data-ivw="on"] body .moodle-dialogue-base .moodle-dialogue-hd > *:not(button):not(.yui3-widget-buttons) {
+  font-family: var(--font-head) !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  position: static !important;
+  top: auto !important;
+  transform: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  align-self: center !important;
+}
+
+:root[data-ivw="on"] .moodle-dialogue-base .closebutton {
+  border-radius: 999px !important;
+  border: 1px solid var(--line) !important;
+  background-color: var(--surface) !important;
+  background-size: 11px !important;
+  background-position: center !important;
+  opacity: .85 !important;
+  /* se mantiene clicable y por encima del título */
+  pointer-events: auto !important;
+  z-index: 6 !important;
+  cursor: pointer !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .yui3-widget-buttons {
+  pointer-events: auto !important;
+  z-index: 6 !important;
+}
+/* el título nunca intercepta el clic del botón */
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-hd h1,
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-hd h2 {
+  pointer-events: none !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .closebutton:hover {
+  background-color: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  opacity: 1 !important;
+}
+
+/* El cuerpo solo gana un tope de alto: si el diálogo es más alto que la
+   ventana, el contenido scrollea en vez de quedar cortado */
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue-bd {
+  /* sin scroll propio: quien se acota es el contenido (abajo), así el
+     diálogo entero cabe en pantalla sin barras internas */
+  max-height: none !important;
+  overflow: visible !important;
+  background: var(--surface) !important;
+  padding: 0 !important;
+}
+/* --- El diálogo del selector se comporta como una columna: cabecera fija
+   y cuerpo que ocupa el resto. Así el panel de repositorios (que es
+   absolute con top/bottom) mide exactamente lo que la caja, sin salirse
+   por abajo ni dejar barras de scroll. --- */
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.filepicker:not(.yui3-widget-hidden):not(.moodle-dialogue-hidden) {
+  height: min(720px, 92vh) !important;
+  max-height: 92vh !important;
+  /* centrado vertical propio: Moodle fija un `top` calculado para una caja
+     más alta y el diálogo se salía por abajo en ventanas cortas */
+  top: 50% !important;
+  bottom: auto !important;
+  margin-top: max(-360px, -46vh) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.filepicker:not(.yui3-widget-hidden) .moodle-dialogue-wrap,
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.filepicker:not(.yui3-widget-hidden) .moodle-dialogue-content {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.filepicker .moodle-dialogue-hd { flex: none !important; }
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.filepicker .moodle-dialogue-bd {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+:root[data-ivw="on"] .file-picker.fp-generallayout,
+:root[data-ivw="on"] .filepicker .fp-generallayout {
+  height: 100% !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  border: 0 !important;
+}
+/* Otros diálogos: alto según su contenido, con tope y scroll si hace falta */
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue { max-height: 92vh !important; }
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue:not(.filepicker) .moodle-dialogue-bd {
+  max-height: 78vh !important;
+  overflow: auto !important;
+}
+
+/* ---------- Selector de archivos: solo cosmética ---------- */
+:root[data-ivw="on"] .file-picker .fp-repo-area { background: var(--canvas) !important; }
+:root[data-ivw="on"] .file-picker .fp-repo {
+  border-radius: var(--r-sm) !important;
+  transition: background .12s ease !important;
+}
+:root[data-ivw="on"] .file-picker .fp-repo:hover { background: var(--blue-50) !important; }
+/* El repositorio activo venía en verde del tema */
+:root[data-ivw="on"] .file-picker .fp-repo.active,
+:root[data-ivw="on"] .file-picker li.fp-repo.active {
+  background: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .file-picker .fp-repo.active .fp-repo-name,
+:root[data-ivw="on"] .file-picker .fp-repo.active a,
+:root[data-ivw="on"] .file-picker .fp-repo.active span { color: #fff !important; }
+:root[data-ivw="on"] .file-picker .fp-repo-name,
+:root[data-ivw="on"] .file-picker .fp-repo a {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .file-picker label,
+:root[data-ivw="on"] .file-picker .fp-upload-form label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .file-picker input[type="text"],
+:root[data-ivw="on"] .file-picker input[type="url"],
+:root[data-ivw="on"] .file-picker select {
+  max-width: 100% !important;
+  min-height: 38px !important;
+  height: auto !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 10px !important;
+  padding: 7px 11px !important;
+  font-size: 14px !important;
+  background-color: var(--surface) !important;
+}
+:root[data-ivw="on"] .file-picker .fp-upload-btn,
+:root[data-ivw="on"] .file-picker .fp-select-confirm,
+:root[data-ivw="on"] .file-picker .fp-login-submit {
+  background: var(--blue-700) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  padding: 9px 18px !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .file-picker .fp-upload-btn:hover { filter: brightness(.93) !important; }
+
+/* Barra de vistas (rejilla / lista / árbol) */
+:root[data-ivw="on"] .file-picker .fp-viewbar a,
+:root[data-ivw="on"] .filemanager .fp-viewbar a {
+  margin-left: 4px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .file-picker .fp-viewbar a.checked,
+:root[data-ivw="on"] .filemanager .fp-viewbar a.checked {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+
+/* ---------- Campo de archivo nativo ----------
+   El <input type="file"> del navegador (botón gris + "Ningún archivo
+   seleccionado") se convierte en una zona con botón propio. */
+:root[data-ivw="on"] .file-picker input[type="file"],
+:root[data-ivw="on"] .mform input[type="file"] {
+  display: block !important;
+  width: 100% !important;
+  max-width: min(520px, 100%) !important;
+  box-sizing: border-box !important;
+  padding: 8px !important;
+  border: 1.5px dashed var(--blue-100) !important;
+  border-radius: 12px !important;
+  background: var(--blue-50) !important;
+  color: var(--muted) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  cursor: pointer !important;
+  transition: border-color .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"]:hover,
+:root[data-ivw="on"] .mform input[type="file"]:hover {
+  border-color: var(--blue-300) !important;
+  background: var(--blue-100) !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"]:focus-visible,
+:root[data-ivw="on"] .mform input[type="file"]:focus-visible {
+  outline: none !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"]::file-selector-button,
+:root[data-ivw="on"] .mform input[type="file"]::file-selector-button {
+  margin: 0 12px 0 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--blue-700) !important;
+  color: #fff !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  padding: 9px 16px !important;
+  cursor: pointer !important;
+  transition: filter .15s ease !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"]::file-selector-button:hover,
+:root[data-ivw="on"] .mform input[type="file"]::file-selector-button:hover {
+  filter: brightness(.93) !important;
+}
+
+/* ---------- El formulario del picker cabe sin scroll ----------
+   El panel derecho scrolleaba por unas decenas de píxeles; se compacta el
+   formulario para que entre completo. Si el panel muestra una lista larga
+   de archivos, su overflow:auto sigue funcionando como debe. */
+:root[data-ivw="on"] .file-picker .fp-upload-form,
+:root[data-ivw="on"] .file-picker .fp-login-form,
+:root[data-ivw="on"] .file-picker .fp-content > form { padding: 12px 16px 14px !important; }
+:root[data-ivw="on"] .file-picker .fp-upload-form td,
+:root[data-ivw="on"] .file-picker .fp-login-form td,
+:root[data-ivw="on"] .file-picker .fp-upload-form tr { padding: 3px 0 !important; }
+:root[data-ivw="on"] .file-picker label,
+:root[data-ivw="on"] .file-picker .fp-upload-form label {
+  font-size: 12.5px !important;
+  margin: 0 0 2px !important;
+  display: inline-block !important;
+}
+:root[data-ivw="on"] .file-picker input[type="text"],
+:root[data-ivw="on"] .file-picker input[type="url"],
+:root[data-ivw="on"] .file-picker select {
+  min-height: 36px !important;
+  padding: 6px 10px !important;
+  font-size: 13.5px !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"] {
+  padding: 6px !important;
+  font-size: 12.5px !important;
+}
+:root[data-ivw="on"] .file-picker input[type="file"]::file-selector-button {
+  padding: 7px 14px !important;
+  font-size: 13px !important;
+  margin-right: 10px !important;
+}
+:root[data-ivw="on"] .file-picker .fp-upload-btn,
+:root[data-ivw="on"] .file-picker .fp-login-submit {
+  padding: 8px 16px !important;
+  margin-top: 4px !important;
+}
+
+/* ---------- Estado cerrado ----------
+   YUI cierra sus diálogos añadiendo `yui3-widget-hidden` (que vale
+   display:none). Cualquier `display` del wrap debe ceder ante eso, o el
+   modal se queda en pantalla aunque ya esté cerrado. */
+:root[data-ivw="on"] .moodle-dialogue.yui3-widget-hidden,
+:root[data-ivw="on"] .moodle-dialogue.moodle-dialogue-hidden,
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.yui3-widget-hidden,
+:root[data-ivw="on"] .moodle-dialogue-base .moodle-dialogue.moodle-dialogue-hidden,
+:root[data-ivw="on"] .yui3-widget-mask.yui3-widget-hidden,
+:root[data-ivw="on"] .moodle-dialogue-lightbox.yui3-widget-hidden,
+:root[data-ivw="on"] [aria-hidden="true"] > .moodle-dialogue.yui3-widget-hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* --- Cabecera de sección: sin subrayados ni contornos en hover/focus.
+   El tema subraya el enlace y le pinta borde al icono, y salían esas
+   líneas negras alrededor del chevron. --- */
+:root[data-ivw="on"] .mform legend a,
+:root[data-ivw="on"] .mform legend a:hover,
+:root[data-ivw="on"] .mform legend a:focus,
+:root[data-ivw="on"] .mform legend a:active,
+:root[data-ivw="on"] .mform legend a:visited,
+:root[data-ivw="on"] .mform .ftoggler a,
+:root[data-ivw="on"] .mform .ftoggler a:hover,
+:root[data-ivw="on"] .mform .fheader,
+:root[data-ivw="on"] .mform .fheader:hover {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  outline: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform legend a *,
+:root[data-ivw="on"] .mform legend a:hover *,
+:root[data-ivw="on"] .mform .ftoggler a *,
+:root[data-ivw="on"] .mform legend a .icon,
+:root[data-ivw="on"] .mform legend a i,
+:root[data-ivw="on"] .mform legend a img {
+  text-decoration: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+/* Foco por teclado: anillo azul, no líneas sueltas */
+:root[data-ivw="on"] .mform legend a:focus-visible,
+:root[data-ivw="on"] .mform .ftoggler a:focus-visible {
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .28) !important;
+  border-radius: var(--r-sm) !important;
+}
+
+/* --- Alineación icono ↔ título en la cabecera de sección ---
+   El título va en un <h3> y el chevron en un <i>: como items flex, ambos
+   se centran en el eje; el <h3> deja de ser inline para que el centrado
+   use su caja completa y no su línea base. */
+:root[data-ivw="on"] .mform legend a,
+:root[data-ivw="on"] .mform .ftoggler a,
+:root[data-ivw="on"] .mform .fheader {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+:root[data-ivw="on"] .mform legend a > *,
+:root[data-ivw="on"] .mform .ftoggler a > * { align-self: center !important; }
+:root[data-ivw="on"] .mform legend a h1,
+:root[data-ivw="on"] .mform legend a h2,
+:root[data-ivw="on"] .mform legend a h3,
+:root[data-ivw="on"] .mform legend a h4,
+:root[data-ivw="on"] .mform legend a h5 {
+  display: block !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .mform legend a .icon,
+:root[data-ivw="on"] .mform legend a i,
+:root[data-ivw="on"] .mform .ftoggler .icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  width: 14px !important;
+  height: 16px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* --- Botonera: cualquier contenedor que agrupe botones se vuelve flex ---
+   El markup varía (a veces .fgroup, a veces un .d-flex suelto), así que se
+   detecta por contenido en lugar de por clase. */
+:root[data-ivw="on"] .mform .felement:has(> input[type="submit"]),
+:root[data-ivw="on"] .mform .felement:has(> button[type="submit"]),
+:root[data-ivw="on"] .mform .felement > div:has(> input[type="submit"]),
+:root[data-ivw="on"] .mform .felement > div:has(> button[type="submit"]),
+:root[data-ivw="on"] .mform [data-fieldtype="group"] > div,
+:root[data-ivw="on"] .mform [data-groupname="buttonar"] .felement,
+:root[data-ivw="on"] .mform [data-groupname="buttonar"] .felement > div {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+:root[data-ivw="on"] .mform input[type="submit"],
+:root[data-ivw="on"] .mform button[type="submit"],
+:root[data-ivw="on"] .mform input[name="cancel"],
+:root[data-ivw="on"] .mform #id_cancel,
+:root[data-ivw="on"] .mform [data-groupname="buttonar"] .btn {
+  margin: 0 !important;
+  float: none !important;
+  position: static !important;
+  flex: none !important;
+}
+
+/* Fila de botones creada por enhance.js (nodo propio: ninguna regla del
+   tema le aplica float ni márgenes negativos) */
+:root[data-ivw="on"] .ivw-btnrow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* ============================================================
+   CABECERA DE SECCIÓN Y BOTONERA  —  arreglos finales
+   ============================================================ */
+
+/* --- El acento decorativo del tema (una barrita bajo la primera letra del
+   <h3>) se colaba en el título de cada ficha --- */
+:root[data-ivw="on"] .mform legend h1::before, :root[data-ivw="on"] .mform legend h1::after,
+:root[data-ivw="on"] .mform legend h2::before, :root[data-ivw="on"] .mform legend h2::after,
+:root[data-ivw="on"] .mform legend h3::before, :root[data-ivw="on"] .mform legend h3::after,
+:root[data-ivw="on"] .mform legend h4::before, :root[data-ivw="on"] .mform legend h4::after,
+:root[data-ivw="on"] .mform legend h5::before, :root[data-ivw="on"] .mform legend h5::after,
+:root[data-ivw="on"] .mform legend span::before, :root[data-ivw="on"] .mform legend span::after,
+:root[data-ivw="on"] .mform .fheader h3::before, :root[data-ivw="on"] .mform .fheader h3::after,
+:root[data-ivw="on"] .ivw-fheader-title::before,
+:root[data-ivw="on"] .ivw-fheader-title::after { content: none !important; display: none !important; }
+
+/* --- Icono y título en la misma línea base --- */
+:root[data-ivw="on"] .mform legend a.fheader,
+:root[data-ivw="on"] .mform legend > a {
+  align-items: center !important;
+  line-height: 1.3 !important;
+}
+:root[data-ivw="on"] .mform .collapsible-icon-container,
+:root[data-ivw="on"] .mform legend a > span:empty,
+:root[data-ivw="on"] .mform legend a > span:not(.ivw-fheader-title) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .ivw-fheader-title {
+  display: block !important;
+  flex: 1 1 auto !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  position: static !important;
+}
+
+/* --- Los bordes de fila son solo para los campos de dentro de una ficha:
+   fuera de .fcontainer dejaban líneas sueltas cruzando la botonera --- */
+:root[data-ivw="on"] .mform > .form-group.row,
+:root[data-ivw="on"] .mform > .fitem,
+:root[data-ivw="on"] .mform > div > .form-group.row,
+:root[data-ivw="on"] .mform [id*="buttonar"],
+:root[data-ivw="on"] .mform .fitem_actionbuttons,
+:root[data-ivw="on"] .mform .femptylabel,
+:root[data-ivw="on"] .mform .singlebutton,
+:root[data-ivw="on"] .ivw-btnrow,
+:root[data-ivw="on"] .ivw-btncell {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* --- Fila de botones: una sola línea, sin float ni márgenes del tema --- */
+:root[data-ivw="on"] .ivw-btnrow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 16px 0 4px !important;
+  float: none !important;
+  overflow: visible !important;
+}
+:root[data-ivw="on"] .ivw-btncell {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  position: static !important;
+}
+:root[data-ivw="on"] .ivw-btncell form { display: contents !important; }
+:root[data-ivw="on"] .ivw-btnrow input,
+:root[data-ivw="on"] .ivw-btnrow button {
+  margin: 0 !important;
+  float: none !important;
+  position: static !important;
+  flex: none !important;
+}
+/* La botonera no debe recortarse: .felement lleva overflow-x auto para el
+   gestor de archivos y ahí sobraba */
+:root[data-ivw="on"] .mform .felement:has(.ivw-btnrow),
+:root[data-ivw="on"] .mform [id*="buttonar"] .felement { overflow: visible !important; }
+
+/* --- La fila de la botonera ocupa el ancho completo de la ficha: sin esto
+   los botones arrancan en la columna del campo y se ven centrados --- */
+:root[data-ivw="on"] .mform .form-group.row[id*="buttonar"],
+:root[data-ivw="on"] .mform .fitem[id*="buttonar"],
+:root[data-ivw="on"] .mform .femptylabel:has(.ivw-btnrow),
+:root[data-ivw="on"] .mform .form-group.row:has(.ivw-btnrow) {
+  display: flex !important;
+  grid-template-columns: none !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] .mform .form-group.row[id*="buttonar"] > .col-form-label,
+:root[data-ivw="on"] .mform .form-group.row[id*="buttonar"] > .fitemtitle,
+:root[data-ivw="on"] .mform .form-group.row:has(.ivw-btnrow) > .col-form-label:empty,
+:root[data-ivw="on"] .mform .form-group.row:has(.ivw-btnrow) > .fitemtitle:empty { display: none !important; }
+:root[data-ivw="on"] .mform .form-group.row[id*="buttonar"] > .felement,
+:root[data-ivw="on"] .mform .form-group.row:has(.ivw-btnrow) > .felement,
+:root[data-ivw="on"] .mform .felement:has(> .ivw-btnrow) {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  justify-content: flex-start !important;
+}
+:root[data-ivw="on"] .ivw-btnrow { justify-content: flex-start !important; }
+
+/* --- "Cancelar" siempre secundario: como <button type="submit"> se comía el
+   estilo del botón principal --- */
+:root[data-ivw="on"] .mform button.btn-secondary,
+:root[data-ivw="on"] .mform input.btn-secondary,
+:root[data-ivw="on"] .mform .btn.btn-secondary,
+:root[data-ivw="on"] .mform [name="cancel"],
+:root[data-ivw="on"] .ivw-btnrow .btn-secondary {
+  background: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  color: var(--ink-2) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform button.btn-secondary:hover,
+:root[data-ivw="on"] .mform input.btn-secondary:hover,
+:root[data-ivw="on"] .mform [name="cancel"]:hover {
+  background: var(--canvas) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--ink) !important;
+}
+
+/* Con el wrap apagado la fila inyectada no debe alterar el layout original */
+:root[data-ivw="off"] .ivw-btnrow { display: contents !important; }
+
+/* --- El tema mueve "Cancelar" con márgenes negativos / posición relativa y
+   se montaba sobre el botón principal aunque la fila ya fuera flex --- */
+:root[data-ivw="on"] .ivw-btnrow > *,
+:root[data-ivw="on"] .ivw-btnrow input,
+:root[data-ivw="on"] .ivw-btnrow button,
+:root[data-ivw="on"] .ivw-btnrow .btn,
+:root[data-ivw="on"] .ivw-btnrow .singlebutton,
+:root[data-ivw="on"] .ivw-btnrow .felement {
+  margin: 0 !important;
+  inset: auto !important;
+  position: static !important;
+  float: none !important;
+  transform: none !important;
+  vertical-align: middle !important;
+}
+
+/* --- Cabecera reconstruida por enhance.js: chevron + título propios --- */
+:root[data-ivw="on"] .ivw-fheader-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  color: var(--blue-600) !important;
+  transition: transform .15s ease !important;
+}
+:root[data-ivw="on"] .ivw-fheader-icon svg { width: 16px !important; height: 16px !important; display: block !important; }
+:root[data-ivw="on"] a[aria-expanded="false"] .ivw-fheader-icon,
+:root[data-ivw="on"] a.collapsed .ivw-fheader-icon { transform: rotate(-90deg) !important; }
+:root[data-ivw="on"] .ivw-legend-rest { display: none !important; }
+
+/* --- Refuerzo sin JS: cualquier fila del formulario que lleve botones de
+   acción deja de ser rejilla (los botones caían en columnas distintas y el
+   principal, más ancho que su columna, se montaba sobre "Cancelar") --- */
+:root[data-ivw="on"] .mform .form-group.row:has(> input[type="submit"]),
+:root[data-ivw="on"] .mform .form-group.row:has(> button[type="submit"]),
+:root[data-ivw="on"] .mform .form-group.row:has(input[type="submit"]),
+:root[data-ivw="on"] .mform .fitem:has(input[type="submit"]),
+:root[data-ivw="on"] .mform .form-group.row[data-groupname="buttonar"],
+:root[data-ivw="on"] .mform .fitem[data-groupname="buttonar"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  grid-template-columns: none !important;
+  border: 0 !important;
+  padding: 16px 0 4px !important;
+}
+:root[data-ivw="on"] .mform .form-group.row:has(input[type="submit"]) > .col-form-label:empty,
+:root[data-ivw="on"] .mform .fitem:has(input[type="submit"]) > .col-form-label:empty,
+:root[data-ivw="on"] .mform .form-group.row[data-groupname="buttonar"] > .col-form-label {
+  display: none !important;
+}
+:root[data-ivw="on"] .mform .form-group.row:has(input[type="submit"]) > .felement,
+:root[data-ivw="on"] .mform .fitem:has(input[type="submit"]) > .felement {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: auto !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+/* ============================================================
+   AIRE DENTRO DE LA FICHA  —  el tema deja .fcontainer sin padding y las
+   filas con los márgenes negativos de .row de Bootstrap, así que etiquetas
+   y campos quedaban pegados al borde de la tarjeta.
+   Los selectores llevan #region-main para ganarle al tema.
+   ============================================================ */
+/* El aire lateral lo pone cada fila, no el contenedor: .fcontainer cambia de
+   clases al plegarse (collapse / collapsing / show) y el relleno se perdía en
+   las fichas que el usuario abre a mano, dejando las etiquetas pegadas al
+   borde. Con el relleno en la fila, además, la línea divisoria cruza la ficha
+   de lado a lado. */
+:root[data-ivw="on"] #region-main .mform .fcontainer,
+:root[data-ivw="on"] #region-main .mform fieldset > .fcontainer,
+:root[data-ivw="on"] #page .mform .fcontainer { padding: 10px 0 20px !important; }
+:root[data-ivw="on"] #region-main .mform fieldset.collapsed .fcontainer,
+:root[data-ivw="on"] #region-main .mform .fcontainer.collapse:not(.show):not(.collapsing) { padding: 0 !important; }
+
+:root[data-ivw="on"] #region-main .mform .fitem,
+:root[data-ivw="on"] #region-main .mform .form-group.row,
+:root[data-ivw="on"] #page .mform .form-group.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+/* Filas de una ficha: etiqueta y campo separados del borde */
+:root[data-ivw="on"] .mform .fcontainer > .fitem,
+:root[data-ivw="on"] .mform .fcontainer > .form-group.row,
+:root[data-ivw="on"] #region-main .mform .fcontainer > .fitem,
+:root[data-ivw="on"] #region-main .mform .fcontainer > .form-group.row,
+:root[data-ivw="on"] #page .mform .fcontainer > .form-group.row {
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+@media (max-width: 760px) {
+  :root[data-ivw="on"] .mform .fcontainer > .fitem,
+  :root[data-ivw="on"] .mform .fcontainer > .form-group.row,
+  :root[data-ivw="on"] #region-main .mform .fcontainer > .fitem,
+  :root[data-ivw="on"] #region-main .mform .fcontainer > .form-group.row {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* La cabecera se alinea con el contenido de la ficha */
+:root[data-ivw="on"] #region-main .mform legend a.fheader,
+:root[data-ivw="on"] #region-main .mform legend > a,
+:root[data-ivw="on"] #region-main .mform legend .ivw-fheader { padding: 15px 28px !important; }
+
+/* Chevron: el tema le mete margin-top y lo bajaba respecto al título */
+:root[data-ivw="on"] .ivw-fheader-icon,
+:root[data-ivw="on"] .ivw-fheader-icon svg,
+:root[data-ivw="on"] #region-main .mform .fheader svg,
+:root[data-ivw="on"] #page .mform .ivw-fheader-icon svg {
+  align-self: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  position: static !important;
+  top: auto !important;
+  transform-origin: 50% 50% !important;
+}
+:root[data-ivw="on"] .ivw-fheader-title {
+  align-self: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ============================================================
+   CABECERA DE FICHA (markup real de Moodle 4.x + Adaptable)
+   El <legend> es la fila: chevron propio + <h3> del tema. El <a> del toggle
+   queda como capa de clic (stretched-link) por encima, sin contenido visible.
+   ============================================================ */
+:root[data-ivw="on"] #region-main .mform .ivw-fhead,
+:root[data-ivw="on"] #page .mform .ivw-fhead {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  position: relative !important;
+  width: 100% !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 15px 28px !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .mform .ivw-fhead:hover { background: var(--blue-50) !important; }
+
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  flex: none !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  color: var(--blue-600) !important;
+  transition: transform .15s ease !important;
+}
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  margin: 0 !important;
+}
+/* Chevron según el estado real del toggle */
+:root[data-ivw="on"] .ivw-fhead:has(a[aria-expanded="false"]) .ivw-fheader-icon,
+:root[data-ivw="on"] .ivw-fhead:has(a.collapsed) .ivw-fheader-icon {
+  transform: rotate(-90deg) !important;
+}
+
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-title {
+  display: block !important;
+  flex: 1 1 auto !important;
+  align-self: center !important;
+  font-family: var(--font-head) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.01em !important;
+  color: var(--ink) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  position: static !important;
+  text-transform: none !important;
+}
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-title::before,
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-title::after { content: none !important; }
+
+/* Capa de clic: cubre la cabecera entera, invisible */
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-hit {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  z-index: 1 !important;
+}
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-hit::before,
+:root[data-ivw="on"] .ivw-fhead .ivw-fheader-hit::after { content: none !important; }
+
+
+/* --- Blindaje: lo que solo es para lectores de pantalla se queda oculto ---
+   Varias reglas de arriba son deliberadamente amplias (`legend`, `.mform
+   legend > *`) y llegaban a desocultar el <legend class="sr-only"> y el
+   <span class="sr-only"> del enlace de colapso: el título salía tres veces
+   (legend + span del enlace + <h3> del tema). */
+:root[data-ivw="on"] .mform .sr-only:not(:focus):not(:active),
+:root[data-ivw="on"] .mform .visually-hidden:not(:focus):not(:active),
+:root[data-ivw="on"] .mform .accesshide:not(:focus):not(:active),
+:root[data-ivw="on"] .mform legend.sr-only,
+:root[data-ivw="on"] .mform legend.visually-hidden,
+:root[data-ivw="on"] .mform legend.accesshide {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  float: none !important;
+}
+
+/* --- Envoltorios entre el fieldset y la cabecera ---
+   Moodle 4.x mete un `div.d-flex.mb-2` (y dentro el `.ftoggler`) entre el
+   fieldset y el título: sus márgenes despegaban la cabecera del borde de la
+   ficha y le dejaban una franja blanca debajo. */
+:root[data-ivw="on"] .mform fieldset > .ivw-fhead-wrap {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .mform .ivw-fhead-wrap.ftoggler,
+:root[data-ivw="on"] .mform .ivw-fhead-wrap .ftoggler { margin: 0 !important; }
+
+/* Los dos iconos del tema (expandido/colapsado) ya no pintan: el chevron es
+   nuestro. Sin esto reaparecían al re-renderizar Moodle la cabecera. */
+:root[data-ivw="on"] .ivw-fhead .expanded-icon,
+:root[data-ivw="on"] .ivw-fhead .collapsed-icon { display: none !important; }
+
+/* ============================================================
+   ENTREGA DE ARCHIVOS  (mod/assign · gestor de archivos)
+   El gestor llega como tres cajas sueltas —restricciones, barra de botones
+   y zona de arrastre— con botones redondos sin etiqueta y un área de soltar
+   que ocupa media pantalla. Aquí es una sola caja: ayuda arriba, barra de
+   acciones con nombre y zona de subida contenida.
+   ============================================================ */
+/* La etiqueta del campo va encima: el gestor necesita todo el ancho */
+:root[data-ivw="on"] body[id^="page-mod-assign"] #fitem_id_files_filemanager {
+  display: block !important;
+  margin: 0 !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #fitem_id_files_filemanager > .col-form-label {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 0 8px !important;
+  text-align: left !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] #fitem_id_files_filemanager > .felement {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+/* La caja del gestor */
+:root[data-ivw="on"] .filemanager {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-lg) !important;
+  background: var(--surface) !important;
+  overflow: hidden !important;
+}
+/* La nota de límites (tamaño y número de archivos) cierra la caja: arriba
+   se montaba sobre el borde. */
+:root[data-ivw="on"] .filemanager .fp-navbar { order: 1 !important; }
+:root[data-ivw="on"] .filemanager .filemanager-container { order: 2 !important; }
+:root[data-ivw="on"] .filemanager .fp-restrictions {
+  order: 3 !important;
+  margin: 0 !important;
+  padding: 0 16px 12px !important;
+  font-size: 12px !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-navbar {
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filemanager .filemanager-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .filemanager .fp-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  margin-right: auto !important;
+}
+/* Botones con nombre: el tema los deja como iconos sueltos sin etiqueta */
+:root[data-ivw="on"] .filemanager .fp-toolbar > div > a.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  height: 38px !important;
+  width: auto !important;
+  padding: 0 14px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--blue-700) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filemanager .fp-toolbar > div > a.btn:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-toolbar > .fp-btn-add > a.btn {
+  background: var(--blue-700) !important;
+  border-color: var(--blue-700) !important;
+  color: #fff !important;
+}
+:root[data-ivw="on"] .filemanager .fp-toolbar > .fp-btn-add > a.btn:hover {
+  background: var(--blue-800) !important;
+  border-color: var(--blue-800) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-btn-add a.btn::after { content: "Subir archivo"; }
+:root[data-ivw="on"] .filemanager .fp-btn-mkdir a.btn::after { content: "Nueva carpeta"; }
+:root[data-ivw="on"] .filemanager .fp-btn-download a.btn::after { content: "Descargar"; }
+:root[data-ivw="on"] .filemanager .fp-btn-delete a.btn::after { content: "Eliminar"; }
+/* Selector de vista: segmentado a la derecha */
+:root[data-ivw="on"] .filemanager .fp-viewbar {
+  float: none !important;
+  display: inline-flex !important;
+  gap: 2px !important;
+  padding: 3px !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-50) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-viewbar a.btn {
+  width: 34px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: var(--r-sm) !important;
+  background: transparent !important;
+  color: var(--ink-2) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filemanager .fp-viewbar a.btn.checked,
+:root[data-ivw="on"] .filemanager .fp-viewbar a.btn:hover {
+  background: var(--surface) !important;
+  color: var(--blue-700) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-pathbar {
+  margin: 0 !important;
+  padding: 8px 16px 0 !important;
+  font-size: 12.5px !important;
+}
+:root[data-ivw="on"] .filemanager .fp-pathbar .fp-path-folder-name { color: var(--blue-700) !important; }
+
+/* Zona de subida: contenida y con instrucciones claras */
+:root[data-ivw="on"] .filemanager .filemanager-container {
+  margin: 12px !important;
+  border: 0 !important;
+  border-radius: var(--r) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .filemanager .fm-empty-container,
+:root[data-ivw="on"] .filemanager .dndupload-target {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 148px !important;
+  padding: 18px !important;
+  border: 2px dashed var(--blue-100) !important;
+  border-radius: var(--r) !important;
+  background: var(--blue-50) !important;
+  color: var(--ink-2) !important;
+  cursor: pointer !important;
+  transition: border-color .15s ease, background .15s ease !important;
+}
+:root[data-ivw="on"] .filemanager .fm-empty-container:hover {
+  border-color: var(--blue-300) !important;
+  background: #e6f0fb !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-message {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-message::after {
+  content: "o pulsa aquí para elegirlo desde tu equipo";
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+:root[data-ivw="on"] .filemanager .dndupload-arrow i,
+:root[data-ivw="on"] .filemanager .dndupload-arrow { color: var(--blue-300) !important; }
+
+/* Tipos aceptados: fichas, no una lista suelta */
+:root[data-ivw="on"] body[id^="page-mod-assign"] .felement > p {
+  margin: 14px 0 6px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .form-filetypes-descriptions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+:root[data-ivw="on"] .form-filetypes-descriptions > * {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 5px 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  font-size: 12.5px !important;
+  color: var(--ink-2) !important;
+}
+
+/* ============================================================
+   AUTOCOMPLETAR DE MOODLE  (el `<select>` que el JS convierte en fichas)
+   Aparece en competencias, matriculación, filtros de informes… El tema lo
+   pinta con su verde de marca: la ficha del valor elegido queda en verde
+   sobre verde y el campo, sin relación con el resto de controles.
+   ============================================================ */
+:root[data-ivw="on"] .form-autocomplete-selection {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+:root[data-ivw="on"] .form-autocomplete-selection [role="option"],
+:root[data-ivw="on"] .form-autocomplete-selection .badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  height: 28px !important;
+  padding: 0 10px !important;
+  border: 1px solid var(--blue-100) !important;
+  border-radius: 999px !important;
+  background: var(--blue-50) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--blue-800) !important;
+  cursor: pointer !important;
+}
+:root[data-ivw="on"] .form-autocomplete-selection [role="option"]:hover,
+:root[data-ivw="on"] .form-autocomplete-selection .badge:hover {
+  background: var(--blue-100) !important;
+  border-color: var(--blue-300) !important;
+}
+:root[data-ivw="on"] .form-autocomplete-selection [role="option"] .fa,
+:root[data-ivw="on"] .form-autocomplete-selection [role="option"] i { font-size: 10px !important; opacity: .7 !important; }
+
+:root[data-ivw="on"] input.form-autocomplete-input {
+  height: 40px !important;
+  width: 100% !important;
+  max-width: min(420px, 100%) !important;
+  padding: 0 34px 0 12px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  background: var(--surface) !important;
+  font-family: var(--font-body) !important;
+  font-size: 13.5px !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] input.form-autocomplete-input:focus {
+  outline: 0 !important;
+  border-color: var(--blue-500) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+}
+:root[data-ivw="on"] .form-autocomplete-downarrow {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+}
+:root[data-ivw="on"] .form-autocomplete-suggestions {
+  margin: 4px 0 0 !important;
+  padding: 6px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  box-shadow: var(--sh-3) !important;
+  max-height: 320px !important;
+  overflow-y: auto !important;
+}
+:root[data-ivw="on"] .form-autocomplete-suggestions li,
+:root[data-ivw="on"] .form-autocomplete-suggestions [role="option"] {
+  padding: 8px 12px !important;
+  border-radius: var(--r-sm) !important;
+  font-size: 13.5px !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"] .form-autocomplete-suggestions li:hover,
+:root[data-ivw="on"] .form-autocomplete-suggestions [role="option"]:hover,
+:root[data-ivw="on"] .form-autocomplete-suggestions [aria-selected="true"] {
+  background: var(--blue-50) !important;
+  color: var(--blue-700) !important;
+}

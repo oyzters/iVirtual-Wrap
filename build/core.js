@@ -10,7 +10,7 @@
   var KEY = "ivwWrapEnabled";
   var CSS = __IVW_CSS__;
   var FONTS =
-    "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap";
+    "https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap";
 
   function injectFonts() {
     if (document.getElementById("ivw-fonts")) return;
@@ -31,6 +31,12 @@
   function pageKey() {
     var h = location.hostname, p = location.pathname;
     if (h.indexOf("apps9") !== -1 && /CambioPass/i.test(p)) return "recupera";
+    if (h.indexOf("apps9") !== -1 && /MesaAyuda/i.test(p)) return "mesaayuda";
+    if (h.indexOf("apps9") !== -1 && /PortalSistemas\/PortalSistemas/i.test(p)) return "portalsistemas";
+    if (h.indexOf("apps9") !== -1 && /^\/PortalSistemas(\/(Inicio.*)?)?$/i.test(p)) return "portalinicio";
+    if (h.indexOf("apps9") !== -1 && /^\/eres/i.test(p)) return "eres";
+    if (h.indexOf("apps11") !== -1 && /CalendarioAnual/i.test(p)) return "calendario-anual";
+    if (h.indexOf("apps11") !== -1 && /CalendarioEscolar/i.test(p)) return "calendario-escolar";
     return "";
   }
 
@@ -40,6 +46,10 @@
     ROOT.setAttribute(ATTR, on ? "on" : "off");
     updateBadge();
     store(on);
+    if (window.ivwEnhance) {
+      if (on) window.ivwEnhance.rerun();
+      else window.ivwEnhance.clearInline();
+    }
   }
 
   function makeBadge() {
@@ -59,76 +69,23 @@
     b.setAttribute("data-on", on ? "1" : "0");
   }
 
-  // Reestructura del header de Moodle (idéntica a la extensión)
-  function moodleChrome() {
-    if (location.hostname.indexOf("ivirtual") === -1) return;
-
-    var nodes = document.querySelectorAll("a,button,span,li,div");
-    for (var k = 0; k < nodes.length; k++) {
-      var el = nodes[k];
-      var txt = (el.textContent || "").trim();
-      if (el.children.length <= 1 && /^Vista\s+(est[aá]ndar|compacta)$/i.test(txt)) {
-        (el.closest("li,.nav-item,a,button,div") || el).setAttribute("data-ivw-hide", "1");
-      }
-    }
-
-    var userNav = document.querySelector("#adaptable-user-nav");
-    var topbarInner = userNav ? userNav.parentElement : null;
-    if (topbarInner) {
-      var search = document.querySelector(".headersearch");
-      if (search && !search.dataset.ivwMoved) {
-        search.dataset.ivwMoved = "1";
-        search.classList.add("ivw-search");
-        userNav.insertBefore(search, userNav.firstChild);
-      }
-
-      var mainMenu = null;
-      document.querySelectorAll("ul.navbar-nav").forEach(function (ul) {
-        if (ul.id === "adaptable-user-nav" || ul.dataset.ivwMoved) return;
-        if (/Inicio|Tablero|Cursos|Eventos/i.test(ul.textContent || "")) mainMenu = mainMenu || ul;
-      });
-      if (mainMenu && !mainMenu.dataset.ivwMoved) {
-        var oldBar = mainMenu.closest("nav,.navbar");
-        mainMenu.dataset.ivwMoved = "1";
-        mainMenu.classList.add("ivw-topnav");
-        topbarInner.insertBefore(mainMenu, userNav);
-        if (oldBar) {
-          oldBar.setAttribute("data-ivw-hide", "1");
-          var barWrap = oldBar.parentElement;
-          if (barWrap && barWrap !== topbarInner && !barWrap.querySelector("#adaptable-user-nav")) {
-            barWrap.setAttribute("data-ivw-hide", "1");
-          }
-        }
-      }
-    }
-
-    document.querySelectorAll("i.fa-magnifying-glass").forEach(function (ic) {
-      if (ic.closest(".ivw-search")) return;
-      var w = ic.closest("button,a,li");
-      if (w) w.setAttribute("data-ivw-hide", "1");
-    });
-
-    document.querySelectorAll(".navbarsearchsocial, [data-action='opensearch']").forEach(function (el) {
-      el.remove();
-    });
-  }
-
-  function runDomFixes() {
-    if (!isOn()) return;
-    document.querySelectorAll('img[src^="http://ivirtual.itson.edu.mx"]').forEach(function (el) {
-      el.src = el.src.replace(/^http:/, "https:");
-    });
-  }
+  // Reestructura de DOM compartida con la extensión (extension/src/enhance.js).
+  // build.js la inserta aquí íntegra y expone window.ivwEnhance.
+__IVW_ENHANCE__
 
   function onReady() {
     makeBadge();
-    runDomFixes();
-    moodleChrome();
-    setTimeout(moodleChrome, 600);
+    if (!window.ivwEnhance) return;
+    window.ivwEnhance.run();
+    setTimeout(function () { window.ivwEnhance.run(); }, 600);
   }
 
   function boot(defaultOn) {
     ROOT.setAttribute("data-ivw-page", pageKey());
+    // El calendario escolar tiene una vista reducida (/Calendario/Prototipo) que la
+    // portada del Portal de Sistemas embebe en un <iframe>: mismo markup, pero sin
+    // sitio para el layout a pantalla completa.
+    if (/\/Prototipo/i.test(location.pathname)) ROOT.setAttribute("data-ivw-view", "prototipo");
     injectFonts();
     injectStyle();
     var stored = null;
