@@ -1915,3 +1915,62 @@
   :root[data-ivw="on"] .userlist .initialbar,
   :root[data-ivw="on"] .userlist .initialbargroups { justify-content: flex-start !important; }
 }
+
+/* ============================================================
+   EDITAR ENVÍO  (#page-mod-assign-editsubmission)
+   Una sola columna, ancha: el enunciado arriba y el envío debajo. Se probó a
+   dos columnas y el salto de la lectura al panel lateral costaba más de lo que
+   ahorraba, sobre todo con el editor de texto en línea dentro de la tarjeta.
+   ============================================================ */
+
+/* ---------- La tarjeta de envío, en cualquier ancho ---------- */
+/* Un marco basta: la tarjeta del formulario ya encuadra, y el gestor dentro
+   dibujaba un segundo borde alrededor de la zona de arrastre */
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager .fp-navbar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager .filemanager-container {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+/* Límites y tipos aceptados comparten pie: mismo tamaño y mismo tono */
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager .fp-restrictions {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* La zona de arrastre no necesita 150 px de alto para dos líneas de texto */
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager .fp-content,
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .filemanager .filemanager-container {
+  min-height: 132px !important;
+}
+/* Límites y tipos aceptados: una nota compacta al pie de la tarjeta, en vez
+   de dos bloques con rótulos distintos separados por el borde */
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .felement > p {
+  margin: 14px 0 8px !important;
+}
+:root[data-ivw="on"] body#page-mod-assign-editsubmission .form-filetypes-descriptions > * {
+  background: var(--surface) !important;
+}
+
+/* Rótulos del envío: "Envíos de archivo" y "Tipos de archivos aceptados" son
+   apoyo, no titulares. En pequeño y en mayúsculas dejan el protagonismo a la
+   zona de subida. */
+:root[data-ivw="on"] body[id^="page-mod-assign"] #fitem_id_files_filemanager > .col-form-label p,
+:root[data-ivw="on"] body[id^="page-mod-assign"] .mform p:has(+ .form-filetypes-descriptions) {
+  margin: 0 0 8px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] body[id^="page-mod-assign"] .form-filetypes-descriptions > * {
+  padding: 4px 10px !important;
+  font-size: 12px !important;
+}

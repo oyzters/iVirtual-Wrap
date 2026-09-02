@@ -275,7 +275,6 @@
   background: var(--surface) !important;
   color: var(--blue-700) !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message,
 :root[data-ivw="on"] .filemanager .fp-content .dndupload-target,
 :root[data-ivw="on"] .dndupload-target {
   border: 2px dashed var(--blue-100) !important;
@@ -1079,6 +1078,21 @@
   box-shadow: none !important;
 }
 
+/* --- Orden de la botonera: Cancelar a la izquierda, la acción a la derecha ---
+   Moodle saca primero el submit y luego Cancelar; en el wrap la acción
+   principal cierra la fila, que es donde se busca. enhance.js marca cada celda
+   con data-ivw-btn; el :has cubre las botoneras que no pasan por ahí. */
+:root[data-ivw="on"] .ivw-btnrow > [data-ivw-btn="cancel"],
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > *:has(input[name="cancel"]),
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > input[name="cancel"],
+:root[data-ivw="on"] .mform .fitem_actionbuttons > *:has(input[name="cancel"]),
+:root[data-ivw="on"] .mform .fitem_actionbuttons input[name="cancel"] { order: 1 !important; }
+:root[data-ivw="on"] .ivw-btnrow > [data-ivw-btn="main"],
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > *:has(input[type="submit"]:not([name="cancel"])),
+:root[data-ivw="on"] .mform #fgroup_id_buttonar > input[type="submit"]:not([name="cancel"]),
+:root[data-ivw="on"] .mform .fitem_actionbuttons > *:has(input[type="submit"]:not([name="cancel"])),
+:root[data-ivw="on"] .mform .fitem_actionbuttons input[type="submit"]:not([name="cancel"]) { order: 2 !important; }
+
 /* --- Fila de botones: una sola línea, sin float ni márgenes del tema --- */
 :root[data-ivw="on"] .ivw-btnrow {
   display: flex !important;
@@ -1458,6 +1472,7 @@
 
 /* La caja del gestor */
 :root[data-ivw="on"] .filemanager {
+  container-type: inline-size !important;
   display: flex !important;
   flex-direction: column !important;
   padding: 0 !important;
@@ -1489,12 +1504,16 @@
 :root[data-ivw="on"] .filemanager .filemanager-toolbar {
   display: flex !important;
   align-items: center !important;
+  flex-wrap: wrap !important;
   gap: 8px !important;
   padding: 0 !important;
 }
+/* En una columna estrecha (el envío de una tarea al lado del enunciado) los
+   cuatro botones no caben en una línea: envuelven en vez de salirse. */
 :root[data-ivw="on"] .filemanager .fp-toolbar {
   display: flex !important;
   align-items: center !important;
+  flex-wrap: wrap !important;
   gap: 8px !important;
   padding: 0 !important;
   margin-right: auto !important;
@@ -1576,42 +1595,159 @@
   background: transparent !important;
   box-shadow: none !important;
 }
-:root[data-ivw="on"] .filemanager .fm-empty-container,
+/* Ojo con el `display` de estas dos: el tema las enseña y esconde según el
+   estado (.fm-noitems para la caja vacía, .dndupload-ready mientras arrastras
+   para el objetivo de suelte) y ambas son overlays absolutos dentro del
+   contenedor. Forzarles display las dejaba pintadas siempre, encima de los
+   archivos ya subidos. Aquí solo se pintan; quién se ve lo decide el tema. */
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container,
 :root[data-ivw="on"] .filemanager .dndupload-target {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 148px !important;
   padding: 18px !important;
   border: 2px dashed var(--blue-100) !important;
   border-radius: var(--r) !important;
   background: var(--blue-50) !important;
   color: var(--ink-2) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
   cursor: pointer !important;
   transition: border-color .15s ease, background .15s ease !important;
 }
-:root[data-ivw="on"] .filemanager .fm-empty-container:hover {
+/* El objetivo de suelte se pinta sobre la lista: fondo sólido para que no se
+   lea el contenido por debajo, y el azul de arrastre activo. */
+:root[data-ivw="on"] .filemanager .dndupload-target {
+  background: #e6f0fb !important;
+  border-color: var(--blue-300) !important;
+  z-index: 2 !important;
+}
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container:hover {
   border-color: var(--blue-300) !important;
   background: #e6f0fb !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message {
+/* Centrado del contenido. El display solo se toca en los estados en los que el
+   tema ya enseña la caja (.fm-noitems para la vacía, .dndupload-ready mientras
+   arrastras), nunca en el selector suelto. */
+:root[data-ivw="on"] .filemanager.fm-noitems .fm-empty-container,
+:root[data-ivw="on"] .dndupload-ready .dndupload-target,
+:root[data-ivw="on"] .filemanager-container.dndupload-over .dndupload-target {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 6px !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  color: var(--ink-2) !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 18px !important;
+  text-align: center !important;
 }
-:root[data-ivw="on"] .filemanager .dndupload-message::after {
+/* La flecha va en el flujo: el tema la ancla arriba en absoluto y el texto
+   quedaba debajo de la caja */
+:root[data-ivw="on"] .filemanager .dndupload-arrow {
+  position: static !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0 4px !important;
+}
+:root[data-ivw="on"] .filemanager .dndupload-arrow i { font-size: 30px !important; }
+:root[data-ivw="on"] .filemanager .dndupload-message,
+:root[data-ivw="on"] .filemanager .dndupload-target { color: var(--ink-2) !important; }
+:root[data-ivw="on"] .filemanager.fm-noitems .dndupload-message {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  cursor: pointer !important;   /* el wrap sí abre el selector desde aquí */
+}
+/* Los botones de la barra no parten su nombre en dos líneas */
+:root[data-ivw="on"] .filemanager .fp-toolbar > div > a.btn { white-space: nowrap !important; }
+:root[data-ivw="on"] .filemanager.fm-noitems .dndupload-message::after {
   content: "o pulsa aquí para elegirlo desde tu equipo";
+  display: block;
+  margin-top: 4px;
   font-size: 12px;
   font-weight: 400;
   color: var(--muted);
 }
 :root[data-ivw="on"] .filemanager .dndupload-arrow i,
 :root[data-ivw="on"] .filemanager .dndupload-arrow { color: var(--blue-300) !important; }
+
+/* ---------- La lista cuando ya hay archivos ---------- */
+:root[data-ivw="on"] .filemanager .fp-content {
+  min-height: 150px !important;
+  padding: 4px !important;
+  background: var(--surface) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)) !important;
+  gap: 10px !important;
+  padding: 6px !important;
+}
+/* Cada archivo, una ficha: el tema los suelta con float y el nombre absoluto,
+   que se montaba sobre la ficha de al lado. */
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file {
+  float: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 12px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r) !important;
+  background: var(--surface) !important;
+  transition: border-color .15s ease, box-shadow .15s ease !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file:hover {
+  border-color: var(--blue-300) !important;
+  box-shadow: var(--sh-1) !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-file > a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  width: 64px !important;
+  height: 64px !important;
+  line-height: 1 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail img {
+  max-width: 48px !important;
+  max-height: 48px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-thumbnail:hover {
+  border: 0 !important;
+  background: transparent !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-filename-field {
+  position: static !important;
+  height: auto !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  width: 100% !important;
+}
+:root[data-ivw="on"] .filemanager .fp-iconview .fp-filename {
+  display: block !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+  color: var(--ink) !important;
+  overflow-wrap: anywhere !important;
+}
 
 /* Tipos aceptados: fichas, no una lista suelta */
 :root[data-ivw="on"] body[id^="page-mod-assign"] .felement > p {
@@ -1724,4 +1860,101 @@
 :root[data-ivw="on"] .form-autocomplete-suggestions [aria-selected="true"] {
   background: var(--blue-50) !important;
   color: var(--blue-700) !important;
+}
+
+/* ============================================================
+   FICHAS ANIDADAS  —  mform mete un <fieldset> dentro de otro (por ejemplo
+   "Envíos de archivo" dentro de "Añadir envío") y el interior repetía marco,
+   sombra y relleno: tres bordes concéntricos alrededor del mismo control.
+   El de dentro se queda solo con su rótulo.
+   ============================================================ */
+:root[data-ivw="on"] .mform fieldset fieldset {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:root[data-ivw="on"] .mform fieldset fieldset > .fcontainer,
+:root[data-ivw="on"] #region-main .mform fieldset fieldset > .fcontainer {
+  padding: 0 !important;
+}
+:root[data-ivw="on"] .mform fieldset fieldset > .fcontainer > .fitem,
+:root[data-ivw="on"] #region-main .mform fieldset fieldset > .fcontainer > .fitem {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+
+/* El selector de vista (iconos / detalles / árbol) se va cuando el gestor
+   queda estrecho —el envío de una tarea al lado del enunciado—: ahí los
+   cuatro botones de acción ya ocupan dos líneas. */
+@container (max-width: 560px) {
+  :root[data-ivw="on"] .filemanager .fp-viewbar { display: none !important; }
+}
+
+/* ============================================================
+   SELECTOR DE ARCHIVOS EN SILENCIO  +  FICHAS DE REPOSITORIO
+   El "Selector de archivos" de Moodle es un paso intermedio: elegir
+   repositorio, pulsar "Seleccionar archivo" y, de vuelta, confirmar la subida.
+   enhance.js lo usa como motor y marca <html class="ivw-fp-silent"> mientras
+   hace ese recorrido, así que el diálogo no llega a verse: el usuario solo ve
+   su explorador. Los repositorios que listaba salen como fichas en la barra
+   del gestor.
+   ============================================================ */
+:root[data-ivw="on"].ivw-fp-silent .moodle-dialogue-base .moodle-dialogue.filepicker,
+:root[data-ivw="on"].ivw-fp-silent .moodle-dialogue-lightbox,
+:root[data-ivw="on"].ivw-fp-silent .yui3-widget-mask {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ---------- Fichas de repositorio ---------- */
+/* Con fichas, el empuje a la derecha lo hacen ellas: así quedan pegadas a
+   "Nueva carpeta" y el selector de vista sigue cerrando la barra. */
+:root[data-ivw="on"] .filemanager .filemanager-toolbar:has(.ivw-fp-repos) .fp-toolbar {
+  margin-right: 0 !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repos {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin: 0 auto 0 4px !important;   /* a la derecha de Subir archivo / Nueva carpeta */
+  padding-left: 10px !important;
+  border-left: 1px solid var(--line) !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 30px !important;
+  padding: 0 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--canvas) !important;
+  font-family: var(--font-body) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--ink-2) !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background .15s ease, border-color .15s ease, color .15s ease !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo:hover {
+  background: var(--blue-50) !important;
+  border-color: var(--blue-300) !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .filemanager .ivw-fp-repo:active { transform: translateY(1px) !important; }
+
+/* En un gestor estrecho las fichas se van con el selector de vista */
+@container (max-width: 560px) {
+  :root[data-ivw="on"] .filemanager .ivw-fp-repos {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
 }

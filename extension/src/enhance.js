@@ -1188,6 +1188,16 @@
         common.classList.add("ivw-btnrow");
       }
 
+      // Cancelar va primero; la acción principal cierra la fila (el CSS lee
+      // data-ivw-btn para ordenarlas).
+      for (var o = 0; o < cells.length; o++) {
+        var btn = cells[o].matches(BTN_SEL) ? cells[o] : cells[o].querySelector(BTN_SEL);
+        var nombre = btn ? (btn.getAttribute("name") || "") : "";
+        var texto = btn ? (btn.value || textOf(btn)) : "";
+        var esCancel = /(^|_)cancel$/i.test(nombre) || /^cancelar$/i.test((texto || "").trim());
+        cells[o].setAttribute("data-ivw-btn", esCancel ? "cancel" : "main");
+      }
+
       setInline(row, {
         display: "flex", "flex-wrap": "wrap", "align-items": "center",
         "justify-content": "flex-start", gap: "10px", width: "100%",
@@ -1900,6 +1910,7 @@
       portalSistemas,
       courseActivities,
       assignPdfPreview,
+      filemanagerQuickPick,
       headerOffset,
       portalInicio,
       calendarioAnual,
@@ -1929,6 +1940,262 @@
         console.warn("[ivw] falló " + (fns[i].name || "una mejora") + ":", e);
       }
     }
+  }
+
+  /* Subir un archivo sin fricción ----------
+     La zona de arrastre parece un botón pero Moodle no le engancha nada: el
+     selector de archivos solo se abre desde el botón "Subir archivo", y desde
+     ahí todavía hay que elegir el repositorio y pulsar "Seleccionar archivo".
+     Aquí el clic en la zona abre ese diálogo y, en cuanto aparece, elige el
+     repositorio de subida y dispara el explorador del sistema.
+
+     El sondeo es corto a propósito: Chrome solo deja abrir el explorador
+     mientras dure la activación del clic (unos segundos). Si no llega a
+     tiempo, el diálogo se queda abierto y el usuario sigue a mano. */
+  function visible(el) {
+    return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  }
+
+  /* ---------- Subir un archivo sin diálogo ----------
+     Moodle mete tres pasos entre el clic y el explorador del sistema: abrir el
+     "Selector de archivos", elegir el repositorio "Subir un archivo" y pulsar
+     "Seleccionar archivo"; y al volver, todavía otro botón para confirmar la
+     subida. Aquí el selector se usa como motor, oculto: el wrap lo abre, elige
+     el repositorio, dispara el explorador y confirma la subida, así que el
+     usuario solo ve su propio explorador.
+
+     Los repositorios que ese diálogo listaba (Archivos recientes, Subir un
+     archivo, Wikimedia…) se copian como fichas en la barra del gestor, para
+     poder ir a cualquiera sin abrir el diálogo primero. */
+  var FP_DLG = ".moodle-dialogue.filepicker";
+  var CHIPS_KEY = "ivw-fp-repos";
+
+  function fpSilencio(on) {
+    document.documentElement.classList.toggle("ivw-fp-silent", !!on);
+  }
+
+  // Pulsa "Subir archivo" marcando el clic como propio, para que el escuchador
+  // que atiende ese botón no arranque un segundo flujo.
+  function fpPulsarAdd(fm) {
+    var boton = fm && fm.querySelector(".fp-btn-add a, .fp-btn-add button");
+    if (!boton) return false;
+    boton.dataset.ivwProg = "1";
+    boton.click();
+    setTimeout(function () { delete boton.dataset.ivwProg; }, 0);
+    return true;
+  }
+
+  function fpDialogo() {
+    var dlgs = document.querySelectorAll(FP_DLG);
+    for (var i = 0; i < dlgs.length; i++) {
+      // En silencio el diálogo está oculto por CSS: vale el que YUI dejó abierto.
+      if (!dlgs[i].classList.contains("moodle-dialogue-hidden") &&
+          !dlgs[i].classList.contains("yui3-widget-hidden")) return dlgs[i];
+    }
+    return null;
+  }
+
+  function fpCerrar() {
+    var dlg = fpDialogo();
+    var x = dlg && dlg.querySelector(".moodle-dialogue-hd .closebutton");
+    if (x) x.click();
+    fpSilencio(false);
+  }
+
+  // Sondea el diálogo hasta `limite` vueltas de 90 ms y llama a `paso(dlg)`.
+  // `paso` devuelve true cuando ya terminó.
+  function fpEsperar(paso, limite, n) {
+    n = n || 0;
+    if (n > (limite || 45)) { fpSilencio(false); return; }
+    var dlg = fpDialogo();
+    if (dlg && paso(dlg)) return;
+    setTimeout(function () { fpEsperar(paso, limite, n + 1); }, 90);
+  }
+
+  function fpRepos(dlg) {
+    return dlg ? dlg.querySelectorAll(".fp-repo") : [];
+  }
+
+  function fpNombreRepo(repo) {
+    var n = repo.querySelector(".fp-repo-name");
+    return textOf(n || repo);
+  }
+
+  function fpEsSubida(repo) {
+    return /^subir/i.test(fpNombreRepo(repo)) ||
+      /repository_upload/.test((repo.querySelector("img.fp-repo-icon") || {}).src || "");
+  }
+
+  function fpActivarRepo(dlg, repo) {
+    if (repo.classList.contains("active")) return true;
+    var a = repo.querySelector("a") || repo;
+    a.click();
+    return false;
+  }
+
+  /* Tras elegir el archivo en el explorador, Moodle pinta el formulario de
+     subida con nombre, autor y licencia ya rellenos: se confirma solo. */
+  function fpAutoSubir(input) {
+    if (input.dataset.ivwAuto) return;
+    input.dataset.ivwAuto = "1";
+    input.addEventListener("change", function () {
+      if (!input.files || !input.files.length) return;
+      fpEsperar(function (dlg) {
+        var btn = dlg.querySelector(".fp-upload-btn, button.fp-upload-btn");
+        if (!btn || !visible(btn)) return false;
+        btn.click();
+        // La subida cierra el diálogo por su cuenta; el velo se levanta con él.
+        setTimeout(function () { fpSilencio(false); }, 1200);
+        return true;
+      }, 60);
+    });
+  }
+
+  /* Si el explorador se cierra sin elegir nada, el diálogo oculto no puede
+     quedarse abierto: al volver el foco sin archivo, se cierra. */
+  function fpVigilarCancelacion(input) {
+    function alVolver() {
+      setTimeout(function () {
+        if (input.files && input.files.length) return;
+        if (document.documentElement.classList.contains("ivw-fp-silent")) fpCerrar();
+      }, 900);
+      window.removeEventListener("focus", alVolver);
+    }
+    window.addEventListener("focus", alVolver);
+  }
+
+  // Abre el explorador del sistema: repositorio de subida + clic en el input.
+  function fpSubidaDirecta() {
+    fpSilencio(true);
+    fpEsperar(function (dlg) {
+      var input = dlg.querySelector('.fp-upload-form input[type="file"], input[type="file"]');
+      if (input && !input.dataset.ivwPicked) {
+        input.dataset.ivwPicked = "1";
+        fpAutoSubir(input);
+        fpVigilarCancelacion(input);
+        input.click();
+        return true;
+      }
+      if (input) return true;
+      var repos = fpRepos(dlg);
+      for (var i = 0; i < repos.length; i++) {
+        if (fpEsSubida(repos[i])) { fpActivarRepo(dlg, repos[i]); break; }
+      }
+      return false;
+    }, 45);
+  }
+
+  // Los repositorios remotos sí necesitan su navegador: se abre el diálogo ya
+  // puesto en ese repositorio, esta vez a la vista.
+  function fpAbrirRepo(nombre) {
+    fpSilencio(true);
+    fpEsperar(function (dlg) {
+      var repos = fpRepos(dlg);
+      for (var i = 0; i < repos.length; i++) {
+        if (fpNombreRepo(repos[i]) !== nombre) continue;
+        if (!repos[i].classList.contains("active")) { fpActivarRepo(dlg, repos[i]); return false; }
+        fpSilencio(false);
+        return true;
+      }
+      return false;
+    }, 45);
+  }
+
+  function fpGuardarRepos(nombres) {
+    try { sessionStorage.setItem(CHIPS_KEY, JSON.stringify(nombres)); } catch (e) { /* sin storage */ }
+  }
+
+  function fpLeerRepos() {
+    try {
+      var v = JSON.parse(sessionStorage.getItem(CHIPS_KEY) || "null");
+      if (v && v.length) return v;
+    } catch (e) { /* sin storage */ }
+    return null;
+  }
+
+  function fpPintarChips(fm, nombres) {
+    var barra = fm.querySelector(".filemanager-toolbar");
+    if (!barra || !nombres || !nombres.length) return;
+    var vieja = barra.querySelector(".ivw-fp-repos");
+    if (vieja) vieja.remove();
+
+    var caja = el("div", "ivw-fp-repos");
+    for (var i = 0; i < nombres.length; i++) {
+      var chip = el("button", "ivw-fp-repo");
+      chip.type = "button";
+      chip.textContent = nombres[i];
+      chip.dataset.repo = nombres[i];
+      chip.title = "Abrir " + nombres[i];
+      caja.appendChild(chip);
+    }
+    caja.addEventListener("click", function (ev) {
+      var chip = ev.target.closest(".ivw-fp-repo");
+      if (!chip) return;
+      ev.preventDefault();
+      if (!fpPulsarAdd(fm)) return;
+      if (/^subir/i.test(chip.dataset.repo)) { fpSubidaDirecta(); return; }
+      fpAbrirRepo(chip.dataset.repo);
+    });
+    // A la derecha de "Subir archivo" y "Nueva carpeta", antes del selector de vista
+    var viewbar = barra.querySelector(".fp-viewbar");
+    if (viewbar) barra.insertBefore(caja, viewbar);
+    else barra.appendChild(caja);
+  }
+
+  /* La lista de repositorios solo existe dentro del diálogo, así que la primera
+     vez se lee abriéndolo en silencio y se guarda para el resto de la sesión. */
+  function fpSembrarChips(fm) {
+    if (fm.dataset.ivwRepos) return;
+    fm.dataset.ivwRepos = "1";
+
+    var guardados = fpLeerRepos();
+    if (guardados) { fpPintarChips(fm, guardados); return; }
+
+    fpSilencio(true);
+    if (!fpPulsarAdd(fm)) { fpSilencio(false); return; }
+    fpEsperar(function (dlg) {
+      var repos = fpRepos(dlg);
+      if (!repos.length) return false;
+      var nombres = [];
+      for (var i = 0; i < repos.length; i++) {
+        var n = fpNombreRepo(repos[i]);
+        if (n) nombres.push(n);
+      }
+      fpGuardarRepos(nombres);
+      fpPintarChips(fm, nombres);
+      fpCerrar();
+      return true;
+    }, 60);
+  }
+
+  function filemanagerQuickPick() {
+    // El escuchador va en el documento: el gestor lo pinta el JS de Moodle
+    // después, y así no importa quién llegue primero.
+    if (!window.__ivwQuickPick) {
+      window.__ivwQuickPick = 1;
+      document.addEventListener("click", function (ev) {
+        if (!ev.target.closest) return;
+        var zona = ev.target.closest(".fm-empty-container, .filemanager .dndupload-message");
+        if (!zona) return;
+        var fm = zona.closest(".filemanager");
+        if (!fm) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (!fpPulsarAdd(fm)) return;
+        fpSubidaDirecta();
+      }, true);
+
+      // "Subir archivo" también salta el diálogo
+      document.addEventListener("click", function (ev) {
+        if (!ev.target.closest) return;
+        var btn = ev.target.closest(".filemanager .fp-btn-add a, .filemanager .fp-btn-add button");
+        if (!btn || btn.dataset.ivwProg) return;
+        fpSubidaDirecta();
+      }, true);
+    }
+
+    var gestores = document.querySelectorAll(".filemanager");
+    for (var i = 0; i < gestores.length; i++) fpSembrarChips(gestores[i]);
   }
 
   function run() {
@@ -1968,6 +2235,7 @@
     moodleChrome: moodleChrome,
     topnavLinks: topnavLinks,
     topnavDropdowns: topnavDropdowns,
+    filemanagerQuickPick: filemanagerQuickPick,
     langMenu: langMenu,
     guestFrontpage: guestFrontpage,
     courseSearchCards: courseSearchCards,
