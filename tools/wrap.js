@@ -15,7 +15,8 @@ const SRC = path.join(__dirname, "..", "extension", "src");
 const CSS = [
   "base.css", "pages/login.css", "pages/dashboard.css", "pages/frontpage.css",
   "pages/recuperapassword.css", "pages/mesaayuda.css", "pages/portalsistemas.css", "pages/portalinicio.css", "pages/eres.css", "pages/calendarioescolar.css", "pages/coursesearch.css", "pages/profile.css",
-  "pages/tables.css", "pages/forms.css", "pages/messaging.css", "pages/notifications.css", "pages/calendar.css", "pages/course.css", "pages/attendance.css", "pages/reportbuilder.css", "pages/chrome.css"
+  "pages/tables.css", "pages/forms.css", "pages/messaging.css", "pages/notifications.css", "pages/calendar.css", "pages/course.css", "pages/attendance.css", "pages/reportbuilder.css", "pages/chrome.css",
+  "pages/dark.css"
 ];
 
 const input = process.argv[2];

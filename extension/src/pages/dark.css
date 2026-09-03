@@ -1,0 +1,349 @@
+/* ============================================================
+   iVirtual Wrap — capa de compatibilidad del modo oscuro
+   ============================================================
+
+   El remapeo de tokens de base.css cubre todo lo que el wrap pinta. Lo que
+   NO cubre es lo que el wrap nunca tocó porque de día ya se veía bien: los
+   blancos y los grises oscuros que Moodle y el tema Adaptable escriben en
+   sus propias hojas. Sobre papel blanco pasan desapercibidos —blanco sobre
+   blanco, tinta oscura sobre claro—; de noche son exactamente lo contrario:
+   islas luminosas y texto negro sobre superficie oscura.
+
+   Dos reglas de este archivo:
+
+   1. **Con `!important`, y no por gusto.** Este archivo nació sin él, con la
+      idea de que la especificidad bastaba para ganarle al tema y perder
+      contra las hojas de página. Esa idea funciona para una parte del
+      archivo y no para otra, y conviene tener clara la frontera:
+
+      - Contra las reglas NORMALES del tema, la especificidad basta y el
+        archivo sí aplicaba sin `!important`. Verificado quitando y
+        reponiendo la regla en el sitio real: `#region-main` pasaba de
+        negro a `--ink` con la regla sin `!important` puesta. Lo mismo
+        valía para `.secondary-navigation .navigation`, `.activity-dates`,
+        `.userinitials` y `.user-report-container`.
+      - Contra las UTILIDADES de Bootstrap (`.bg-white`, `.text-*`,
+        `.border`) no basta, porque se declaran ellas mismas con
+        `!important` y ninguna especificidad le gana a eso. Esa mitad sí
+        estaba inerte, y era la que dejaba las flechas del carrusel de
+        cursos como dos rectángulos blancos sobre el lienzo oscuro.
+
+      Se optó por `!important` en todo el archivo por uniformidad, no
+      porque cada regla lo necesite. Tiene un coste que hay que vigilar:
+      sube la especificidad efectiva y puede comerse reglas del wrap que
+      antes ganaban — pasó con `.btn:not(…)`, que dejó sin su azul a
+      `.btn-link` de base.css y de course.css, y por eso la cadena lleva
+      ahora `:not(.btn-link)`. Al añadir un selector aquí, comprobar
+      primero que ninguna hoja de página pinte lo mismo (nota 2).
+
+   2. **Solo lo que se comprobó que se filtra.** Cada selector de abajo se
+      midió en el sitio real: se quedaron los que devolvían un valor claro
+      del tema y se descartaron los que ya resolvían bien (`.block`,
+      `.breadcrumb`, `.custom-select`, `.btn-link`, `.courseindex-link`…).
+      Forzarles un valor "por si acaso" no es inofensivo: pintaría cajas
+      donde hoy no hay ninguna.
+      `.page-link` figuraba entre los descartados y volvió a entrar: con el
+      archivo ya activo se midió el tablero real y las flechas del carrusel
+      de cursos eran la única superficie blanca opaca que quedaba sobre el
+      lienzo oscuro. La paginación de la búsqueda de cursos no se ve
+      afectada: `chrome.css` la trata con un selector que lleva ID y por
+      tanto gana a este.
+
+   El orden dentro del manifest da igual: aquí todo se decide por
+   especificidad, no por posición. */
+
+/* ---------- Superficies ---------- */
+:root[data-ivw="on"][data-ivw-theme="dark"] .page-link,
+:root[data-ivw="on"][data-ivw-theme="dark"] .list-group-item,
+:root[data-ivw="on"][data-ivw-theme="dark"] .modal-content,
+:root[data-ivw="on"][data-ivw-theme="dark"] .popover,
+:root[data-ivw="on"][data-ivw-theme="dark"] .dropdown-menu,
+:root[data-ivw="on"][data-ivw-theme="dark"] .form-autocomplete-suggestions,
+:root[data-ivw="on"][data-ivw-theme="dark"] .moodle-dialogue-base .moodle-dialogue-wrap,
+:root[data-ivw="on"][data-ivw-theme="dark"] .yui3-button,
+:root[data-ivw="on"][data-ivw-theme="dark"] .yui3-skin-sam .yui3-panel .yui3-widget-ft,
+:root[data-ivw="on"][data-ivw-theme="dark"] .fp-select .fp-thumbnail,
+:root[data-ivw="on"][data-ivw-theme="dark"] .filepicker-filelist .dndupload-target,
+:root[data-ivw="on"][data-ivw-theme="dark"] .filemanager-container .dndupload-target,
+:root[data-ivw="on"][data-ivw-theme="dark"] .filemanager.fp-select .fp-reflist .fp-value,
+:root[data-ivw="on"][data-ivw-theme="dark"] #MathJax_Message {
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+}
+
+/* El cajón: por dentro ya es lienzo (chrome.css pinta .drawercontent), pero
+   el contenedor seguía en blanco y asomaba por los bordes y el relleno. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .drawer,
+/* El reporte de calificaciones: un #f8f9fa detrás de la tabla que salía como
+   un marco blanco alrededor de ella. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .user-report-container,
+:root[data-ivw="on"][data-ivw-theme="dark"] .thead-light th,
+:root[data-ivw="on"][data-ivw-theme="dark"] .table .thead-light th {
+  background-color: var(--canvas) !important;
+}
+
+/* El separador vertical entre el selector de reporte y la barra de acciones
+   de calificaciones: no es un borde, es un <div> de 1px pintado de gris
+   claro, así que salía como una raya blanca en medio de la página. Va con el
+   color de línea, no con el del lienzo: si tomara el del fondo desaparecería
+   y el separador dejaría de separar. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .navitem-divider {
+  background-color: var(--line) !important;
+}
+
+/* Barras que solo son contenedor: no son superficie ni tinte, no deberían
+   pintar nada. En claro su blanco coincidía con el de la página; en oscuro
+   son una franja luminosa cruzando la pantalla. La de `.secondary-navigation`
+   es la más visible del sitio: las pestañas Curso / Participantes /
+   Calificaciones / Competencias, en todos los cursos. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .secondary-navigation,
+:root[data-ivw="on"][data-ivw-theme="dark"] .secondary-navigation .navigation,
+:root[data-ivw="on"][data-ivw-theme="dark"] .moremenu .nav-tabs {
+  background-color: transparent !important;
+}
+
+/* ---------- Tinta ---------- */
+:root[data-ivw="on"][data-ivw-theme="dark"] .modal-title,
+:root[data-ivw="on"][data-ivw-theme="dark"] .form-control-static,
+:root[data-ivw="on"][data-ivw-theme="dark"] .dropdown-item,
+:root[data-ivw="on"][data-ivw-theme="dark"] .popover-region-container,
+:root[data-ivw="on"][data-ivw-theme="dark"] .navbar .popover-region-container,
+/* La cabecera de sección del curso viene con el verde azulado de Adaptable */
+:root[data-ivw="on"][data-ivw-theme="dark"] body:not(.single-section-page) .course-section-header,
+:root[data-ivw="on"][data-ivw-theme="dark"] #adaptable-page-header-wrapper #main-navbar .navbar-nav > li > a.nav-link {
+  color: var(--ink) !important;
+}
+/* "Abrió / Cierre / Fecha esperada" bajo cada actividad del curso: gris 700
+   de Bootstrap, el texto peor contrastado que quedaba (2.06:1). */
+:root[data-ivw="on"][data-ivw-theme="dark"] .activity-item .activity-dates,
+:root[data-ivw="on"][data-ivw-theme="dark"] .courseindex .courseindex-item.dimmed {
+  color: var(--muted) !important;
+}
+/* La "x" de cerrar del tema es negra sobre fondo claro. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .close,
+:root[data-ivw="on"][data-ivw-theme="dark"] .btn-close,
+:root[data-ivw="on"][data-ivw-theme="dark"] button.close,
+:root[data-ivw="on"][data-ivw-theme="dark"] button.btn-close {
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] #adaptable-page-header-wrapper .dropdown-menu a,
+:root[data-ivw="on"][data-ivw-theme="dark"] #adaptable-page-header-wrapper .dropdown-menu a:visited,
+/* Árbol de navegación del cajón de bloques: el tema le pone su cian de marca
+   (#0ca0cc), que sobre el lienzo oscuro se lee como un acento ajeno al
+   sistema. El resto de los enlaces ya sigue a --blue-700 desde base.css;
+   estos tienen regla propia y más específica. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tree_item,
+:root[data-ivw="on"][data-ivw-theme="dark"] .block_navigation .tree_item a,
+:root[data-ivw="on"][data-ivw-theme="dark"] .block_settings .tree_item a {
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .invalid-feedback { color: var(--danger) !important; }
+
+/* El botón sin variante. Adaptable le da `color: #333` a `.btn` a secas y el
+   wrap solo redefine las variantes con nombre, así que los que no la llevan
+   —el desplegable "Reporte de usuario" de calificaciones, los botones de
+   icono— se quedaban en gris casi negro. Se excluyen las variantes de color
+   una por una: ahí el texto lo decide el relleno, no el tema.
+
+   `.btn-link` va en la lista aunque no tenga relleno, y por una razón que solo
+   aparece al sumar `!important`: base.css le da el color de enlace con
+   especificidad (0,2,1) y esta regla es (0,4,1), así que sin excluirlo se lo
+   comía y de noche los botones-enlace perdían su azul. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .btn:not(.btn-primary):not(.btn-secondary):not(.btn-success):not(.btn-danger):not(.btn-warning):not(.btn-info):not(.btn-light):not(.btn-dark):not(.btn-link):not([class*="btn-outline"]) {
+  color: var(--ink) !important;
+}
+
+/* Iniciales de quien no tiene foto: gris claro con tinta oscura. Es el único
+   elemento que sale en TODAS las pantallas —topbar, participantes, foros,
+   mensajería, calificaciones—, así que era la isla clara más constante. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .userinitials {
+  background-color: var(--blue-50) !important;
+  color: var(--blue-600) !important;
+}
+
+/* ---------- Bordes ----------
+   Grises claros que de noche se leen como líneas blancas. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .modal-header,
+:root[data-ivw="on"][data-ivw-theme="dark"] .modal-footer,
+:root[data-ivw="on"][data-ivw-theme="dark"] .list-group-item,
+:root[data-ivw="on"][data-ivw-theme="dark"] .thead-light th,
+:root[data-ivw="on"][data-ivw-theme="dark"] .dropdown-divider {
+  border-color: var(--line) !important;
+}
+
+/* ---------- Avisos ----------
+   Bootstrap 4 los arma con un fondo pálido y texto casi negro. Se conserva el
+   tono y se invierten los papeles: el color pasa al borde y el fondo queda en
+   un lavado del mismo tono sobre la superficie. Los tokens `--*-50` ya se
+   recalculan solos por modo, así que esto no fija ningún color. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-info,
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-primary {
+  background-color: var(--blue-50) !important;
+  border-color: var(--blue-100) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-success {
+  background-color: var(--ok-50) !important;
+  border-color: color-mix(in srgb, var(--ok) 35%, transparent) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-warning {
+  background-color: var(--warn-50) !important;
+  border-color: color-mix(in srgb, var(--warn) 35%, transparent) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-danger {
+  background-color: var(--danger-50) !important;
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-secondary,
+:root[data-ivw="on"][data-ivw-theme="dark"] .alert-light,
+:root[data-ivw="on"][data-ivw-theme="dark"] .badge-light,
+:root[data-ivw="on"][data-ivw-theme="dark"] .badge-secondary {
+  background-color: var(--canvas) !important;
+  border-color: var(--line) !important;
+  color: var(--ink-2) !important;
+}
+
+/* ---------- Utilidades de Bootstrap ----------
+   Aquí sí va `!important`, y es la única excepción de este archivo. No es un
+   atajo: las utilidades de Bootstrap se declaran ellas mismas con
+   `!important` (`.bg-white { background-color: #fff !important }`), así que
+   una regla sin él no las alcanza por mucha especificidad que tenga. Se
+   comprobó en la barra de filtros de Participantes, que seguía saliendo
+   blanca con la versión anterior de este archivo.
+
+   Que lleven `!important` no las vuelve peligrosas: una utilidad es una
+   intención explícita de quien escribió el marcado ("esto va blanco"), y lo
+   que se hace es traducir esa intención al modo oscuro, no inventarla. Entre
+   dos `!important` gana la especificidad, y la de aquí es mayor que la de
+   cualquier regla del wrap; en las utilidades eso es justo lo que se quiere.
+   Fuera de este bloque, la regla del archivo sigue siendo no llevarlo. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .bg-white {
+  background-color: var(--surface) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .bg-light {
+  background-color: var(--canvas) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-dark,
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-body   { color: var(--ink) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-muted,
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-secondary { color: var(--muted) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-primary { color: var(--blue-700) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-danger  { color: var(--danger) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-info    { color: var(--blue-500) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-success { color: var(--ok) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .text-warning { color: var(--warn) !important; }
+:root[data-ivw="on"][data-ivw-theme="dark"] .border,
+:root[data-ivw="on"][data-ivw-theme="dark"] .border-top,
+:root[data-ivw="on"][data-ivw-theme="dark"] .border-right,
+:root[data-ivw="on"][data-ivw-theme="dark"] .border-bottom,
+:root[data-ivw="on"][data-ivw-theme="dark"] .border-left {
+  border-color: var(--line) !important;
+}
+
+/* ============================================================
+   TinyMCE — el editor de texto enriquecido
+   ============================================================
+   Trae su hoja completa y no hereda nada del sitio: menú, barra, área de
+   edición y pie son blancos, dentro de formularios que ya son oscuros
+   (editar perfil, nuevo evento, respuesta de foro, envío de tarea). Era el
+   bloque claro más grande que quedaba en el modo oscuro.
+
+   El interior del área de edición es un <iframe> con documento propio, donde
+   esta hoja no entra: lo pinta enhance.js inyectándole una. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-menubar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-sidebar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar-overlord,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar__primary,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar__overflow,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox:not(.tox-tinymce-inline) .tox-editor-header,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-view-wrap,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-view-wrap__slot-container,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-edit-area__iframe {
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-mbtn,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn--disabled,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn:disabled,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar a,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar__path-item,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar__wordcount {
+  background-color: transparent !important;
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-mbtn:hover:not(:disabled),
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn:hover:not(:disabled) {
+  background-color: var(--blue-50) !important;
+  color: var(--ink) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn--active,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn--enabled,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn--enabled:hover,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-mbtn--active {
+  background-color: var(--blue-100) !important;
+  color: var(--ink) !important;
+}
+/* Los glifos NO usan `currentColor`: TinyMCE les fija `fill: #222f3e`, un
+   azul casi negro que sobre la barra oscura desaparece. Atándolos al color
+   del botón siguen al resto sin repetir ningún valor. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-tbtn svg,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-mbtn svg,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar svg,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-collection__item-icon svg,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-icon svg {
+  fill: currentColor !important;
+}
+/* Los botones que los plugins de Moodle añaden a la barra (grabar audio,
+   grabar video) no son un glifo vectorial sino
+   `<svg><image href="theme/image.php/…">`: el mismo PNG negro de siempre,
+   donde `fill` no pinta nada. Se invierten con el mismo token que el resto
+   de los iconos monocromos del sitio. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox svg[data-buttonsource="moodle"] {
+  filter: var(--icon-filter) !important;
+}
+
+/* La raya que separa el menú de la barra de herramientas no es un borde: es
+   un `repeating-linear-gradient` de #e3e3e3 metido en el fondo, así que
+   repintar `background-color` no la tocaba y quedaba como una línea clara
+   cruzando el editor. Mismo patrón, con el color de línea del sistema. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar__primary {
+  background-image: repeating-linear-gradient(var(--line) 0 1px, transparent 1px 39px) !important;
+}
+
+/* Bordes del marco. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-toolbar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-menubar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-statusbar,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox:not(.tox-tinymce-inline) .tox-editor-header {
+  border-color: var(--line) !important;
+}
+/* Menús y diálogos que TinyMCE monta en el <body>, fuera del editor. */
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-menu,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-collection__group,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-dialog,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-dialog__header,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-dialog__footer,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-dialog__body-nav,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-textfield,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-textarea,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-listbox {
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-collection__item {
+  color: var(--ink-2) !important;
+}
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-collection__item--active,
+:root[data-ivw="on"][data-ivw-theme="dark"] .tox .tox-collection__item--enabled {
+  background-color: var(--blue-50) !important;
+  color: var(--ink) !important;
+}

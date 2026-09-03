@@ -6,10 +6,40 @@
 const ROOT = document.documentElement;
 const ATTR = "data-ivw";
 const KEY = "wrapEnabled";
+const THEME_ATTR = "data-ivw-theme";
+const THEME_KEY = "themeMode";        // "light" (por defecto) | "dark" | "auto"
 const log = (...a) => console.log("[ivw]", ...a);
 
 // Optimista: aplicar YA en document_start para evitar flash. Se corrige tras leer storage.
 ROOT.setAttribute(ATTR, "on");
+
+// --- Tema: automático / claro / oscuro ---------------------------------
+// El CSS solo mira [data-ivw-theme]; aquí se resuelve "auto" contra el
+// sistema. matchMedia es síncrono, así que el primer pintado ya sale con el
+// tema correcto y no hay parpadeo mientras llega storage.
+const mqOscuro = window.matchMedia("(prefers-color-scheme: dark)");
+let modoTema = "light";
+
+function temaResuelto(modo) {
+  if (modo === "light" || modo === "dark") return modo;
+  return mqOscuro.matches ? "dark" : "light";
+}
+
+function aplicarTema(modo) {
+  modoTema = modo || "auto";
+  ROOT.setAttribute(THEME_ATTR, temaResuelto(modoTema));
+  ROOT.setAttribute("data-ivw-theme-mode", modoTema);
+}
+
+// Claro por defecto: es lo que hace el Moodle original, así que el wrap no
+// cambia el aspecto de entrada; el oscuro se elige con el botón del topbar.
+// Optimista igual que el flag, la preferencia guardada llega después.
+aplicarTema("light");
+
+// Solo si el usuario eligió "automático" se sigue al sistema cuando cambie.
+mqOscuro.addEventListener("change", () => {
+  if (modoTema === "auto") aplicarTema("auto");
+});
 
 // Marcar la página para scoping de CSS por pantalla (útil donde <body> no trae id).
 function pageKey() {
@@ -87,8 +117,23 @@ function updateBadge() {
   b.dataset.on = on ? "1" : "0";
 }
 
-// Estado inicial (default: activado)
-ivwStorage.get({ [KEY]: true }).then((cfg) => apply(cfg[KEY]));
+// Estado inicial (default: activado, tema claro)
+ivwStorage.get({ [KEY]: true, [THEME_KEY]: "light" }).then((cfg) => {
+  apply(cfg[KEY]);
+  aplicarTema(cfg[THEME_KEY]);
+});
+
+// El botón del topbar (lo dibuja enhance.js) pide el siguiente modo del ciclo.
+window.ivwTema = {
+  actual: () => modoTema,
+  ciclar: () => {
+    const orden = ["light", "dark", "auto"];
+    const siguiente = orden[(orden.indexOf(modoTema) + 1) % orden.length];
+    aplicarTema(siguiente);
+    ivwStorage.set({ [THEME_KEY]: siguiente });
+    return siguiente;
+  }
+};
 
 // Toggle desde el popup (mensaje directo)
 chrome.runtime.onMessage.addListener((msg) => {
@@ -97,7 +142,9 @@ chrome.runtime.onMessage.addListener((msg) => {
 
 // Respaldo: cambios de storage desde cualquier origen
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && KEY in changes) apply(changes[KEY].newValue);
+  if (area !== "local") return;
+  if (KEY in changes) apply(changes[KEY].newValue);
+  if (THEME_KEY in changes) aplicarTema(changes[THEME_KEY].newValue);
 });
 
 function onReady() {
