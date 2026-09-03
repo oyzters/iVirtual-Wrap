@@ -26,8 +26,8 @@
   font-weight: 600 !important;
   color: var(--ink-2) !important;
 }
-:root[data-ivw="on"] body[id^="page-mod-attendance"] .nav-tabs .nav-link:hover { background: var(--blue-50) !important; color: var(--blue-700) !important; }
-:root[data-ivw="on"] body[id^="page-mod-attendance"] .nav-tabs .nav-link.active { color: var(--blue-800) !important; background: transparent !important; }
+:root[data-ivw="on"] body[id^="page-mod-attendance"] .nav-tabs .nav-link:hover { background: var(--blue-50) !important; color: var(--fill-primary) !important; }
+:root[data-ivw="on"] body[id^="page-mod-attendance"] .nav-tabs .nav-link.active { color: var(--current) !important; background: transparent !important; }
 :root[data-ivw="on"] body[id^="page-mod-attendance"] .nav-tabs .nav-link.active::after {
   content: "";
   position: absolute;
@@ -36,7 +36,7 @@
   bottom: -1px;
   height: 3px;
   border-radius: 3px 3px 0 0;
-  background: var(--blue-700);
+  background: var(--fill-primary);
 }
 
 /* ============================================================
@@ -100,7 +100,7 @@
   line-height: 44px !important;
   border-radius: 50% !important;
   background: var(--blue-100) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   font-family: var(--font-head) !important;
   font-size: 18px !important;
   font-weight: 800 !important;
@@ -176,7 +176,7 @@
 :root[data-ivw="on"] body[id^="page-mod-attendance"] .allsessionssummary .userinfo table tr.lastrow td {
   font-size: 13.5px !important;
   font-weight: 700 !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 /* Color por estatus en el número (lo marca enhance.js, que es quien puede
    leer el texto de la fila); un cero se queda gris para que resalten los
@@ -291,7 +291,7 @@
   color: var(--blue-700) !important;
 }
 :root[data-ivw="on"] .attfiltercontrols .attcurbtn {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
   cursor: default !important;
@@ -323,7 +323,7 @@
   text-decoration: none !important;
 }
 :root[data-ivw="on"] .attfiltercontrols .curdatecontrols .ivw-att-nav > a:hover {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
 }
@@ -342,7 +342,7 @@
   color: var(--ink) !important;
   text-transform: capitalize !important;
 }
-:root[data-ivw="on"] .attfiltercontrols .curdatecontrols #show:hover { background: var(--blue-50) !important; color: var(--blue-800) !important; }
+:root[data-ivw="on"] .attfiltercontrols .curdatecontrols #show:hover { background: var(--blue-50) !important; color: var(--current) !important; }
 
 /* ============================================================
    3. Tablas de sesiones
@@ -484,10 +484,10 @@
   background: currentColor;
   flex: none;
 }
-:root[data-ivw="on"] td[data-ivw-att="ok"] > span.ivw-att   { background: #e6f4ee !important; color: var(--ok) !important; }
-:root[data-ivw="on"] td[data-ivw-att="warn"] > span.ivw-att { background: #fdf3e0 !important; color: var(--warn) !important; }
-:root[data-ivw="on"] td[data-ivw-att="info"] > span.ivw-att { background: var(--blue-50) !important; color: var(--blue-700) !important; }
-:root[data-ivw="on"] td[data-ivw-att="bad"] > span.ivw-att  { background: #fbeae8 !important; color: var(--danger) !important; }
+:root[data-ivw="on"] td[data-ivw-att="ok"] > span.ivw-att   { background: var(--ok-50) !important; color: var(--ok) !important; }
+:root[data-ivw="on"] td[data-ivw-att="warn"] > span.ivw-att { background: var(--warn-50) !important; color: var(--warn) !important; }
+:root[data-ivw="on"] td[data-ivw-att="info"] > span.ivw-att { background: var(--blue-50) !important; color: var(--fill-primary) !important; }
+:root[data-ivw="on"] td[data-ivw-att="bad"] > span.ivw-att  { background: var(--danger-50) !important; color: var(--danger) !important; }
 
 /* Puntos de la sesión: números alineados y sin ruido */
 :root[data-ivw="on"] body[id^="page-mod-attendance"] table.generaltable td.pointscol,

@@ -51,7 +51,7 @@
 :root[data-ivw="on"] #page-login-index .login-container {
   width: 100% !important;
   max-width: 430px !important;
-  background: rgba(255, 255, 255, .98) !important;
+  background: color-mix(in srgb, var(--surface) 98%, transparent) !important;
   border: 1px solid rgba(255, 255, 255, .5) !important;
   border-radius: var(--r-xl) !important;
   box-shadow: var(--sh-3) !important;
@@ -59,16 +59,18 @@
   backdrop-filter: blur(6px);
 }
 
-/* Encabezado de marca dentro de la tarjeta */
+/* Encabezado de marca dentro de la tarjeta — serif editorial (Fraunces),
+   el único lugar "premium" de la pantalla más vista de todo el wrap. */
 :root[data-ivw="on"] #page-login-index .login-container::before {
   content: "iVirtual";
   display: block;
-  font-family: var(--font-body); /* Figtree, igual que el texto de abajo */
-  font-weight: 600;
-  font-style: normal;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: italic;
   font-size: 40px;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   text-align: center;
   color: var(--blue-700);
   margin-bottom: 22px;
@@ -102,7 +104,7 @@
   font-weight: 700 !important;
   padding: 0.85rem 1rem !important;
   border-radius: var(--r) !important;
-  background: linear-gradient(135deg, var(--blue-600), var(--blue-700)) !important;
+  background: linear-gradient(135deg, var(--fill-primary-hi), var(--fill-primary)) !important;
   border: 0 !important;
   box-shadow: 0 8px 20px rgba(11, 92, 173, .35) !important;
   margin-top: 4px !important;
@@ -130,7 +132,7 @@
   transition: color .15s ease !important;
 }
 :root[data-ivw="on"] #page-login-index .login-form-forgotpassword a[href*="RecuperaPassword"]:hover {
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 
 /* Divisor + pie (idioma / cookies) */

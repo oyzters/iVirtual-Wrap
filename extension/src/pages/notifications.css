@@ -91,7 +91,7 @@
   background: var(--surface) !important;
 }
 :root[data-ivw="on"] .popover-region-notifications .content-item-container.unread {
-  background: #f7fbff !important;
+  background: var(--blue-50) !important;
   box-shadow: inset 3px 0 0 var(--blue-500) !important;
 }
 :root[data-ivw="on"] .popover-region-notifications .content-item-container > a,
@@ -182,7 +182,7 @@
 }
 :root[data-ivw="on"] .popover-region-notifications .content-item-container a.view-more:hover {
   background: var(--blue-100) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 
 /* ---------- Sin notificaciones ---------- */
@@ -272,7 +272,7 @@
   height: 18px !important;
   padding: 0 5px !important;
   border-radius: 999px !important;
-  background: var(--danger) !important;
+  background: var(--fill-danger) !important;
   color: #fff !important;
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -283,7 +283,7 @@
 /* ---------- Barra de scroll fina ---------- */
 :root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar { width: 8px !important; }
 :root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar-thumb {
-  background: #cfdaea !important;
+  background: var(--scrollbar-thumb) !important;
   border-radius: 999px !important;
 }
 :root[data-ivw="on"] .popover-region-notifications .popover-region-content-container::-webkit-scrollbar-track { background: transparent !important; }
@@ -317,7 +317,7 @@
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications #region-main > [role="main"] > h2 {
   font-family: var(--font-head) !important;
-  font-size: 26px !important;
+  font-size: var(--fs-title) !important;
   font-weight: 800 !important;
   letter-spacing: -.02em !important;
   color: var(--ink) !important;
@@ -390,7 +390,7 @@
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container:hover,
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread:hover {
-  background: #f5f9fe !important;
+  background: var(--blue-50) !important;
   color: var(--ink) !important;
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.unread {
@@ -405,7 +405,7 @@
   color: var(--ink) !important;
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container.selected .notification-message {
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   font-weight: 700 !important;
 }
 
@@ -490,7 +490,7 @@
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-item-container .view-more:hover {
   background: var(--blue-100) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   text-decoration: none !important;
 }
 
@@ -593,7 +593,7 @@
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content a:hover {
   background: var(--blue-100) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 /* Avisos en texto plano: el <pre> del tema se lee como código */
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content pre {
@@ -623,7 +623,7 @@
   gap: 8px !important;
   padding: 10px 18px !important;
   border-radius: 999px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
@@ -637,7 +637,7 @@
   font-weight: 700 !important;
 }
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .footer a:hover {
-  background: var(--blue-600) !important;
+  background: var(--fill-primary-hi) !important;
   box-shadow: var(--sh-2) !important;
   color: #fff !important;
 }
@@ -671,7 +671,7 @@
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content::-webkit-scrollbar { width: 8px !important; }
 :root[data-ivw="on"] #page-message-output-popup-notifications .control-area > .content::-webkit-scrollbar-thumb,
 :root[data-ivw="on"] #page-message-output-popup-notifications .content-area > .content::-webkit-scrollbar-thumb {
-  background: #cfdaea !important;
+  background: var(--scrollbar-thumb) !important;
   border-radius: 999px !important;
 }
 

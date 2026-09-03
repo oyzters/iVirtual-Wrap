@@ -33,7 +33,7 @@
 
 /* ---------- Navegación ---------- */
 :root[data-ivw="on"][data-ivw-page="portalinicio"] nav.navbar.fixed-top {
-  background: rgba(255, 255, 255, .94) !important;
+  background: var(--nav-glass) !important;
   backdrop-filter: saturate(140%) blur(8px);
   border-bottom: 1px solid var(--line) !important;
   box-shadow: var(--sh-1) !important;
@@ -69,7 +69,7 @@
   padding: 9px 18px !important;
   border-radius: 999px !important;
   border: 0 !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-family: var(--font-body) !important;
   font-size: 13px !important;
@@ -102,7 +102,7 @@
 :root[data-ivw="on"][data-ivw-page="portalinicio"] #hero-area .contents .head-title {
   margin: 0 !important;
   max-width: 20ch !important;
-  font-size: clamp(28px, 4vw, 44px) !important;
+  font-size: var(--fs-hero) !important;
   line-height: 1.1 !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
@@ -136,7 +136,7 @@
 }
 :root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a:first-child {
   background: #fff;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   box-shadow: var(--sh-2);
 }
 :root[data-ivw="on"][data-ivw-page="portalinicio"] .ivw-pi-cta a:first-child:hover { transform: translateY(-1px); }
@@ -237,6 +237,9 @@
   width: 36px !important;
   height: 36px !important;
   border-radius: 999px !important;
+  /* Blanco fijo a propósito: la pastilla va sobre las fotos del carrusel, no
+     sobre la superficie del tema, y el chevron que lleva dibujado es azul
+     oscuro. Con --nav-glass se oscurecería de noche y el chevron se perdería. */
   background-color: rgba(255, 255, 255, .95) !important;
   background-size: 15px 15px !important;
   background-position: center !important;
@@ -322,7 +325,7 @@
   width: 44px !important;
   height: 44px !important;
   border-radius: 12px !important;
-  background: linear-gradient(135deg, var(--blue-700), var(--blue-900)) !important;
+  background: linear-gradient(135deg, var(--fill-primary), var(--blue-900)) !important;
 }
 :root[data-ivw="on"][data-ivw-page="portalinicio"] .services-item .icon img {
   width: 22px !important;
@@ -442,7 +445,7 @@
   height: auto !important;
   padding: 11px 20px !important;
   border-radius: 999px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   opacity: 1 !important;
   box-shadow: 0 6px 20px rgba(8, 42, 102, .35) !important;
 }
@@ -485,7 +488,7 @@
   flex: 0 0 38% !important;
   max-width: 38% !important;
   padding: 28px !important;
-  background: linear-gradient(160deg, var(--blue-700), var(--blue-900)) !important;
+  background: linear-gradient(160deg, var(--fill-primary), var(--blue-900)) !important;
 }
 :root[data-ivw="on"][data-ivw-page="portalinicio"] #boxlogin .logoITSON-login {
   max-width: 170px !important;
@@ -541,7 +544,7 @@
 :root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-control:focus {
   background: var(--surface) !important;
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
 }
 /* El icono del campo es un <div> con un PNG dentro, colocado por el tema */
 :root[data-ivw="on"][data-ivw-page="portalinicio"] #isesion .form-control-feedback {
@@ -563,7 +566,7 @@
   margin-top: 4px !important;
   border: 0 !important;
   border-radius: var(--r) !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-family: var(--font-body) !important;
   font-size: 14px !important;

@@ -30,7 +30,7 @@
 }
 :root[data-ivw="on"] #page-course-search #region-main .simplesearchform .input-group:focus-within {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
 }
 :root[data-ivw="on"] #page-course-search #region-main .simplesearchform .form-control {
   border: 0 !important;
@@ -45,7 +45,7 @@
   align-items: center !important;
   justify-content: center !important;
   border-radius: 0 !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border: 0 !important;
   color: #fff !important;
   padding: 0 20px !important;
@@ -53,7 +53,7 @@
   box-shadow: none !important;
 }
 :root[data-ivw="on"] #page-course-search #region-main .simplesearchform .btn.search-icon:hover {
-  background: var(--blue-600) !important;
+  background: var(--fill-primary-hi) !important;
 }
 :root[data-ivw="on"] #page-course-search #region-main .simplesearchform .btn.search-icon i {
   display: inline-block !important;
@@ -249,13 +249,13 @@
 :root[data-ivw="on"] #page-course-search .highlight,
 :root[data-ivw="on"] #page-course-index-category .highlight,
 :root[data-ivw="on"] span.highlight {
-  background: #fff3c4 !important;
+  background: var(--highlight) !important;
   color: inherit !important;
   border-radius: 2px !important;
   padding: 0 !important;
   margin: 0 !important;
   font-weight: 700 !important;
-  box-shadow: 0 0 0 1px #fff3c4 !important;
+  box-shadow: 0 0 0 1px var(--highlight) !important;
   text-decoration: inherit !important;
 }
 
@@ -287,7 +287,7 @@
   text-decoration: none !important;
 }
 :root[data-ivw="on"] #page-course-search .pagination .page-item.active .page-link {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
   box-shadow: var(--sh-1) !important;
@@ -391,7 +391,7 @@
 }
 :root[data-ivw="on"] #page-course-index-category select.urlselect:focus {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
   outline: none !important;
 }
 :root[data-ivw="on"] #page-course-index-category .urlselect form { margin: 0 !important; }
@@ -413,7 +413,7 @@
 }
 :root[data-ivw="on"] #page-course-index-category .simplesearchform .input-group:focus-within {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
 }
 :root[data-ivw="on"] #page-course-index-category .simplesearchform .form-control {
   border: 0 !important;
@@ -427,7 +427,7 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border: 0 !important;
   border-radius: 0 !important;
   color: #fff !important;
@@ -435,7 +435,7 @@
   height: 100% !important;
   box-shadow: none !important;
 }
-:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon:hover { background: var(--blue-600) !important; }
+:root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon:hover { background: var(--fill-primary-hi) !important; }
 :root[data-ivw="on"] #page-course-index-category .simplesearchform .btn.search-icon i {
   display: inline-block !important;
   color: #fff !important;

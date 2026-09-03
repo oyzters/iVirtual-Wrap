@@ -99,7 +99,7 @@
 :root[data-ivw="on"] #page-my-index .block .card-title,
 :root[data-ivw="on"] #page-my-index .block h3 {
   font-family: var(--font-head) !important;
-  font-size: 18px !important;
+  font-size: var(--fs-section) !important;
   font-weight: 800 !important;
   letter-spacing: -.01em !important;
   color: var(--ink) !important;
@@ -322,7 +322,7 @@
 }
 :root[data-ivw="on"] .ivw-tl-item .btn {
   border-radius: 999px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   border: 0 !important;
   font-weight: 600 !important;
@@ -331,7 +331,7 @@
   white-space: nowrap !important;
   box-shadow: none !important;
 }
-:root[data-ivw="on"] .ivw-tl-item .btn:hover { background: var(--blue-700) !important; }
+:root[data-ivw="on"] .ivw-tl-item .btn:hover { background: var(--fill-primary) !important; }
 :root[data-ivw="on"] .ivw-tl-item .btn.ivw-btn-soft {
   background: var(--surface) !important;
   color: var(--blue-700) !important;
@@ -407,6 +407,30 @@
   transform: translateY(-2px) !important;
   box-shadow: var(--sh-2) !important;
   border-color: var(--blue-300) !important;
+}
+
+/* ---------- Tarjeta de "Mis cursos": periodo y menú ----------
+   Dos suposiciones de tema claro horneadas en el markup de Moodle:
+   · `.categoryname` —el semestre al que pertenece el curso— hereda un gris
+     oscuro que sobre la tarjeta de noche daba 1.04:1, es decir, invisible:
+     no se veía a qué periodo era cada curso.
+   · el pie con el menú `⋮` trae la utilidad `.bg-white` de Bootstrap, que
+     dibujaba un rectángulo blanco en la esquina de cada tarjeta. */
+/* Se apunta al bloque, no a la tarjeta: el Tablero las llama
+   `.dashboard-card` y "Mis cursos" `.course-card`, mismo componente. */
+:root[data-ivw="on"] .block_myoverview .categoryname,
+:root[data-ivw="on"] .block_recentlyaccessedcourses .categoryname,
+:root[data-ivw="on"] .block_myoverview .text-muted,
+:root[data-ivw="on"] .block_myoverview .muted {
+  color: var(--muted) !important;
+}
+:root[data-ivw="on"] .block_myoverview .categoryname {
+  font-size: 12.5px !important;
+}
+:root[data-ivw="on"] .block_myoverview .bg-white,
+:root[data-ivw="on"] .block_myoverview .card-footer {
+  background: transparent !important;
+  border: 0 !important;
 }
 :root[data-ivw="on"] .block_recentlyaccessedcourses .dashboard-card-img,
 :root[data-ivw="on"] .block_recentlyaccessedcourses .card-img-top {
@@ -505,13 +529,13 @@
 :root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:hover {
   background: var(--blue-100) !important;
   border-color: var(--blue-300) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   text-decoration: none !important;
 }
 :root[data-ivw="on"] .block_timeline .dropdown-toggle:focus-visible,
 :root[data-ivw="on"] .block_timeline [data-toggle="dropdown"]:focus-visible {
   outline: none !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
 }
 :root[data-ivw="on"] .block_timeline .dropdown-toggle::after {
   border-top-color: currentColor !important;
@@ -544,6 +568,6 @@
 }
 :root[data-ivw="on"] .block_timeline .dropdown-item.active,
 :root[data-ivw="on"] .block_timeline .dropdown-item[aria-current="true"] {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
 }

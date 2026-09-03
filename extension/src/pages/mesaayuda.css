@@ -92,7 +92,7 @@
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox:focus {
   outline: 0 !important;
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] .form-field input::placeholder,
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] #cpatchaTextBox::placeholder { color: var(--muted) !important; }
@@ -115,7 +115,7 @@
   margin: 8px 0 0 !important;
   padding: 7px 10px !important;
   border-radius: var(--r-sm) !important;
-  background: #fdecea !important;
+  background: var(--danger-50) !important;
   font-size: 12.5px !important;
   font-weight: 500 !important;
   color: var(--danger) !important;
@@ -170,7 +170,7 @@
   transition: background .15s ease, color .15s ease !important;
 }
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha:hover {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
 }
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] #btnGenerarNuevaCaptcha i { display: none !important; }
@@ -199,7 +199,7 @@
   padding: 12px 20px !important;
   border: 0 !important;
   border-radius: var(--r-sm) !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   box-shadow: 0 6px 16px rgba(11, 92, 173, .25) !important;
   font-family: var(--font-body) !important;
   font-size: 14.5px !important;
@@ -259,7 +259,7 @@
 :root[data-ivw="on"][data-ivw-page="mesaayuda"] .MAclass:hover {
   margin: 2px 0 !important;   /* el sitio le mete margin lateral en :hover y bailaba */
   background: var(--blue-50) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 
 /* ---------- Modal de mensajes ---------- */
@@ -291,7 +291,7 @@
   border: 0 !important;
   border-radius: var(--r-sm) !important;
   padding: 10px 22px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   color: #fff !important;
