@@ -311,6 +311,22 @@
 :root[data-ivw="on"] img.activityicon:not(.nofilter) {
   filter: var(--icon-filter);
 }
+/* El mismo icono negro de `theme/image.php`, pero servido como
+   `background-image` en vez de como <img>: la regla de arriba no lo alcanza
+   porque no hay elemento que filtrar, solo un fondo. Pasa en la ruta del
+   gestor de archivos, donde la carpeta quedaba como un cuadrado negro sobre
+   la superficie oscura.
+   `filter` no sabe de fondos: tiñe el elemento entero, y este <span> lleva
+   dentro el enlace con el nombre de la carpeta —invertirlo dejaba "Archivos"
+   en naranja—. La segunda regla vuelve a invertir ese contenido, que es la
+   forma de que el filtro alcance solo al fondo. De día ambas resuelven a
+   `none`, así que no se aplica nada. */
+:root[data-ivw="on"] .fp-path-folder {
+  filter: var(--icon-filter);
+}
+:root[data-ivw="on"] .fp-path-folder > * {
+  filter: var(--icon-filter);
+}
 /* Moodle colorea el glifo por propósito con su propia cadena de `filter`, y
    los iconos de marca traen color propio: ahí el nuestro sobra y encima los
    dejaría grises. En vez de esquivarlos desde el selector de arriba —que ya
