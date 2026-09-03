@@ -15,17 +15,137 @@
   --blue-100: #d6e6f7;
   --blue-50:  #eef5fc;
 
+  /* Versiones OPACAS de los dos azules tenues, para superficies que pueden
+     quedar anidadas sobre otro tinte. De día --blue-50/-100 ya son opacos y
+     estos son un alias exacto: no se mueve un pixel. De noche son translúcidos
+     (rgba(91,157,255,.12) y .22), así que al apilarse dos veces el fondo se
+     aclara y el texto encima pierde contraste: la pastilla de un evento dentro
+     de la celda del día de hoy caía a 4.22:1, por debajo del 4.5 de AA, y
+     además las pastillas se veían de tres colores distintos según el día que
+     tuvieran debajo. Opacas quedan idénticas en toda la rejilla. */
+  --blue-50-op:  var(--blue-50);
+  --blue-100-op: var(--blue-100);
+
   /* Neutros */
   --ink:      #0f1b2d;
   --ink-2:    #38465c;
-  --muted:    #6b7891;
+  --muted:    #647085;
   --line:     #e5eaf2;
   --surface:  #ffffff;
   --canvas:   #f4f7fb;
 
-  --ok:       #12805c;
-  --warn:     #b7791f;
+  --ok:       #0f7052;
+  --warn:     #8a590c;
   --danger:   #c0392b;
+
+  /* Derivados — se recalculan solos en oscuro porque color-mix() lee los
+     tokens de arriba, que ya tienen remap oscuro. Cero líneas nuevas hacen
+     falta dentro del @media de abajo. */
+  --ok-50:     color-mix(in srgb, var(--ok) 12%, var(--surface));
+  --warn-50:   color-mix(in srgb, var(--warn) 12%, var(--surface));
+  --danger-50: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  --focus-ring:      color-mix(in srgb, var(--blue-500) 18%, transparent);
+  --scrollbar-thumb: color-mix(in srgb, var(--muted) 30%, var(--canvas));
+  --nav-glass:       color-mix(in srgb, var(--surface) 93%, transparent);
+
+  /* Mismo criterio para los últimos colores fijos que quedaban sueltos en las
+     hojas de página. Cada uno era un tono elegido a ojo sobre fondo claro
+     —arrastre del scroll al pasar, chevron de la miga de pan, punto de
+     "sin finalización", franja par de las tablas del enunciado, dropzone al
+     pasar por encima— y de noche se quedaban como manchas pálidas. Los
+     porcentajes están calculados para reproducir el valor que había fijo, así
+     que en claro no se mueve un pixel; en oscuro se recalculan solos. */
+  --scrollbar-thumb-hi: color-mix(in srgb, var(--muted) 45%, var(--canvas));
+  --chevron:            color-mix(in srgb, var(--muted) 42%, var(--surface));
+  --dot-idle:           color-mix(in srgb, var(--muted) 28%, var(--surface));
+  --zebra:              color-mix(in srgb, var(--ink) 3%, var(--surface));
+  --blue-50-hi:         color-mix(in srgb, var(--blue-500) 10%, var(--surface));
+
+  /* Iconos de UI que Moodle sirve como <img> desde theme/image.php: el SVG no
+     declara `fill`, así que se pinta negro, y al venir por <img> es un
+     documento aparte donde el `color` del CSS no entra. Los de actividad se
+     salvan porque Moodle les aplica su propia cadena de `filter`; a los demás
+     no, y de noche quedan negros sobre fondo oscuro. En claro no hace falta
+     nada: negro sobre superficie clara es justo lo correcto. */
+  --icon-filter: none;
+
+  /* Coincidencia de búsqueda. Va explícito por modo, no derivado: el texto
+     resaltado conserva su color (`inherit`), así que el fondo tiene que
+     funcionar bajo tinta oscura de día y clara de noche, y el amarillo de
+     siempre solo cumple lo primero. */
+  --highlight: #fff3c4;
+
+  /* Propósito del módulo (Moodle agrupa así las actividades). El tono es el
+     mismo en ambos modos; lo que cambia es cuánto se mezcla con la superficie
+     —un lavado pálido sobre blanco, un tinte oscuro sobre el lienzo de noche—.
+     Los tonos están calculados para reproducir exactamente los pasteles que
+     había antes fijos, así que en claro no se mueve un pixel.
+     El glifo no se toca: Moodle ya lo colorea con su cadena de `filter`. */
+  --purpose-mix: 12%;
+  --purpose-collaboration:  rgb(47, 130, 222);
+  --purpose-content:        rgb(80, 163, 138);
+  --purpose-assessment:     rgb(238, 130, 22);
+  --purpose-administration: rgb(113, 130, 180);
+  --purpose-interface:      rgb(155, 105, 213);
+
+  /* Rellenos sólidos que llevan texto blanco encima (botón primario, pastilla
+     del día de hoy, insignias de conteo). Mismo doble rol que ya obligó a
+     separar --current de --blue-800: como TEXTO sobre fondo oscuro el azul
+     tiene que aclararse, pero como RELLENO tiene que seguir siendo oscuro o el
+     blanco encima deja de leerse —quedaba en 2.72:1—. No hace falta variante
+     por modo: el azul de día ya contrasta bien con blanco (6.6:1) y sigue
+     destacando sobre la superficie de noche. */
+  --fill-primary: #0b5cad;
+  --fill-danger:  #c0392b;
+  /* Extremo claro de los degradados de relleno y de los hover de botón sólido.
+     Vale exactamente lo que --blue-600 vale de día, así que el modo claro no
+     cambia ni un pixel. Existe porque --blue-600 tiene dos papeles que solo de
+     noche se separan: como ACENTO sobre superficie oscura se remapea a #8bbaff,
+     y ese azul claro bajo texto blanco cae a 1.99:1 —el botón de iniciar sesión
+     era ilegible en su mitad izquierda—. Como RELLENO no debe cambiar por modo,
+     igual que --fill-primary. */
+  --fill-primary-hi: #1461bd;
+
+  /* Puente hacia una variable del tema Adaptable, no un token nuestro.
+     Adaptable declara `--ad-regionmaintext-colour: #000` en :root y la consume
+     en `#region-main { color: ... }`. Como el color se hereda, TODO lo que
+     dentro de la región principal no declare color propio salía negro puro:
+     sobre la superficie oscura quedaba en 1.11:1, es decir invisible.
+     Se detectó primero en el enunciado de un foro y después, idéntico, en las
+     reglas de un cuestionario ("intentos permitidos", "límite de tiempo") —
+     iba a reaparecer en cada pantalla nueva, así que se corrige en el origen.
+     Redefinirla es preferible a pelear el `color` de #region-main regla por
+     regla: es la única fuente de ese color, así que basta una línea. */
+  --ad-regionmaintext-colour: var(--ink);
+
+  /* Categoría del evento en el calendario de Moodle. Tonos de media
+     saturación: legibles como pastilla sólida con texto blanco de día y como
+     acento sobre superficie oscura de noche, así que no cambian por modo. */
+  --event-site:  #7a5cd6;
+  --event-group: #0f8ca8;
+
+  /* Skeleton de carga. Este par SÍ se redefine abajo: la dirección del barrido
+     se invierte entre modos —en claro el destello es la superficie blanca, en
+     oscuro es un gris más claro que el bloque— y una sola fórmula daría un
+     barrido más oscuro que el fondo en uno de los dos. */
+  --skeleton:    color-mix(in srgb, var(--muted) 14%, var(--surface));
+  --skeleton-hi: var(--surface);
+
+  /* --blue-800 tiene dos roles que coinciden por casualidad en claro (navy
+     oscuro = buen relleno Y buen texto sobre blanco): "relleno hover más
+     oscuro" en botones sólidos (background/border-color, ~7 usos, texto
+     blanco encima) y "texto de activo/actual" (color:, ~39 usos, sobre
+     fondos claros/tenues). En oscuro se separan — --blue-800 oscuro es casi
+     negro, perfecto como relleno, ilegible como texto. --current es el
+     texto: en claro es un alias exacto de --blue-800 (cero cambio visual),
+     en oscuro toma el valor de --blue-700 (ya probado legible). */
+  --current: var(--blue-800);
+
+  /* Los controles nativos (casillas, radios, barras de scroll, el desplegable
+     de <select>, el selector de fecha) no se pintan con CSS: los dibuja el
+     navegador y solo miran `color-scheme`. Sin esto, de noche salían blancos
+     recortados sobre la superficie oscura. */
+  color-scheme: light;
 
   /* Forma */
   --r-sm: 8px;
@@ -41,6 +161,80 @@
   /* Tipografía */
   --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-head: "Plus Jakarta Sans", var(--font-body);
+
+  /* Escala tipográfica fluida — un solo sistema para los títulos que viven en
+     contenedores de ancho variable. NO usar en anchos fijos (popovers,
+     drawers) ni en glifos de icono: ahí `vw` no significa nada. */
+  --fs-hero:    clamp(28px, 4vw, 44px);    /* portada a sangre */
+  --fs-display: clamp(26px, 3vw, 38px);    /* hero dentro de tarjeta */
+  --fs-title:   clamp(22px, 2.4vw, 30px);  /* título de pantalla */
+  --fs-section: clamp(17px, 1.5vw, 20px);  /* encabezado de bloque/sección */
+
+  /* Serif con eje óptico, reservada a dos momentos: el wordmark del login y
+     el título de la portada de invitado. content.js ya la descargaba en cada
+     carga sin que ninguna regla la usara. */
+  --font-display: "Fraunces", var(--font-head);
+}
+
+/* ---------- Modo oscuro: mismos tokens, mismos consumidores ----------
+   Todo el sistema ya vive en var(--*), así que remapear los valores aquí
+   basta para que cards, botones, inputs y el chrome del topbar respondan
+   solos. Lo que NO cubre: los colores fijos escritos directo en las hojas de
+   página. Van ~56 (sin contar #fff/#000, que muchas veces son correctos:
+   texto sobre una superficie oscura fija).
+
+   Cuelga de un atributo, no de `@media (prefers-color-scheme)`, porque el
+   botón del topbar deja elegir Automático / Claro / Oscuro. content.js
+   resuelve la preferencia —consultando el sistema cuando está en automático—
+   y escribe data-ivw-theme antes de pintar. Con el media query harían falta
+   dos copias del bloque (una por consulta, otra por atributo) y tarde o
+   temprano se desincronizan; así hay una sola definición. */
+:root[data-ivw="on"][data-ivw-theme="dark"] {
+    --blue-900: #0a0f1a;
+    --blue-800: #101a2c;
+    --blue-700: #5b9dff;   /* primario: el mismo azul que ya usa index.html */
+    --blue-600: #8bbaff;
+    --blue-500: #5b9dff;   /* accent */
+    --blue-300: #3f6fb0;
+    --blue-100: rgba(91, 157, 255, .22);
+    --blue-50:  rgba(91, 157, 255, .12);
+    /* Mismos porcentajes que el alpha de arriba, pero mezclados contra la
+       superficie en vez de dejarlos transparentes: reproducen exactamente el
+       color que hoy se ve sobre una celda normal —rgb(33,44,63) y rgb(40,57,85)—
+       sin heredar lo que haya debajo. */
+    --blue-50-op:  color-mix(in srgb, var(--blue-500) 12%, var(--surface));
+    --blue-100-op: color-mix(in srgb, var(--blue-500) 22%, var(--surface));
+
+    --ink:      #f4f6f9;
+    --ink-2:    #c7cdd8;
+    --muted:    #93a0b0;
+    --line:     rgba(255, 255, 255, .09);
+    --surface:  #191d25;
+    --canvas:   #0e1116;
+
+    --current:  var(--blue-700);
+
+    --skeleton:    color-mix(in srgb, var(--muted) 14%, var(--surface));
+    --skeleton-hi: color-mix(in srgb, var(--muted) 26%, var(--surface));
+
+    /* Sobre fondo oscuro un 12% no se distingue de la superficie */
+    --purpose-mix: 24%;
+
+    /* Negro -> gris claro. El `brightness` evita el blanco puro, que sobre
+       superficie oscura vibra más que el texto que acompaña al icono. */
+    --icon-filter: invert(1) brightness(.82);
+
+    --highlight: rgb(74, 58, 22);
+
+    --ok:       #35c98f;
+    --warn:     #e0a530;
+    --danger:   #ff6b5c;
+
+    color-scheme: dark;
+
+    --sh-1: 0 1px 2px rgba(0, 0, 0, .5), 0 1px 3px rgba(0, 0, 0, .4);
+    --sh-2: 0 4px 14px rgba(0, 0, 0, .45);
+    --sh-3: 0 12px 34px rgba(0, 0, 0, .55);
 }
 
 /* ---------- Base tipográfica global ---------- */
@@ -70,7 +264,71 @@
 }
 :root[data-ivw="on"] a:hover { color: var(--blue-500); text-decoration: underline; }
 
+/* Texto de pista de los campos. Sin esto lo elige el navegador: daba un gris
+   que sobre el campo oscuro se quedaba en 3.5:1, por debajo del 4.5:1 que pide
+   AA para texto normal. Importa más de lo que parece en el login, donde el
+   diseño no muestra etiqueta y el placeholder es la única indicación de qué va
+   en cada campo. --muted ya está calibrado para los dos modos: queda en 5.0:1
+   de día y 6.4:1 de noche. El `opacity: 1` es necesario porque Firefox le
+   aplica una opacidad propia que volvería a bajar el contraste. */
+:root[data-ivw="on"] ::placeholder {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+}
+
 :root[data-ivw="on"] img { max-width: 100%; height: auto; }
+
+/* ---------- Skeleton de carga (.bg-pulse-grey de Moodle) ----------
+   Moodle marca así los huecos que rellena por AJAX (el Tablero solo trae 213).
+   Su color es `rgb(248,249,250)` fijo: manchas casi blancas sobre el lienzo
+   oscuro. Aquí se repinta con tokens y su pulso de opacidad se cambia por un
+   barrido, que lee mejor como "esto está cargando" y no como "esto está roto".
+   No hace falta tocar el foco ni el tab-order: son <div> vacíos sin nada
+   enfocable dentro, y Moodle ya cuelga aria-hidden de la mayoría. */
+:root[data-ivw="on"] .bg-pulse-grey {
+  background-color: var(--skeleton) !important;
+  background-image: linear-gradient(90deg,
+    var(--skeleton) 0%, var(--skeleton-hi) 50%, var(--skeleton) 100%) !important;
+  background-size: 200% 100% !important;
+  background-repeat: no-repeat !important;
+  border-radius: var(--r-sm) !important;
+  animation: ivw-shimmer 1.6s ease-in-out infinite !important;
+}
+@keyframes ivw-shimmer {
+  from { background-position: 150% 0; }
+  to   { background-position: -50% 0; }
+}
+/* Sin movimiento: bloque sólido, no un degradado congelado a medias */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ivw="on"] .bg-pulse-grey { background-image: none !important; }
+}
+
+/* Iconos monocromos de Moodle (ver --icon-filter). Se excluyen los de
+   actividad —Moodle ya los colorea por propósito con su propio filter, y
+   pisarlo los dejaría grises— y cualquier imagen de contenido, que nunca
+   lleva la clase `.icon` (usa img-fluid / atto_*) y sí trae color propio. */
+:root[data-ivw="on"] img.icon:not(.nofilter),
+:root[data-ivw="on"] img.activityicon:not(.nofilter) {
+  filter: var(--icon-filter);
+}
+/* Moodle colorea el glifo por propósito con su propia cadena de `filter`, y
+   los iconos de marca traen color propio: ahí el nuestro sobra y encima los
+   dejaría grises. En vez de esquivarlos desde el selector de arriba —que ya
+   se había quedado corto: el contenedor de la línea de tiempo NO trae clase
+   de propósito, así que Moodle no lo pintaba y nosotros tampoco, y el glifo
+   salía negro sobre el círculo oscuro— se apaga el token aquí. Como
+   --icon-filter se hereda, todo lo que cuelgue del contenedor queda fuera
+   sin repetir un solo selector. */
+:root[data-ivw="on"] .activityiconcontainer.administration,
+:root[data-ivw="on"] .activityiconcontainer.assessment,
+:root[data-ivw="on"] .activityiconcontainer.collaboration,
+:root[data-ivw="on"] .activityiconcontainer.communication,
+:root[data-ivw="on"] .activityiconcontainer.content,
+:root[data-ivw="on"] .activityiconcontainer.interactivecontent,
+:root[data-ivw="on"] .activityiconcontainer.interface,
+:root[data-ivw="on"] .activityiconcontainer.isbranded {
+  --icon-filter: none;
+}
 
 /* ---------- Componentes genéricos ---------- */
 :root[data-ivw="on"] .btn {
@@ -84,25 +342,52 @@
 :root[data-ivw="on"] .btn:active { transform: translateY(1px) !important; }
 
 :root[data-ivw="on"] .btn-primary {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   box-shadow: var(--sh-1) !important;
   color: #fff !important;
 }
 :root[data-ivw="on"] .btn-primary:hover {
-  background: var(--blue-600) !important;
+  background: var(--fill-primary-hi) !important;
   box-shadow: var(--sh-2) !important;
 }
+/* `.btn-outline-secondary` entra aquí junto a sus hermanos: Adaptable lo pinta
+   con su verde azulado de marca (#009688 de borde, #0ca0cc de relleno), que no
+   es de este sistema. En claro pasaba como un acento raro pero tolerable; en
+   oscuro son bloques de cian encendido sobre el lienzo —los filtros de "Mis
+   cursos" son tres seguidos— y es lo primero que ve el ojo en la pantalla.
+   Se corrige en los dos modos: el botón secundario ya tenía una definición
+   aquí, a este solo se le había escapado la clase. */
 :root[data-ivw="on"] .btn-secondary,
+:root[data-ivw="on"] .btn-outline-secondary,
 :root[data-ivw="on"] .btn-outline-primary {
   background: var(--surface) !important;
   border-color: var(--line) !important;
   color: var(--blue-700) !important;
 }
 :root[data-ivw="on"] .btn-secondary:hover,
+:root[data-ivw="on"] .btn-outline-secondary:hover,
 :root[data-ivw="on"] .btn-outline-primary:hover {
   border-color: var(--blue-300) !important;
   background: var(--blue-50) !important;
+}
+
+/* Adaptable rellena con su cian de marca (#0ca0cc) todo lo que sea `button`
+   o `.btn-link`, incluidos los que solo deberían ser texto: el selector de
+   fecha del modal de evento, los "Mostrar más". Bootstrap define `.btn-link`
+   justo al revés —sin relleno, con el color de enlace— y es lo que el resto
+   del sistema espera. Como con `.btn-outline-secondary`, se corrige en los
+   dos modos: de día era un botón azul de más, de noche es un bloque de cian
+   encendido dentro de un formulario oscuro. */
+:root[data-ivw="on"] .btn-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--blue-700) !important;
+}
+:root[data-ivw="on"] .btn-link:hover {
+  color: var(--blue-500) !important;
+  text-decoration: underline !important;
 }
 
 :root[data-ivw="on"] .form-control,
@@ -121,7 +406,7 @@
 :root[data-ivw="on"] select:focus,
 :root[data-ivw="on"] textarea:focus {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
   outline: none !important;
 }
 
@@ -131,6 +416,31 @@
   border: 1px solid var(--line) !important;
   border-radius: var(--r-lg) !important;
   box-shadow: var(--sh-1) !important;
+}
+
+/* ---------- Foco de teclado: anillo de marca por defecto ----------
+   Cubre todo lo que no define su propio :focus-visible (la mayoría del
+   sistema). Las reglas específicas de cada página siguen ganando por
+   especificidad donde ya existen. */
+:root[data-ivw="on"] a:focus-visible,
+:root[data-ivw="on"] button:focus-visible,
+:root[data-ivw="on"] [tabindex]:focus-visible {
+  outline: 2.5px solid var(--blue-500) !important;
+  outline-offset: 2px !important;
+}
+
+/* ---------- Movimiento reducido: una sola regla para todo el wrap ----------
+   Antes solo protegía el drawer del curso (chrome.css). Aquí cubre los
+   @keyframes de login/notifications y cualquier transition/transform del
+   resto del sistema. */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-ivw="on"] *,
+  :root[data-ivw="on"] *::before,
+  :root[data-ivw="on"] *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ============================================================
@@ -144,7 +454,7 @@
   width: 100% !important;
   aspect-ratio: 16 / 9 !important;
   margin: 0 0 12px !important;
-  background: linear-gradient(135deg, var(--blue-700), var(--blue-900));
+  background: linear-gradient(135deg, var(--fill-primary), var(--blue-900));
   position: relative;
   overflow: hidden;
 }
