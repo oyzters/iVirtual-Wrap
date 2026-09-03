@@ -8,6 +8,7 @@
   var ROOT = document.documentElement;
   var ATTR = "data-ivw";
   var KEY = "ivwWrapEnabled";
+  var THEME_KEY = "ivwThemeMode";   // "auto" | "light" | "dark"
   var CSS = __IVW_CSS__;
   var FONTS =
     "https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap";
@@ -80,8 +81,39 @@ __IVW_ENHANCE__
     setTimeout(function () { window.ivwEnhance.run(); }, 600);
   }
 
+  /* Tema: el CSS solo mira [data-ivw-theme], así que aquí se resuelve igual
+     que en content.js. Sin esto el userscript y el bookmarklet se quedarían
+     sin modo oscuro, porque ya no hay `@media (prefers-color-scheme)`. */
+  var mqOscuro = window.matchMedia("(prefers-color-scheme: dark)");
+  var modoTema = "light";
+
+  function aplicarTema(modo) {
+    modoTema = modo || "auto";
+    var resuelto = (modoTema === "light" || modoTema === "dark")
+      ? modoTema
+      : (mqOscuro.matches ? "dark" : "light");
+    ROOT.setAttribute("data-ivw-theme", resuelto);
+    ROOT.setAttribute("data-ivw-theme-mode", modoTema);
+  }
+
+  function ciclarTema() {
+    var orden = ["light", "dark", "auto"];
+    var siguiente = orden[(orden.indexOf(modoTema) + 1) % orden.length];
+    aplicarTema(siguiente);
+    try { localStorage.setItem(THEME_KEY, siguiente); } catch (e) {}
+    return siguiente;
+  }
+
   function boot(defaultOn) {
     ROOT.setAttribute("data-ivw-page", pageKey());
+    var temaGuardado = null;
+    try { temaGuardado = localStorage.getItem(THEME_KEY); } catch (e) {}
+    aplicarTema(temaGuardado || "light");
+    mqOscuro.addEventListener("change", function () {
+      if (modoTema === "auto") aplicarTema("auto");
+    });
+    // enhance.js busca este puente para el botón del topbar.
+    window.ivwTema = { actual: function () { return modoTema; }, ciclar: ciclarTema };
     // El calendario escolar tiene una vista reducida (/Calendario/Prototipo) que la
     // portada del Portal de Sistemas embebe en un <iframe>: mismo markup, pero sin
     // sitio para el layout a pantalla completa.

@@ -138,7 +138,7 @@
 :root[data-ivw="on"] .message-app [data-region="favourite-icon-container"] {
   display: inline-flex !important;
   align-items: center !important;
-  color: #d99400 !important;
+  color: var(--warn) !important;
 }
 :root[data-ivw="on"] .message-app [data-region="favourite-icon-container"] i {
   font-size: 12px !important;
@@ -165,7 +165,7 @@
 :root[data-ivw="on"] .message-app [data-region="self-conversation-message-container"] p:first-child {
   font-size: 13px !important;
   font-weight: 700 !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 :root[data-ivw="on"] .message-app [data-region="self-conversation-message-container"] p {
   margin: 0 !important;
@@ -188,7 +188,7 @@
 :root[data-ivw="on"] .message-app .message .tail { display: none !important; }
 :root[data-ivw="on"] .message-app .message.send {
   margin-left: auto !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   border-bottom-right-radius: 5px !important;
 }
@@ -262,13 +262,13 @@
 :root[data-ivw="on"] .message-app [data-region="send-message-txt"]::placeholder { color: var(--muted) !important; }
 :root[data-ivw="on"] .message-app [data-region="send-message-txt"]:focus {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
   outline: 0 !important;
 }
 /* Enviar: el único botón con color; emojis se queda neutro */
 :root[data-ivw="on"] .message-app .btn-icon[data-action="send-message"],
 :root[data-ivw="on"] .message-app .btn[data-action="send-message"] {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
 }
 :root[data-ivw="on"] .message-app .btn-icon[data-action="send-message"]:hover,
@@ -312,7 +312,7 @@
 :root[data-ivw="on"] .message-app [data-region="unread-count"] {
   padding: 2px 8px !important;
   border-radius: 999px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -394,7 +394,7 @@
 :root[data-ivw="on"] .message-app .simplesearchform:focus-within {
   border-color: var(--blue-500) !important;
   background: var(--surface) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 :root[data-ivw="on"] .message-app .simplesearchform .form-control {
   height: 38px !important;
@@ -453,7 +453,7 @@
 :root[data-ivw="on"] .message-app [data-region="search-input"]:focus {
   border-color: var(--blue-500) !important;
   background: var(--surface) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
   outline: 0 !important;
 }
 
@@ -477,7 +477,7 @@
 /* ---------- Barras de scroll finas dentro del cajón ---------- */
 :root[data-ivw="on"] .message-app *::-webkit-scrollbar { width: 8px !important; }
 :root[data-ivw="on"] .message-app *::-webkit-scrollbar-thumb {
-  background: #cfdaea !important;
+  background: var(--scrollbar-thumb) !important;
   border-radius: 999px !important;
 }
 :root[data-ivw="on"] .message-app *::-webkit-scrollbar-track { background: transparent !important; }

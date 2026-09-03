@@ -27,6 +27,10 @@ const CSS_ORDER = [
   "pages/attendance.css",
   "pages/reportbuilder.css",
   "pages/chrome.css",
+  // Va al final a propósito: es una capa de compatibilidad que corrige lo que
+  // Moodle y Adaptable pintan por su cuenta, así que tiene que poder pisar a
+  // las hojas de página. Mismo orden que los dos bloques de manifest.json.
+  "pages/dark.css",
 ];
 
 function read(p) { return fs.readFileSync(p, "utf8"); }

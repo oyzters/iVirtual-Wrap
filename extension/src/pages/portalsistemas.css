@@ -82,7 +82,7 @@
   place-items: center !important;
   font-size: 9px !important;
   color: #fff !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border: 2px solid var(--surface) !important;
   box-shadow: none !important;
   animation: none !important;
@@ -108,7 +108,7 @@
   pointer-events: auto !important;
   gap: 16px !important;
   padding: 10px max(20px, calc((100% - 1240px) / 2)) !important;
-  background: rgba(255, 255, 255, .92) !important;
+  background: var(--nav-glass) !important;
   backdrop-filter: saturate(140%) blur(8px);
   border-bottom: 1px solid var(--line) !important;
   box-shadow: var(--sh-1) !important;
@@ -129,7 +129,7 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--blue-700), var(--blue-900));
+  background: linear-gradient(135deg, var(--fill-primary), var(--blue-900));
   color: #fff;
   font-family: var(--font-head);
   font-size: 13px;
@@ -190,7 +190,7 @@
 :root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar:focus {
   background: var(--surface) !important;
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
 }
 :root[data-ivw="on"][data-ivw-page="portalsistemas"] #Buscar::placeholder {
   color: var(--muted) !important;

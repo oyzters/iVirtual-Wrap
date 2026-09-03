@@ -69,7 +69,7 @@
 :root[data-ivw="on"] .page-header-headings h1,
 :root[data-ivw="on"] #page-user-profile .page-header-headings h1 {
   font-family: var(--font-head) !important;
-  font-size: clamp(22px, 2.4vw, 30px) !important;
+  font-size: var(--fs-title) !important;
   font-weight: 800 !important;
   letter-spacing: -.02em !important;
   line-height: 1.2 !important;
@@ -436,7 +436,7 @@
   padding: 2px 7px !important;
   border-radius: 6px !important;
   background: var(--blue-50) !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   font-size: 11px !important;
   font-weight: 800 !important;
   letter-spacing: .02em !important;
@@ -466,7 +466,7 @@
   padding: 9px 16px !important;
   border: 0 !important;
   border-radius: 999px !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;

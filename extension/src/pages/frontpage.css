@@ -124,7 +124,7 @@
   text-shadow: none !important;
 }
 :root[data-ivw="on"] #page-site-index .flex-direction-nav a:hover {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   opacity: 1 !important;
   transform: scale(1.06) !important;
 }
@@ -193,11 +193,14 @@
   margin-bottom: 16px;
 }
 :root[data-ivw="on"] #ivw-guest h1 {
-  font-family: var(--font-head) !important;
+  font-family: var(--font-display) !important;
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 500;
   color: #fff !important;
-  font-size: clamp(26px, 3vw, 38px);
+  font-size: var(--fs-display);
   line-height: 1.15;
-  letter-spacing: -.02em;
+  letter-spacing: -.01em;
   margin: 0 0 12px;
 }
 :root[data-ivw="on"] #ivw-guest .ivw-guest-main > p {
@@ -229,7 +232,7 @@
 :root[data-ivw="on"] #ivw-guest .ivw-btn:active { transform: translateY(1px); }
 :root[data-ivw="on"] #ivw-guest .ivw-btn-primary {
   background: #fff;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
   box-shadow: 0 6px 18px rgba(3, 20, 48, .28);
 }
 :root[data-ivw="on"] #ivw-guest .ivw-btn-primary:hover {
@@ -307,7 +310,7 @@
   transition: background .12s ease, color .12s ease;
 }
 :root[data-ivw="on"] #ivw-guest .ivw-guest-links a:hover .ivw-ql-icon {
-  background: var(--blue-700);
+  background: var(--fill-primary);
   color: #fff;
 }
 :root[data-ivw="on"] #ivw-guest .ivw-ql-icon svg { width: 18px; height: 18px; }
@@ -362,7 +365,7 @@
 }
 :root[data-ivw="on"] #frontpage-course-list > h2 {
   font-family: var(--font-head) !important;
-  font-size: 20px !important;
+  font-size: var(--fs-section) !important;
   font-weight: 800 !important;
   letter-spacing: -.01em !important;
   color: var(--ink) !important;
@@ -511,7 +514,7 @@
   transition: background .15s ease, color .15s ease !important;
 }
 :root[data-ivw="on"] #frontpage-course-list .coursebtn:hover {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   text-decoration: none !important;
 }

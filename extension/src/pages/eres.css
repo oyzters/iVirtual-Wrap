@@ -119,7 +119,7 @@
 :root[data-ivw="on"][data-ivw-page="eres"] .form-control:focus {
   background: var(--surface) !important;
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
   outline: none !important;
 }
 :root[data-ivw="on"][data-ivw-page="eres"] .form-control::placeholder { color: var(--muted) !important; }
@@ -168,7 +168,7 @@
 :root[data-ivw="on"][data-ivw-page="eres"] .radio:has(input:checked) > label {
   border-color: var(--blue-500) !important;
   background: var(--blue-50) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .12) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 :root[data-ivw="on"][data-ivw-page="eres"] #txtOtraOcupacion { margin-top: 8px !important; }
 
@@ -212,7 +212,7 @@
 }
 :root[data-ivw="on"][data-ivw-page="eres"] #cpatchaTextBox:focus {
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 4px rgba(26, 115, 199, .15) !important;
+  box-shadow: 0 0 0 4px var(--focus-ring) !important;
   outline: none !important;
 }
 
@@ -234,7 +234,7 @@
   height: 48px !important;
   border: 0 !important;
   border-radius: var(--r) !important;
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   font-family: var(--font-body) !important;
   font-size: 15px !important;

@@ -133,7 +133,7 @@
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #txtBuscador:focus {
   outline: 0 !important;
   border-color: var(--blue-500) !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .18) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 
 /* Buscador: input y botón de lupa, un solo control */
@@ -155,7 +155,7 @@
   color: var(--blue-600) !important;
   cursor: pointer !important;
 }
-:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .input-group-text:hover { color: var(--blue-800) !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .input-group-text:hover { color: var(--current) !important; }
 
 /* ---------- Agenda lateral ---------- */
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #listaEventos {
@@ -172,11 +172,11 @@
   mask-image: linear-gradient(to bottom, transparent 0, #000 26px) !important;
   overflow-y: auto !important;
   scrollbar-width: thin !important;
-  scrollbar-color: #c9d5e6 transparent !important;
+  scrollbar-color: var(--scrollbar-thumb) transparent !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #listaEventos::-webkit-scrollbar { width: 8px !important; }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #listaEventos::-webkit-scrollbar-thumb {
-  background: #c9d5e6 !important;
+  background: var(--scrollbar-thumb) !important;
   border-radius: 999px !important;
 }
 /* Rótulo de la sección: el sitio no pone ninguno y la lista aparecía suelta.
@@ -307,7 +307,7 @@
   border-color: var(--blue-300) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #btnDsgCalendario {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border: 1.5px solid var(--blue-700) !important;
   color: #fff !important;
 }
@@ -380,15 +380,15 @@
   text-transform: none !important;
   transition: background .12s ease, color .12s ease !important;
 }
-:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button:hover { background: var(--blue-50) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button:hover { background: var(--blue-50) !important; color: var(--fill-primary) !important; }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button:focus,
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button:focus-visible {
   outline: 0 !important;
-  box-shadow: 0 0 0 3px rgba(26, 115, 199, .2) !important;
+  box-shadow: 0 0 0 3px var(--focus-ring) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button-primary:not(:disabled).fc-button-active,
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-button-primary:not(:disabled):active {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   box-shadow: 0 4px 12px rgba(11, 92, 173, .25) !important;
 }
@@ -467,10 +467,10 @@
   font-weight: 600 !important;
   color: var(--ink-2) !important;
 }
-:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-day-other .fc-daygrid-day-number { color: #b7c1d2 !important; font-weight: 500 !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-day-other .fc-daygrid-day-number { color: color-mix(in srgb, var(--muted) 62%, transparent) !important; font-weight: 500 !important; }
 /* Hoy: el amarillo pálido de FullCalendar pasa a la marca */
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-day-today .fc-daygrid-day-number {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
   box-shadow: 0 3px 10px rgba(11, 92, 173, .3) !important;
 }
@@ -503,8 +503,8 @@
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-daygrid-block-event:not(.fc-event-end) { border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; margin-right: 0 !important; }
 /* Eventos de fondo (Periodo vacacional): el gris plano tapaba el mes entero */
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-bg-event {
-  background-color: #eaeef5 !important;
-  background-image: repeating-linear-gradient(135deg, rgba(107, 120, 145, .13) 0 6px, transparent 6px 12px) !important;
+  background-color: color-mix(in srgb, var(--muted) 10%, var(--canvas)) !important;
+  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--muted) 26%, transparent) 0 6px, transparent 6px 12px) !important;
   opacity: 1 !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-bg-event { position: absolute !important; inset: 0 !important; }
@@ -520,14 +520,14 @@
   letter-spacing: .05em !important;
   text-transform: uppercase !important;
   white-space: nowrap !important;
-  color: #7b879b !important;
+  color: var(--muted) !important;
 }
 /* En las semanas con trama (periodos vacacionales) el número necesita una
    base clara para leerse. */
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-daygrid-day:has(.fc-bg-event) .fc-daygrid-day-number {
-  background: rgba(255, 255, 255, .8) !important;
+  background: color-mix(in srgb, var(--surface) 82%, transparent) !important;
 }
-:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-day-other:has(.fc-bg-event) .fc-daygrid-day-number { color: #93a0b5 !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-day-other:has(.fc-bg-event) .fc-daygrid-day-number { color: var(--muted) !important; }
 
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .fc .fc-daygrid-more-link {
   margin: 2px !important;
@@ -608,8 +608,8 @@
   width: auto !important;
   padding: 5px 12px 5px 10px !important;
   border-radius: 999px !important;
-  border: 1px solid color-mix(in srgb, currentColor 30%, #fff) !important;
-  background: color-mix(in srgb, currentColor 8%, #fff) !important;
+  border: 1px solid color-mix(in srgb, currentColor 30%, var(--surface)) !important;
+  background: color-mix(in srgb, currentColor 8%, var(--surface)) !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   /* El texto va en gris azulado, no en el color de la categoría: varios de
@@ -663,7 +663,7 @@
   text-shadow: none !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] .modal-header .close:hover {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
 }
@@ -719,7 +719,7 @@
 }
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #btnDescargarIndividual,
 :root[data-ivw="on"][data-ivw-page="calendario-escolar"] #btnDescargar {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
 }
@@ -886,7 +886,7 @@
   color: var(--ink) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] #cboAreasElegibles option:checked {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
 }
 /* Los combos son widgets jqxDropDownList: se les da la misma caja.
@@ -931,7 +931,7 @@
   color: var(--blue-700) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] .jqx-listitem-state-selected {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   border-color: var(--blue-700) !important;
   color: #fff !important;
 }
@@ -950,7 +950,7 @@
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] .jqx-popup .jqx-scrollbar-thumb-state-normal,
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] .jqx-popup .jqx-scrollbar-thumb-state-normal-vertical {
-  background: #c3d0e0 !important;
+  background: var(--scrollbar-thumb) !important;
   border-color: transparent !important;
   border-radius: 999px !important;
 }
@@ -980,10 +980,10 @@
   font-weight: 600 !important;
   box-shadow: none !important;
 }
-:root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnEventos { margin-left: auto !important; background: var(--blue-700) !important; border-color: var(--blue-700) !important; color: #fff !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnEventos { margin-left: auto !important; background: var(--fill-primary) !important; border-color: var(--fill-primary) !important; color: #fff !important; }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnEventos:hover { background: var(--blue-800) !important; border-color: var(--blue-800) !important; }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnRegresar { background: var(--surface) !important; border-color: var(--line) !important; color: var(--ink-2) !important; }
-:root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnRegresar:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; color: var(--blue-700) !important; }
+:root[data-ivw="on"][data-ivw-page="calendario-anual"] #btnRegresar:hover { background: var(--blue-50) !important; border-color: var(--blue-300) !important; color: var(--fill-primary) !important; }
 
 /* ---------- Los doce meses ---------- */
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] #contenedorMeses {
@@ -1009,7 +1009,7 @@
   font-size: 15px !important;
   font-weight: 800 !important;
   letter-spacing: .01em !important;
-  color: var(--blue-800) !important;
+  color: var(--current) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] #contenedorMeses h3:not(:first-child) { margin-top: 22px !important; }
 /* La caja de cada mes: el sitio le pone borde azul grisáceo y anchos en % */
@@ -1119,7 +1119,7 @@
   box-shadow: inset 3px 0 0 var(--blue-700) !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] .eventos[data-ivw-state="now"] h5 {
-  background: var(--blue-700) !important;
+  background: var(--fill-primary) !important;
   color: #fff !important;
 }
 :root[data-ivw="on"][data-ivw-page="calendario-anual"] .eventos[data-ivw-state="now"] .ivw-cal-title::after {
@@ -1127,7 +1127,7 @@
   margin-left: 8px;
   padding: 1px 8px;
   border-radius: 999px;
-  background: var(--blue-700);
+  background: var(--fill-primary);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .05em;
@@ -1148,7 +1148,7 @@
   content: "Este mes";
   padding: 2px 9px;
   border-radius: 999px;
-  background: var(--blue-700);
+  background: var(--fill-primary);
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;

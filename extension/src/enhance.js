@@ -24,6 +24,24 @@
     link: '<path d="M10 13a4 4 0 0 0 5.7 0l2.6-2.6A4 4 0 0 0 12.6 4.7l-1.5 1.5"/><path d="M14 11a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.5-1.5"/>'
   };
 
+  // Glifo de marca (mismo trazado que extension/icons/icon.svg, sin el fondo:
+  // el fondo lo pone el CSS de cada sitio donde se usa — topbar, badge…).
+  var BRAND_MARK =
+    '<svg viewBox="0 0 128 128" aria-hidden="true">' +
+      '<circle cx="38" cy="33" r="7.5" fill="#fff"/>' +
+      '<rect x="31.5" y="46" width="13" height="50" rx="6.5" fill="#fff"/>' +
+      '<path d="M58 44 L77 92 L96 44" fill="none" stroke="#fff" stroke-width="14" ' +
+        'stroke-linecap="round" stroke-linejoin="round"/>' +
+    "</svg>";
+
+  // Glifos del selector de tema, uno por modo del ciclo.
+  var TEMA_ICONOS = {
+    auto:  '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17" /><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/>',
+    light: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>',
+    dark:  '<path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.5 8.5 0 1 0 10.2 10.2z"/>'
+  };
+  var TEMA_ETIQUETAS = { auto: "Tema: automático", light: "Tema: claro", dark: "Tema: oscuro" };
+
   function iconFor(text) {
     var t = (text || "").toLowerCase();
     if (/contrase|password|clave/.test(t)) return ICONS.key;
@@ -63,7 +81,7 @@
   function brand(topbarInner) {
     if (!topbarInner || document.getElementById("ivw-brand")) return;
     var a = el("a", null,
-      '<span class="ivw-brand-mark" aria-hidden="true">iV</span>' +
+      '<span class="ivw-brand-mark">' + BRAND_MARK + "</span>" +
       '<span class="ivw-brand-text"><strong>iVirtual</strong><small>ITSON</small></span>');
     a.id = "ivw-brand";
     a.href = "https://ivirtual.itson.edu.mx/";
@@ -304,6 +322,52 @@
     return li;
   }
 
+  /* Selector de tema: recorre Automático → Claro → Oscuro.
+     La preferencia la guarda content.js (window.ivwTema); si por lo que sea
+     no está —el bookmarklet corre sin storage—, el botón cambia el atributo
+     igual y el tema se aplica, solo que no se recuerda entre páginas. */
+  function temaBoton(userNav) {
+    if (!userNav) return;
+    var li = document.getElementById("ivw-theme-li");
+    if (!li) {
+      li = el("li", "nav-item ivw-theme");
+      li.id = "ivw-theme-li";
+      li.innerHTML = '<button type="button" class="nav-link" id="ivw-theme-btn"></button>';
+      var user = userNav.querySelector(":scope > li.usermenu, :scope > li:last-child");
+      if (user && user !== li) userNav.insertBefore(li, user);
+      else userNav.appendChild(li);
+
+      li.querySelector("button").addEventListener("click", function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var siguiente;
+        if (window.ivwTema && window.ivwTema.ciclar) {
+          siguiente = window.ivwTema.ciclar();
+        } else {
+          var orden = ["light", "dark", "auto"];
+          var actual = document.documentElement.getAttribute("data-ivw-theme-mode") || "auto";
+          siguiente = orden[(orden.indexOf(actual) + 1) % orden.length];
+          var resuelto = siguiente === "auto"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : siguiente;
+          document.documentElement.setAttribute("data-ivw-theme", resuelto);
+          document.documentElement.setAttribute("data-ivw-theme-mode", siguiente);
+        }
+        temaPintar(siguiente);
+      });
+    }
+    temaPintar(document.documentElement.getAttribute("data-ivw-theme-mode") || "auto");
+  }
+
+  function temaPintar(modo) {
+    var b = document.getElementById("ivw-theme-btn");
+    if (!b) return;
+    b.innerHTML = svg(TEMA_ICONOS[modo] || TEMA_ICONOS.auto);
+    b.setAttribute("title", TEMA_ETIQUETAS[modo] || TEMA_ETIQUETAS.auto);
+    b.setAttribute("aria-label", TEMA_ETIQUETAS[modo] || TEMA_ETIQUETAS.auto);
+    b.dataset.ivwThemeMode = modo;
+  }
+
   function langMenu(userNav) {
     if (!userNav) return;
     var li = document.querySelector("li.langmenu");
@@ -375,6 +439,7 @@
       }
 
       langMenu(userNav);
+      temaBoton(userNav);
     }
 
     // "Secciones" en el menú "Este curso": duplica el índice del curso que ya
@@ -602,6 +667,7 @@
   function tidyProfile() {
     // Por id del <body> además de por URL: así también aplica en las capturas
     // de pantalla guardadas (fixtures), donde la ruta es un archivo local.
+    if (!document.body) return;
     if (!/^page-user-(profile|view)/.test(document.body.id || "") &&
         !/\/user\/(profile|view)\.php/.test(location.pathname)) return;
     var head = document.querySelector(".page-header-headings h1, .userprofile .page-header-headings h1");
@@ -786,6 +852,7 @@
   }
 
   function tidyAttendance() {
+    if (!document.body) return;
     if (!/^page-mod-attendance/.test(document.body.id || "")) return;
 
     // Celdas de estatus de las tablas de sesiones (la tarjeta de totales
@@ -971,6 +1038,12 @@
       for (var p = 0; p < props.length; p++) if (props[p]) nodes[i].style.removeProperty(props[p]);
       nodes[i].removeAttribute("data-ivw-inline");
     }
+    // El contenido del profesor va aparte: ahí no se borra la propiedad, se
+    // repone la que él escribió (ver pintarAutor / fondearAutor).
+    var tintas = document.querySelectorAll("[data-ivw-color0]");
+    for (var a = 0; a < tintas.length; a++) restaurarAutor(tintas[a]);
+    var fondos = document.querySelectorAll("[data-ivw-bg0]");
+    for (var b = 0; b < fondos.length; b++) restaurarFondo(fondos[b]);
   }
 
   // Cabecera de sección: icono y título centrados en la misma línea.
@@ -1752,6 +1825,23 @@
     } catch (e) { return "documento.pdf"; }
   }
 
+  /* Los blob: que crea la vista previa siguen vivos mientras viva la página,
+     aunque el <details> se cierre. No se pueden revocar en cuanto se pintan
+     porque el mismo objeto alimenta al iframe y al enlace "abrir en pestaña
+     nueva"; se sueltan al salir de la página, que es cuando ya nadie los usa. */
+  var pdfObjetos = [];
+  function registrarPdfObjeto(obj) {
+    pdfObjetos.push(obj);
+    if (window.__ivwPdfLimpieza) return;
+    window.__ivwPdfLimpieza = 1;
+    window.addEventListener("pagehide", function () {
+      for (var i = 0; i < pdfObjetos.length; i++) {
+        try { URL.revokeObjectURL(pdfObjetos[i]); } catch (e) {}
+      }
+      pdfObjetos = [];
+    });
+  }
+
   function cargarPdf(det, url) {
     if (det.dataset.ivwLoaded) return;
     det.dataset.ivwLoaded = "1";
@@ -1768,6 +1858,7 @@
         // sin esta comprobación el visor mostraría ese HTML.
         if (blob.type && blob.type.indexOf("pdf") === -1) throw new Error("no es pdf");
         var obj = URL.createObjectURL(blob);
+        registrarPdfObjeto(obj);
         frame.src = obj + "#view=FitH";
         if (abrir) abrir.href = obj;
         if (nota) nota.remove();
@@ -1879,6 +1970,250 @@
     }
   }
 
+
+  /* ---------- 6bis. Modo oscuro: lo que la CSS no alcanza ----------
+
+     Dos huecos que no se pueden tapar con una hoja de estilos:
+
+     1. El contenido que escriben los profesores. Moodle guarda el HTML tal
+        cual se pegó, y casi siempre viene de Word o de Outlook con el color
+        incrustado en cada nodo (`style="color:#000"`, `<font color>`, clases
+        de Fluent UI…). De día es invisible —negro sobre blanco es lo
+        correcto—; de noche el enunciado de la tarea o la consigna del foro
+        desaparecen contra la superficie oscura. La CSS no puede decidir por
+        valor: no existe "si este color es oscuro". El JS sí.
+
+     2. El interior del editor TinyMCE, que es un <iframe> con documento
+        propio donde la CSS de la extensión no entra.
+
+     Todo lo que se toca aquí queda marcado con data-ivw-inline, que es el
+     mecanismo que ya usa clearInline() para revertir al apagar el wrap. */
+
+  var LIENZOS_AUTOR = "#region-main, #page-content, .modal-body, .drawercontent";
+
+  function esOscuro() {
+    return document.documentElement.getAttribute("data-ivw-theme") === "dark";
+  }
+
+  function rgbDe(txt) {
+    var m = String(txt).match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    var p = m[1].split(/[,\/]+/).map(parseFloat);
+    if (p.length < 3 || isNaN(p[0])) return null;
+    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+  }
+
+  function luminancia(c) {
+    var v = [c.r, c.g, c.b].map(function (x) {
+      x /= 255;
+      return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+  }
+
+  // Fondo que realmente se ve detrás del nodo: el primero de la cadena que
+  // sea opaco. Sin esto no se puede distinguir "negro sobre la superficie
+  // oscura" (hay que aclararlo) de "negro sobre un recuadro claro que puso el
+  // propio autor" (hay que dejarlo en paz).
+  function fondoEfectivo(nodo) {
+    for (var n = nodo; n && n.nodeType === 1; n = n.parentElement) {
+      var c = rgbDe(getComputedStyle(n).backgroundColor);
+      if (c && c.a > 0.5) return c;
+    }
+    return { r: 14, g: 17, b: 22, a: 1 };
+  }
+
+  // Un gris o un negro no tienen nada que conservar: se quita el color y el
+  // nodo hereda la tinta del sistema. Un color con intención —un título en
+  // guinda, una nota en verde— sí: se le sube la luminosidad y se queda con
+  // su tono, que es lo que el autor quería decir.
+  function aHsl(c) {
+    var r = c.r / 255, g = c.g / 255, b = c.b / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    var l = (max + min) / 2;
+    if (!d) return { h: 0, s: 0, l: l };
+    var h;
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h = Math.round(h * 60);
+    if (h < 0) h += 360;
+    return { h: h, s: d / (1 - Math.abs(2 * l - 1)), l: l };
+  }
+
+  function aclarar(c) {
+    var hsl = aHsl(c);
+    if (hsl.s < 0.12) return "";
+    return "hsl(" + hsl.h + ", " + Math.round(Math.min(hsl.s, 0.85) * 100) + "%, 72%)";
+  }
+
+  // Dos pasadas, y en este orden: los fondos primero. El criterio para tocar
+  // un texto es "¿qué se ve detrás?", así que mientras la tabla que pegó el
+  // profesor siga declarando `background:#F4F4F4` la respuesta es "papel
+  // claro" y el texto negro de dentro se queda —correctamente— sin tocar.
+  // Oscurecido el fondo, la segunda pasada ya lee superficie oscura y aclara
+  // la tinta. Al revés, el resultado es una tabla clara con texto claro.
+  function coloresDeAutor() {
+    var lienzos = document.querySelectorAll(LIENZOS_AUTOR);
+    var i, j;
+    for (i = 0; i < lienzos.length; i++) {
+      var fondos = lienzos[i].querySelectorAll('[style*="background"], [bgcolor]');
+      for (j = 0; j < fondos.length; j++) fondearAutor(fondos[j]);
+    }
+    for (i = 0; i < lienzos.length; i++) {
+      var nodos = lienzos[i].querySelectorAll('[style*="color"], font[color]');
+      for (j = 0; j < nodos.length; j++) pintarAutor(nodos[j]);
+    }
+  }
+
+  // Word y Outlook escriben el fondo en cada nodo: `background: white` en cada
+  // párrafo, `#F4F4F4` en la tabla, un pastel en la celda que el autor quiso
+  // resaltar. De día es invisible sobre papel; de noche son recuadros
+  // luminosos en medio de la pantalla, y arrastran consigo el texto oscuro
+  // que llevan dentro.
+  function fondearAutor(nodo) {
+    var yaTocado = nodo.hasAttribute("data-ivw-bg0");
+
+    if (!esOscuro()) {
+      if (yaTocado) restaurarFondo(nodo);
+      return;
+    }
+    if (yaTocado || nodo.closest(".tox")) return;
+
+    var fondo = rgbDe(getComputedStyle(nodo).backgroundColor);
+    if (!fondo || fondo.a < 0.6 || luminancia(fondo) < 0.5) return;
+
+    nodo.setAttribute("data-ivw-bg0", nodo.style.getPropertyValue("background-color"));
+    nodo.style.setProperty("background-color", oscurecer(fondo), "important");
+  }
+
+  // Un blanco o un gris papel no dice nada: pasa a ser la superficie del
+  // sistema. Un pastel sí —el amarillo de "ojo con esto", el verde de "ya
+  // está"—, así que conserva tono y saturación y solo baja de luminosidad lo
+  // justo para que la tinta clara encima se lea.
+  function oscurecer(c) {
+    var hsl = aHsl(c);
+    if (hsl.s < 0.12) return "var(--surface)";
+    return "hsl(" + hsl.h + ", " + Math.round(Math.min(hsl.s, 0.6) * 100) + "%, 20%)";
+  }
+
+  function pintarAutor(nodo) {
+    var yaTocado = nodo.hasAttribute("data-ivw-color0");
+
+    if (!esOscuro()) {
+      if (yaTocado) restaurarAutor(nodo);
+      return;
+    }
+    if (yaTocado || nodo.closest(".tox")) return;
+
+    var color = rgbDe(getComputedStyle(nodo).color);
+    if (!color || color.a < 0.5 || luminancia(color) > 0.22) return;
+    // Fondo claro puesto por el propio autor: ahí el texto oscuro es lo
+    // correcto y tocarlo lo volvería ilegible.
+    if (luminancia(fondoEfectivo(nodo)) > 0.35) return;
+
+    // El color del autor vive en el MISMO atributo style que vamos a
+    // escribir, así que no basta con marcar la propiedad como en el resto de
+    // los arreglos inline: borrarla al revertir se llevaría por delante lo
+    // que escribió el autor. Se guarda el valor original —vacío si venía de
+    // <font color>— y se repone tal cual.
+    nodo.setAttribute("data-ivw-color0", nodo.style.getPropertyValue("color"));
+    nodo.style.setProperty("color", aclarar(color) || "var(--ink)", "important");
+  }
+
+  function restaurarAutor(nodo) {
+    var previo = nodo.getAttribute("data-ivw-color0");
+    nodo.style.removeProperty("color");
+    if (previo) nodo.style.setProperty("color", previo);
+    nodo.removeAttribute("data-ivw-color0");
+  }
+
+  function restaurarFondo(nodo) {
+    var previo = nodo.getAttribute("data-ivw-bg0");
+    nodo.style.removeProperty("background-color");
+    if (previo) nodo.style.setProperty("background-color", previo);
+    nodo.removeAttribute("data-ivw-bg0");
+  }
+
+  // El <iframe> del editor: mismo origen, así que se le puede colgar una hoja
+  // en su <head>. TinyMCE serializa solo el <body> al guardar, de modo que ni
+  // el <style> ni el atributo del <html> viajan con el contenido: se ve
+  // oscuro mientras se escribe y se guarda exactamente lo que se escribió.
+  function editorOscuro() {
+    var marcos = document.querySelectorAll("iframe.tox-edit-area__iframe");
+    for (var i = 0; i < marcos.length; i++) {
+      var doc = null;
+      try { doc = marcos[i].contentDocument; } catch (e) { doc = null; }
+      if (!doc || !doc.head || !doc.documentElement) continue;
+
+      doc.documentElement.setAttribute("data-ivw-theme", esOscuro() ? "dark" : "light");
+
+      var hoja = doc.getElementById("ivw-editor-dark");
+      if (!hoja) {
+        hoja = doc.createElement("style");
+        hoja.id = "ivw-editor-dark";
+        doc.head.appendChild(hoja);
+      }
+      hoja.textContent = cssEditor();
+    }
+  }
+
+  // Los tokens viven en el documento de arriba; el del iframe no los hereda,
+  // así que se leen resueltos y se escriben como valores. Se regenera en cada
+  // pasada, con lo que el editor sigue al botón de tema sin recargar.
+  function cssEditor() {
+    var raiz = getComputedStyle(document.documentElement);
+    function t(n, alt) { return (raiz.getPropertyValue(n) || "").trim() || alt; }
+    var negros = [
+      '[style*="color:#000"]', '[style*="color: #000"]',
+      '[style*="color:black"]', '[style*="color: black"]',
+      '[style*="color:windowtext"]', '[style*="color: windowtext"]',
+      '[style*="color:rgb(0,0,0)"]', '[style*="color: rgb(0, 0, 0)"]',
+      'font[color="#000000"]', 'font[color="black"]'
+    ].map(function (s) { return 'html[data-ivw-theme="dark"] body ' + s; }).join(",\n");
+
+    return 'html[data-ivw-theme="dark"] body {' +
+           "  background-color: " + t("--surface", "#191d25") + ";" +
+           "  color: " + t("--ink", "#f4f6f9") + ";" +
+           "}" +
+           'html[data-ivw-theme="dark"] body a { color: ' + t("--blue-700", "#5b9dff") + "; }" +
+           // Mismo problema que en la página, pero aquí no se puede reescribir
+           // el contenido: cualquier cambio en el <body> se guardaría. Se
+           // resuelve por selector de atributo, que cubre las formas en que
+           // Word y Outlook escriben el negro.
+           negros + " { color: " + t("--ink", "#f4f6f9") + " !important; }";
+  }
+
+  // El tema se cambia con el botón del topbar, desde el popup o siguiendo al
+  // sistema cuando está en automático. Todos acaban escribiendo el atributo
+  // en <html>, así que basta con mirarlo a él para reaplicar (o revertir) lo
+  // que la CSS no puede hacer sola.
+  function watchTema() {
+    if (window.__ivwTemaObs || !window.MutationObserver) return;
+    var obs = new MutationObserver(function () {
+      seguro([coloresDeAutor, editorOscuro, sincronizarBoton]);
+    });
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-ivw-theme", "data-ivw-theme-mode"]
+    });
+    window.__ivwTemaObs = obs;
+  }
+
+  // El botón se dibuja al armar el topbar, en DOMContentLoaded, y toma el modo
+  // del atributo de <html>. En ese momento content.js solo ha aplicado el
+  // optimista ("claro"); la preferencia guardada llega después, por storage,
+  // y actualizaba el atributo pero no el botón. Resultado: con oscuro o
+  // automático guardados, el botón mostraba el sol en cada carga y el primer
+  // clic parecía saltarse un paso —ciclaba desde el modo real, no desde el
+  // que se veía—. Repintarlo cuando cambia el atributo cierra el hueco sin
+  // que content.js tenga que conocer al botón.
+  function sincronizarBoton() {
+    var modo = document.documentElement.getAttribute("data-ivw-theme-mode") || "auto";
+    var b = document.getElementById("ivw-theme-btn");
+    if (b && b.dataset.ivwThemeMode !== modo) temaPintar(modo);
+  }
+
   /* ---------- 6. Fixes varios ---------- */
   function domFixes() {
     var imgs = document.querySelectorAll('img[src^="http://ivirtual.itson.edu.mx"]');
@@ -1905,25 +2240,60 @@
     window.__ivwObserver = obs;
   }
 
+  /* Registro único de tareas.
+     Antes esto eran dos arrays mantenidos a mano —uno en run() y otro en
+     rerun()— y ya habían divergido: tidyGrades, tidyAttendance, tidyProfile,
+     tidyHeadings, tidyUserName y hideEmpties estaban solo en run(), así que
+     no se reaplicaban al contenido que Moodle inyecta por AJAX. Con una sola
+     lista, añadir una función nueva obliga a decidir en el momento si toca
+     reaplicarla, en vez de olvidarlo en silencio.
+
+     `rerun: false` es para lo que se monta una sola vez: reestructuras del
+     topbar, listeners globales y observadores. Volver a llamarlos no rompe
+     nada (todos tienen su guarda), pero es trabajo inútil en cada mutación
+     del DOM. Todo lo que va con `true` es idempotente. */
+  var TAREAS = [
+    { fn: domFixes,             rerun: true  },
+    { fn: moodleChrome,         rerun: false },  // mueve nodos del tema una vez
+    { fn: tidyUserName,         rerun: true  },
+    { fn: courseSearchCards,    rerun: true  },
+    { fn: frontpageCourseCards, rerun: true  },
+    { fn: hideBlockZoom,        rerun: true  },
+    { fn: tidyTimeline,         rerun: true  },
+    { fn: tidyHeadings,         rerun: true  },
+    { fn: tidyProfile,          rerun: true  },
+    { fn: tidyGrades,           rerun: true  },
+    { fn: tidyAttendance,       rerun: true  },
+    { fn: dialogEscapes,        rerun: false },  // listener global, una vez
+    { fn: tidyFormHeaders,      rerun: true  },
+    { fn: tidyFormButtons,      rerun: true  },
+    { fn: guestFrontpage,       rerun: false },  // solo existe al cargar
+    { fn: portalSistemas,       rerun: true  },
+    { fn: portalInicio,         rerun: true  },
+    { fn: calendarioAnual,      rerun: true  },
+    { fn: courseActivities,     rerun: true  },
+    { fn: assignPdfPreview,     rerun: true  },
+    { fn: filemanagerQuickPick, rerun: true  },
+    { fn: headerOffset,         rerun: true  },
+    { fn: watchHeader,          rerun: false },  // listener de resize, una vez
+    { fn: eresForm,             rerun: true  },
+    { fn: embedReportHeight,    rerun: true  },
+    { fn: hideEmpties,          rerun: true  },
+    { fn: coloresDeAutor,       rerun: true  },
+    { fn: editorOscuro,         rerun: true  },
+    { fn: watchTema,            rerun: false },  // observador de <html>, una vez
+    { fn: watchDom,             rerun: false }   // el observador que llama aquí
+  ];
+
   function rerun() {
-    seguro([
-      portalSistemas,
-      courseActivities,
-      assignPdfPreview,
-      filemanagerQuickPick,
-      headerOffset,
-      portalInicio,
-      calendarioAnual,
-      eresForm,
-      embedReportHeight,
-      tidyFormHeaders,
-      tidyFormButtons,
-      tidyTimeline,
-      courseSearchCards,
-      frontpageCourseCards,
-      hideBlockZoom,
-      domFixes
-    ]);
+    // content.js llama aquí desde la promesa de `storage.get`, que en una
+    // página ligera —el login, sin ir más lejos— resuelve ANTES de
+    // DOMContentLoaded. Sin <body> no hay nada que arreglar, y las funciones
+    // que se apoyan en `document.body.id` para saber en qué pantalla están
+    // reventaban con "Cannot read properties of null".
+    if (!document.body) return;
+    seguro(TAREAS.filter(function (t) { return t.rerun; })
+                 .map(function (t) { return t.fn; }));
   }
 
 
@@ -2199,34 +2569,7 @@
   }
 
   function run() {
-    seguro([
-      domFixes,
-      moodleChrome,
-      tidyUserName,
-      courseSearchCards,
-      frontpageCourseCards,
-      hideBlockZoom,
-      tidyTimeline,
-      tidyHeadings,
-      tidyProfile,
-      tidyGrades,
-      tidyAttendance,
-      dialogEscapes,
-      tidyFormHeaders,
-      tidyFormButtons,
-      guestFrontpage,
-      portalSistemas,
-      portalInicio,
-      calendarioAnual,
-      courseActivities,
-      assignPdfPreview,
-      headerOffset,
-      watchHeader,
-      eresForm,
-      embedReportHeight,
-      hideEmpties,
-      watchDom
-    ]);
+    seguro(TAREAS.map(function (t) { return t.fn; }));
   }
 
 
@@ -2255,6 +2598,8 @@
     headerOffset: headerOffset,
     uploadArea: uploadArea,
     closeDialog: closeDialog,
+    coloresDeAutor: coloresDeAutor,
+    editorOscuro: editorOscuro,
     clearInline: clearInline,
     rerun: rerun
   };
