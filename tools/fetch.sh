@@ -18,6 +18,7 @@ case "$PATH_OR_URL" in
 esac
 
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
+mkdir -p "$DIR/fixtures"
 OUT="$DIR/fixtures/$NAME.html"
 
 curl -sS --compressed \
@@ -29,4 +30,4 @@ curl -sS --compressed \
 if grep -qi 'loginform\|Usted no se ha identificado' "$OUT"; then
   echo "⚠  La respuesta parece la pantalla de login: la cookie caducó o es la equivocada." >&2
 fi
-printf '→ %s  (%s bytes)\n' "$OUT" "$(stat -c%s "$OUT")"
+printf '→ %s  (%s bytes)\n' "$OUT" "$(wc -c < "$OUT" | tr -d ' ')"
