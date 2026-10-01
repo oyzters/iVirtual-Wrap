@@ -1,0 +1,72 @@
+# Publica una versión al empujar un tag:   git tag v1.0.1 && git push origin v1.0.1
+#
+# 1. Arma el zip con tools/package.py (valida el manifest antes).
+# 2. Comprueba que el tag coincida con "version" del manifest.
+# 3. Crea el Release de GitHub con el zip y las notas de esa versión en CHANGELOG.md.
+# 4. Si existen los secretos de la Chrome Web Store, sube el zip y lo manda a
+#    revisión; sin ellos este paso se salta y el zip se sube a mano desde el
+#    Release. Ver STORE.md → "Publicar desde GitHub".
+#
+# Mismo archivo en CIA-Wrap e iVirtual-Wrap.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Empaquetar
+        id: pkg
+        run: |
+          python tools/package.py
+          echo "zip=$(ls dist/*.zip)" >> "$GITHUB_OUTPUT"
+          echo "version=$(python -c 'import json;print(json.load(open("extension/manifest.json"))["version"])')" >> "$GITHUB_OUTPUT"
+
+      - name: El tag coincide con el manifest
+        run: |
+          if [ "${GITHUB_REF_NAME#v}" != "${{ steps.pkg.outputs.version }}" ]; then
+            echo "El tag ${GITHUB_REF_NAME} no coincide con la versión del manifest (${{ steps.pkg.outputs.version }})."
+            exit 1
+          fi
+
+      - name: Notas de la versión
+        run: |
+          # la sección "## [x.y.z]" de CHANGELOG.md, hasta la siguiente sección
+          awk -v v="${{ steps.pkg.outputs.version }}" '
+            $0 ~ "^## \\[" v "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          test -s notes.md || echo "Versión ${{ steps.pkg.outputs.version }}." > notes.md
+
+      - name: Release de GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "${{ steps.pkg.outputs.zip }}" --title "$GITHUB_REF_NAME" --notes-file notes.md
+
+      - name: Subir a la Chrome Web Store
+        env:
+          EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+        run: |
+          if [ -z "$EXTENSION_ID" ] || [ -z "$REFRESH_TOKEN" ]; then
+            echo "Sin secretos de la Chrome Web Store: súbelo a mano con el zip del Release."
+            exit 0
+          fi
+          # --auto-publish la manda a revisión y se publica sola al aprobarse.
+          npx --yes chrome-webstore-upload-cli@3 upload \
+            --source "${{ steps.pkg.outputs.zip }}" --auto-publish

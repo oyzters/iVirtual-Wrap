@@ -31,10 +31,10 @@ function aplicarTema(modo) {
   ROOT.setAttribute("data-ivw-theme-mode", modoTema);
 }
 
-// Claro por defecto: es lo que hace el Moodle original, así que el wrap no
-// cambia el aspecto de entrada; el oscuro se elige con el botón del topbar.
-// Optimista igual que el flag, la preferencia guardada llega después.
-aplicarTema("light");
+// Automático por defecto (sigue al sistema), igual que CIA Wrap; claro u
+// oscuro fijos se eligen en el popup o con el botón del topbar. Optimista
+// igual que el flag: la preferencia guardada llega después.
+aplicarTema("auto");
 
 // Solo si el usuario eligió "automático" se sigue al sistema cuando cambie.
 mqOscuro.addEventListener("change", () => {
@@ -85,7 +85,6 @@ function isOn() {
 
 function apply(enabled) {
   ROOT.setAttribute(ATTR, enabled ? "on" : "off");
-  updateBadge();
   // Los arreglos que van como estilo inline se revierten al apagar
   if (typeof ivwEnhance !== "undefined") {
     if (enabled) ivwEnhance.rerun();
@@ -94,31 +93,12 @@ function apply(enabled) {
   log("apply", enabled ? "ON" : "OFF");
 }
 
-// --- Botón/badge flotante que TOGGLEA al click (siempre visible, ON y OFF) ---
-function makeBadge() {
-  if (!document.body || document.getElementById("ivw-badge")) return;
-  const b = document.createElement("button");
-  b.id = "ivw-badge";
-  b.type = "button";
-  b.addEventListener("click", () => {
-    const next = !isOn();
-    apply(next);
-    ivwStorage.set({ [KEY]: next });
-  });
-  document.body.appendChild(b);
-  updateBadge();
-}
+// El on/off se controla desde el popup de la extensión. El botón flotante
+// (#ivw-badge) solo existe en el userscript y el bookmarklet (build/core.js),
+// que no tienen popup.
 
-function updateBadge() {
-  const b = document.getElementById("ivw-badge");
-  if (!b) return;
-  const on = isOn();
-  b.textContent = on ? "iVirtual Wrap: ON" : "iVirtual Wrap: OFF";
-  b.dataset.on = on ? "1" : "0";
-}
-
-// Estado inicial (default: activado, tema claro)
-ivwStorage.get({ [KEY]: true, [THEME_KEY]: "light" }).then((cfg) => {
+// Estado inicial (default: activado, tema automático)
+ivwStorage.get({ [KEY]: true, [THEME_KEY]: "auto" }).then((cfg) => {
   apply(cfg[KEY]);
   aplicarTema(cfg[THEME_KEY]);
 });
@@ -148,7 +128,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 function onReady() {
-  makeBadge();
   ivwEnhance.run();
   setTimeout(() => ivwEnhance.run(), 600); // reintento: parte del header se arma con JS
 }

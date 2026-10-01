@@ -1,108 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <style>
-    /* Mismo lenguaje que el wrap: Figtree, azules iVirtual y esquinas suaves. */
-    :root {
-      --blue-700: #0b5cad;
-      --blue-600: #1461bd;
-      --blue-50: #eef5fc;
-      --ink: #0f1b2d;
-      --ink-2: #38465c;
-      --muted: #6b7891;
-      --line: #e5eaf2;
-      --bg: #fff;
-      --card-line: var(--line);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --blue-700: #5b9dff;
-        --blue-600: #8bbaff;
-        --blue-50: rgba(91, 157, 255, .14);
-        --ink: #f4f6f9;
-        --ink-2: #c7cdd8;
-        --muted: #93a0b0;
-        --line: rgba(255, 255, 255, .1);
-        --bg: #14171d;
-      }
-    }
-    * { box-sizing: border-box; }
-    body {
-      width: 268px;
-      margin: 0;
-      padding: 16px;
-      font: 14px/1.45 "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      -webkit-font-smoothing: antialiased;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .brand img { width: 34px; height: 34px; border-radius: 9px; }
-    h1 { font-size: 15px; font-weight: 800; letter-spacing: -.01em; margin: 0; }
-    p.sub { margin: 1px 0 0; font-size: 12px; color: var(--muted); }
+<meta charset="utf-8">
+<!--
+  Popup compartido por CIA Wrap e iVirtual Wrap: mismo archivo en las dos
+  extensiones. Lo que cambia (nombre, portal, claves de storage) vive en el
+  bloque CONFIG de popup.js; las novedades, en changelog.js.
+-->
+<style>
+  /* Mismo lenguaje que los wraps: Figtree, azules ITSON y esquinas suaves. */
+  :root{
+    --blue-700:#0b5cad; --blue-600:#1461bd; --blue-50:#eef5fc; --fill:#0b5cad;
+    --ink:#0f1b2d; --ink-2:#38465c; --muted:#6b7891; --line:#e5eaf2; --bg:#fff;
+    --off:#c7ced6; --seg:#fff;
+  }
+  :root[data-theme="dark"]{
+    --blue-700:#5b9dff; --blue-600:#8bbaff; --blue-50:rgba(91,157,255,.14);
+    --ink:#f4f6f9; --ink-2:#c7cdd8; --muted:#93a0b0; --line:rgba(255,255,255,.1); --bg:#14171d;
+    --off:#3a414d; --seg:#191d25;
+  }
+  *{box-sizing:border-box}
+  body{ width:288px; margin:0; padding:16px;
+    font:14px/1.45 "Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; }
 
-    .card {
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--blue-50);
-    }
-    .card .label { font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
-    .switch { position: relative; width: 46px; height: 26px; flex: none; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; inset: 0; cursor: pointer;
-      background: #c7ced6; border-radius: 999px; transition: .2s;
-    }
-    .slider::before {
-      content: ""; position: absolute; height: 20px; width: 20px;
-      left: 3px; top: 3px; background: #fff; border-radius: 50%;
-      box-shadow: 0 1px 3px rgba(15,27,45,.25); transition: .2s;
-    }
-    input:checked + .slider { background: var(--blue-700); }
-    input:checked + .slider::before { transform: translateX(20px); }
-    input:focus-visible + .slider { box-shadow: 0 0 0 3px rgba(26,115,199,.35); }
+  .brand{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .brand img{ width:34px; height:34px; border-radius:9px; }
+  h1{ font-size:15px; font-weight:800; letter-spacing:-.01em; margin:0; }
+  p.sub{ margin:1px 0 0; font-size:12px; color:var(--muted); }
 
-    .state {
-      display: flex; align-items: center; gap: 7px;
-      margin-top: 12px; font-size: 12px; color: var(--muted);
-    }
-    .dot { width: 8px; height: 8px; border-radius: 999px; background: #c7ced6; }
-    body.on .dot { background: var(--blue-600); }
-    .state b { color: var(--blue-700); font-weight: 700; }
+  .card{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--blue-50); }
+  .card + .card{ margin-top:8px; }
+  .card .label{ font-size:13.5px; font-weight:600; color:var(--ink-2); }
 
-    footer {
-      margin-top: 14px; padding-top: 11px; border-top: 1px solid var(--line);
-      font-size: 11.5px; color: var(--muted);
-    }
-    footer a { color: var(--blue-700); font-weight: 600; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-  </style>
+  .sw{ position:relative; width:46px; height:26px; flex:none; cursor:pointer;
+    background:var(--off); border-radius:999px; transition:.2s; }
+  .sw::before{ content:""; position:absolute; height:20px; width:20px; left:3px; top:3px;
+    background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(15,27,45,.25); transition:.2s; }
+  .sw[aria-checked="true"]{ background:var(--fill); }
+  .sw[aria-checked="true"]::before{ transform:translateX(20px); }
+  .sw:focus-visible{ outline:0; box-shadow:0 0 0 3px rgba(26,115,199,.35); }
+
+  .seg{ display:flex; gap:2px; padding:2px; border-radius:999px; background:var(--seg); border:1px solid var(--line); }
+  .seg button{ border:none; background:none; cursor:pointer; color:var(--muted); font:inherit; font-size:12px; font-weight:600;
+    padding:4px 9px; border-radius:999px; transition:background .15s, color .15s; }
+  .seg button:hover{ color:var(--blue-700); }
+  .seg button.on{ background:var(--fill); color:#fff; }
+
+  .open{ display:flex; align-items:center; justify-content:center; gap:7px; width:100%; margin-top:10px;
+    padding:10px 14px; border:0; border-radius:12px; background:var(--fill); color:#fff;
+    font:inherit; font-size:13.5px; font-weight:700; cursor:pointer; transition:background .15s; }
+  .open:hover{ background:var(--blue-600); }
+  :root[data-theme="dark"] .open:hover{ background:#1461bd; }
+  .open svg{ width:15px; height:15px; }
+
+  details.news{ margin-top:10px; border:1px solid var(--line); border-radius:12px; }
+  details.news summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:8px;
+    padding:10px 14px; font-size:13px; font-weight:700; color:var(--ink-2); }
+  details.news summary::-webkit-details-marker{ display:none; }
+  details.news summary .ver{ margin-left:auto; font-size:11.5px; font-weight:600; color:var(--muted); }
+  details.news summary .new{ display:none; padding:1px 7px; border-radius:999px; background:var(--fill); color:#fff; font-size:10.5px; font-weight:700; }
+  details.news.unseen summary .new{ display:inline-block; }
+  details.news ul{ margin:0; padding:0 14px 12px 30px; font-size:12.5px; color:var(--ink-2); }
+  details.news li{ margin:4px 0; }
+
+  .state{ display:flex; align-items:center; gap:7px; margin-top:12px; font-size:12px; color:var(--muted); }
+  .dot{ width:8px; height:8px; border-radius:999px; background:var(--off); }
+  body.on .dot{ background:var(--blue-600); }
+  .state b{ color:var(--blue-700); font-weight:700; }
+
+  footer{ display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:12px; padding-top:11px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--muted); }
+  footer a{ color:var(--blue-700); font-weight:600; text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
+  footer .v{ margin-left:auto; }
+</style>
 </head>
 <body>
   <div class="brand">
-    <img src="../icons/icon-128.png" alt="" />
+    <img id="icon" src="" alt="">
     <div>
-      <h1>iVirtual Wrap</h1>
-      <p class="sub">Interfaz moderna para iVirtual</p>
+      <h1 id="name"></h1>
+      <p class="sub" id="sub"></p>
     </div>
   </div>
 
   <div class="card">
     <span class="label">Activar wrap</span>
-    <label class="switch">
-      <input type="checkbox" id="toggle" aria-label="Activar wrap" />
-      <span class="slider"></span>
-    </label>
+    <div id="sw" class="sw" role="switch" aria-checked="true" aria-label="Activar wrap" tabindex="0"></div>
   </div>
 
-  <div class="state"><span class="dot"></span>Estado: <b id="stateLabel">—</b></div>
+  <div class="card">
+    <span class="label">Tema</span>
+    <div class="seg" role="radiogroup" aria-label="Tema">
+      <button data-theme="light">Claro</button>
+      <button data-theme="dark">Oscuro</button>
+      <button data-theme="auto">Auto</button>
+    </div>
+  </div>
 
-  <footer>Corre sobre tu sesión, sin servidor · <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">Código</a></footer>
+  <button class="open" id="open" type="button"></button>
 
-  <script src="storage.js"></script>
+  <details class="news" id="news">
+    <summary>Novedades <span class="new">Nuevo</span><span class="ver" id="newsVer"></span></summary>
+    <ul id="newsList"></ul>
+  </details>
+
+  <div class="state"><span class="dot"></span>Estado: <b id="st">Activada</b></div>
+
+  <footer>
+    <span>Corre sobre tu sesión, sin servidor</span>
+    <a id="site" href="#" target="_blank" rel="noopener">Sitio</a>
+    <a id="code" href="#" target="_blank" rel="noopener">Código</a>
+    <span class="v" id="ver"></span>
+  </footer>
+
+  <script src="changelog.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

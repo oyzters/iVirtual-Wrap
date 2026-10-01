@@ -44,8 +44,8 @@
     background:color-mix(in srgb, var(--bg) 82%, transparent); border-bottom:1px solid var(--line)}
   .nav-in{display:flex; align-items:center; gap:16px; height:64px}
   .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-.01em; font-size:16px}
-  .brand .mk{width:30px; height:30px; border-radius:9px; display:grid; place-items:center; color:#fff;
-    background:linear-gradient(150deg,var(--brand),var(--brand-deep)); box-shadow:0 4px 12px -3px var(--brand); font-size:14px}
+  .brand .mk{width:30px; height:30px; border-radius:9px; display:block;
+    box-shadow:0 4px 12px -3px var(--brand); font-size:14px}
   .brand .mk svg{width:17px;height:17px}
   .nav-links{margin-left:auto; display:flex; align-items:center; gap:6px}
   .nav-links a{padding:8px 12px; border-radius:9px; font-size:14px; color:var(--ink2)}
@@ -200,7 +200,7 @@
 
 <header class="nav">
   <div class="wrap nav-in">
-    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 8-4"/><path d="M6 11v5c0 1.5 2.7 2.6 6 2.6s6-1.1 6-2.6v-5"/></svg></span> iVirtual&nbsp;Wrap</div>
+    <div class="brand"><img class="mk" src="extension/icons/icon.svg" alt="" width="30" height="30"> iVirtual&nbsp;Wrap</div>
     <nav class="nav-links">
       <a href="#features">Características</a>
       <a href="#install">Instalar</a>
@@ -225,7 +225,7 @@
       <div class="tags">
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>100% en tu navegador</span>
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>No maneja credenciales</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>Se prende y apaga con un flag</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>Modo claro, oscuro o automático</span>
       </div>
     </div>
 
@@ -330,10 +330,11 @@
 
 <footer>
   <div class="wrap foot">
-    <span class="brand"><span class="mk" style="width:26px;height:26px;border-radius:8px;display:inline-grid;place-items:center;color:#fff;background:linear-gradient(150deg,var(--brand),var(--brand-deep))"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 8-4"/><path d="M6 11v5c0 1.5 2.7 2.6 6 2.6s6-1.1 6-2.6v-5"/></svg></span> iVirtual Wrap</span>
+    <span class="brand"><img class="mk" src="extension/icons/icon.svg" alt="" width="30" height="30"> iVirtual Wrap</span>
     <span class="sp"></span>
     <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/oyzters/iVirtual-Wrap/issues" target="_blank" rel="noopener">Reportar / Contribuir</a>
+    <a href="privacidad/">Privacidad</a>
     <span>Licencia MIT</span>
   </div>
   <p class="disclaimer">iVirtual Wrap es un proyecto independiente y de código abierto, sin afiliación ni respaldo oficial del Instituto Tecnológico de Sonora (ITSON). "ITSON", "iVirtual" y "Moodle" pertenecen a sus respectivos titulares. La extensión no recopila ni transmite datos personales.</p>
