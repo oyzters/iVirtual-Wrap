@@ -8,6 +8,8 @@
 <meta property="og:title" content="iVirtual Wrap — Interfaz moderna para el Moodle de ITSON">
 <meta property="og:description" content="Una capa limpia y moderna sobre el portal iVirtual (Moodle) de ITSON. 100% en tu navegador, open source.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://ivirtual.potronet.com/">
+<link rel="canonical" href="https://ivirtual.potronet.com/">
 <meta property="og:image" content="https://raw.githubusercontent.com/oyzters/iVirtual-Wrap/main/extension/icons/icon-512.png">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0b5cad">
@@ -31,7 +33,7 @@
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.6;
-    -webkit-font-smoothing:antialiased;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
     background-image:radial-gradient(60% 50% at 50% -8%, rgba(91,157,255,.12), transparent 70%);}
   a{color:inherit; text-decoration:none}
   .wrap{max-width:1120px; margin:0 auto; padding-inline:24px}
@@ -128,6 +130,35 @@
   .oyz{text-align:center; margin-top:26px; color:var(--muted); font-size:14px}
   .oyz b{color:var(--ink)}
 
+  /* acceso directo al portal */
+  .btn-portal{background:var(--surface2); color:var(--ink); border-color:color-mix(in srgb, var(--brand) 45%, var(--line)); padding:11px 16px}
+  .btn-portal:hover{border-color:var(--brand); background:color-mix(in srgb, var(--brand) 12%, var(--surface2))}
+  .launch{margin-top:-28px; background:linear-gradient(120deg, color-mix(in srgb, var(--brand) 14%, var(--surface)), var(--surface) 60%);
+    border:1px solid var(--line); border-radius:22px; padding:26px 30px; display:grid; grid-template-columns:auto 1fr auto; gap:22px; align-items:center}
+  .launch .lk{width:52px; height:52px; border-radius:15px; display:grid; place-items:center; color:#fff;
+    background:linear-gradient(150deg,var(--brand),var(--brand-deep)); box-shadow:0 10px 24px -10px var(--brand)}
+  .launch .lk svg{width:26px; height:26px}
+  .launch h3{margin:0 0 6px; font-size:19px; letter-spacing:-.01em}
+  .launch .urls{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:var(--mono); font-size:12.5px; color:var(--muted)}
+  .launch .urls s{opacity:.75; text-decoration-color:color-mix(in srgb, var(--muted) 70%, transparent); overflow-wrap:anywhere}
+  .launch .urls .to{color:var(--brand2)}
+  .launch .short{display:inline-flex; align-items:center; gap:8px; background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:4px 6px 4px 10px; color:var(--ink)}
+  .launch .copy{border:0; background:var(--surface2); color:var(--ink2); border-radius:7px; padding:4px 9px; font:600 11.5px var(--sans); cursor:pointer}
+  .launch .copy:hover{color:var(--ink)}
+  .launch .acts{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+
+  /* instalación desde el código (secundaria) */
+  details.dev{margin-top:4px; border:1px solid var(--line); border-radius:12px; background:var(--surface2)}
+  details.dev summary{cursor:pointer; list-style:none; padding:13px 16px; font-size:13.5px; font-weight:600; color:var(--ink2); display:flex; align-items:center; gap:8px}
+  details.dev summary::-webkit-details-marker{display:none}
+  details.dev summary::after{content:"+"; margin-left:auto; font-family:var(--mono); color:var(--muted)}
+  details.dev[open] summary::after{content:"\2212"}
+  details.dev .dev-b{padding:0 16px 14px; color:var(--muted); font-size:13px}
+  details.dev ol{margin:0 0 10px; padding-left:18px}
+  details.dev li{margin:3px 0}
+  details.dev code{font-family:var(--mono); font-size:12px; background:var(--bg); border:1px solid var(--line); border-radius:6px; padding:1px 6px; color:var(--brand2)}
+  details.dev a{color:var(--brand2)}
+
   /* footer */
   footer{border-top:1px solid var(--line); padding:34px 0 46px; margin-top:20px}
   .foot{display:flex; align-items:center; gap:16px; flex-wrap:wrap; color:var(--muted); font-size:13px}
@@ -137,11 +168,30 @@
   .disclaimer{max-width:1120px; margin:16px auto 0; padding:0 24px; color:var(--muted); font-size:12px; line-height:1.6; text-align:center; opacity:.85}
 
   @media (max-width:880px){
-    .hero{grid-template-columns:1fr; gap:32px; padding-top:48px}
+    section{padding:64px 0}
+    .hero{grid-template-columns:1fr; gap:34px; padding:52px 0 44px}
+    .hero p.lead{font-size:16.5px}
+    .hero .cta{flex-direction:column}
+    .hero .cta .btn{width:100%; justify-content:center; padding-top:14px; padding-bottom:14px}
     .features{grid-template-columns:1fr}
-    .install{grid-template-columns:1fr; padding:26px}
+    .install{grid-template-columns:1fr; padding:26px; gap:26px}
+    .install .aside .btn{justify-content:center}
     .team{grid-template-columns:1fr}
+    .launch{grid-template-columns:1fr; margin-top:0; padding:22px}
+    .launch .acts{justify-content:stretch}
+    .launch .acts .btn{flex:1; justify-content:center}
+    .sec-head{margin-bottom:34px}
     .nav-links a:not(.btn){display:none}
+    .nav-links a.btn-ghost{display:none}   /* en móvil la barra deja solo "Entrar" */
+    .foot{justify-content:center; text-align:center; gap:10px 18px}
+    .foot .sp{display:none}
+  }
+  @media (max-width:480px){
+    .wrap{padding-inline:18px}
+    .hero h1{font-size:30px}
+    .hero .tags{gap:10px 16px}
+    .mock .app{grid-template-columns:120px 1fr}
+    .install{border-radius:18px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
 </style>
@@ -155,6 +205,7 @@
       <a href="#features">Características</a>
       <a href="#install">Instalar</a>
       <a href="#team">Equipo</a>
+      <a class="btn btn-portal" data-portal href="https://ivirtual.itson.edu.mx/" rel="noopener">Entrar a iVirtual <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       <a class="btn btn-ghost" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2z"/></svg>GitHub</a>
     </nav>
   </div>
@@ -168,8 +219,8 @@
       <h1>Una interfaz <span class="g">moderna</span> para iVirtual de ITSON</h1>
       <p class="lead">iVirtual Wrap le pone una capa limpia y consistente al <strong>Moodle iVirtual</strong> de ITSON — login rediseñado, una sola barra superior, inicio y tablero en tarjetas. Corre <strong>sobre tu propia sesión</strong>: sin servidor, sin tocar tus credenciales.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="#install"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M5 21h14"/></svg>Instalar la extensión</a>
-        <a class="btn btn-ghost" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">Ver el código</a>
+        <a class="btn btn-primary" data-store href="https://chromewebstore.google.com/search/iVirtual%20Wrap" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.5M8.97 13.75 4.7 6.4M15.03 13.75 10.8 21"/></svg>Agregar a Chrome</a>
+        <a class="btn btn-portal" data-portal href="https://ivirtual.itson.edu.mx/" rel="noopener">Entrar a iVirtual <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
       </div>
       <div class="tags">
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5 9-11"/></svg>100% en tu navegador</span>
@@ -198,6 +249,18 @@
     </div>
   </section>
 
+  <!-- ACCESO DIRECTO -->
+  <section class="wrap" style="padding-top:0; padding-bottom:0">
+    <div class="launch">
+      <span class="lk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5M15 12H3"/></svg></span>
+      <div>
+        <h3>Entra a iVirtual sin buscar el link</h3>
+        <div class="urls"><s>ivirtual.itson.edu.mx</s><span class="to">→</span><span class="short"><span data-short>ivirtual.potronet.com/entrar</span><button class="copy" type="button" data-copy>Copiar</button></span></div>
+      </div>
+      <div class="acts"><a class="btn btn-primary" data-portal href="https://ivirtual.itson.edu.mx/" rel="noopener">Entrar a iVirtual <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a></div>
+    </div>
+  </section>
+
   <!-- FEATURES -->
   <section id="features" class="wrap">
     <div class="sec-head">
@@ -220,22 +283,32 @@
     <div class="sec-head">
       <span class="eyebrow">Instalación</span>
       <h2>Instálala en menos de un minuto</h2>
-      <p>Por ahora se instala en modo desarrollador. Publicación en la Chrome Web Store, próximamente.</p>
+      <p>Desde la Chrome Web Store, en Chrome, Edge o Brave. Se actualiza sola.</p>
     </div>
     <div class="install">
       <div class="steps">
-        <div class="step"><div><h4>Descarga el código</h4><p>Clona o descarga el repo desde <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener" style="color:var(--brand2)">GitHub</a> y descomprímelo.</p></div></div>
-        <div class="step"><div><h4>Abre las extensiones</h4><p>En Chrome, Edge o Brave ve a <code>chrome://extensions</code>.</p></div></div>
-        <div class="step"><div><h4>Activa el modo desarrollador</h4><p>El interruptor está arriba a la derecha.</p></div></div>
-        <div class="step"><div><h4>Carga la carpeta</h4><p>Clic en <b>Cargar descomprimida</b> y selecciona la carpeta <code>extension/</code>.</p></div></div>
-        <div class="step"><div><h4>Entra a iVirtual</h4><p>Inicia sesión como siempre. La nueva interfaz se aplica sola; abajo a la derecha hay un botón <b>Wrap ON/OFF</b>.</p></div></div>
+        <div class="step"><div><h4>Abre la Chrome Web Store</h4><p>Con el botón de la derecha. Funciona en Chrome, Edge y Brave.</p></div></div>
+        <div class="step"><div><h4>Agrégala</h4><p>Clic en <b>Agregar a Chrome</b> y confirma. Fíjala en la barra desde el ícono de la pieza de rompecabezas.</p></div></div>
+        <div class="step"><div><h4>Entra a iVirtual</h4><p>Inicia sesión como siempre: la nueva interfaz se aplica sola y se prende o apaga desde el ícono de la extensión.</p></div></div>
       </div>
       <div class="aside">
-        <a class="btn btn-primary" href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener" style="justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2z"/></svg>Descargar de GitHub</a>
+        <a class="btn btn-primary" data-store href="https://chromewebstore.google.com/search/iVirtual%20Wrap" target="_blank" rel="noopener" style="justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5h8.5M8.97 13.75 4.7 6.4M15.03 13.75 10.8 21"/></svg>Agregar a Chrome</a>
+        <a class="btn btn-portal" data-portal href="https://ivirtual.itson.edu.mx/" rel="noopener" style="justify-content:center">Entrar a iVirtual <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg></a>
         <div class="note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
           <p><b>Tu privacidad primero.</b> iVirtual Wrap solo re-estiliza las páginas que ya tienes abiertas. No envía datos a ningún lado, no guarda contraseñas y no pasa por servidores externos.</p>
         </div>
+        <details class="dev">
+          <summary>¿Prefieres instalarla desde el código?</summary>
+          <div class="dev-b">
+            <ol>
+              <li>Descarga el repo desde <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">GitHub</a> y descomprímelo.</li>
+              <li>Ve a <code>chrome://extensions</code> y activa el <b>modo desarrollador</b>.</li>
+              <li><b>Cargar descomprimida</b> → carpeta <code>extension/</code>.</li>
+            </ol>
+            Útil para probar cambios antes de que lleguen a la tienda.
+          </div>
+        </details>
       </div>
     </div>
   </section>
@@ -266,5 +339,28 @@
   <p class="disclaimer">iVirtual Wrap es un proyecto independiente y de código abierto, sin afiliación ni respaldo oficial del Instituto Tecnológico de Sonora (ITSON). "ITSON", "iVirtual" y "Moodle" pertenecen a sus respectivos titulares. La extensión no recopila ni transmite datos personales.</p>
 </footer>
 
+<script>
+  /* Enlaces de la landing — una sola fuente de verdad.
+     STORE_ID: el ID de la Chrome Web Store (32 letras, sale en la URL de la
+     ficha). Mientras esté vacío, "Agregar a Chrome" abre la búsqueda de la
+     tienda por nombre, que la encontrará en cuanto se publique. */
+  var STORE_ID = '';
+  var STORE_URL = STORE_ID ? 'https://chromewebstore.google.com/detail/' + STORE_ID : 'https://chromewebstore.google.com/search/iVirtual%20Wrap';
+  var PORTAL_URL = 'https://ivirtual.itson.edu.mx/';
+
+  document.querySelectorAll('[data-store]').forEach(function(a){ a.href = STORE_URL; });
+  document.querySelectorAll('[data-portal]').forEach(function(a){ a.href = PORTAL_URL; });
+
+  // link corto = esta misma landing + /entrar (vale en cualquier dominio donde se publique)
+  var base = location.origin + location.pathname.replace(/index\.html$/, '').replace(/\/?$/, '/');
+  var short = /^https?:$/.test(location.protocol) ? (base + 'entrar').replace(/^https?:\/\//, '') : 'ivirtual.potronet.com/entrar';
+  document.querySelectorAll('[data-short]').forEach(function(el){ el.textContent = short; });
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var done = function(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Copiar'; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText('https://' + short).then(done, done); else done();
+    });
+  });
+</script>
 </body>
 </html>
