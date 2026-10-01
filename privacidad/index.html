@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidad — iVirtual Wrap</title>
+<meta name="description" content="Política de privacidad de iVirtual Wrap: qué guarda, qué no recopila y con quién se comunica.">
+<link rel="canonical" href="https://ivirtual.potronet.com/privacidad/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0b0d11; --surface:#14171d; --ink:#f4f6f9; --ink2:#c7cdd8; --muted:#93a0b0;
+    --line:rgba(255,255,255,.09); --brand:#5b9dff; --brand2:#8bbaff; }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink2); font:16px/1.7 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased; background-image:radial-gradient(60% 40% at 50% -8%, rgba(91,157,255,.10), transparent 70%)}
+  main{max-width:760px; margin:0 auto; padding:56px 20px 72px}
+  a{color:var(--brand2)}
+  .back{font-size:14px; text-decoration:none}
+  h1{color:var(--ink); font-size:clamp(28px,5vw,40px); line-height:1.1; letter-spacing:-.02em; margin:18px 0 6px}
+  .date{color:var(--muted); font-size:14px; margin:0 0 32px}
+  h2{color:var(--ink); font-size:19px; letter-spacing:-.01em; margin:36px 0 8px}
+  .tldr{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--brand); border-radius:12px; padding:16px 20px}
+  .tldr p{margin:0}
+  table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:8px}
+  th,td{text-align:left; vertical-align:top; padding:10px 12px; border-bottom:1px solid var(--line)}
+  th{color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.06em}
+  code{font-size:13px; background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 6px; color:var(--brand2)}
+  ul{padding-left:20px}
+  footer{margin-top:48px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">← iVirtual Wrap</a>
+  <h1>Política de privacidad</h1>
+  <p class="date">Vigente desde el 1 de octubre de 2026</p>
+
+  <div class="tldr"><p><b>En corto:</b> iVirtual Wrap no recopila, no vende y no envía datos personales.
+  Cambia cómo se ve iVirtual en tu navegador, sobre la sesión que tú iniciaste. No tenemos servidores
+  que reciban información de la extensión.</p></div>
+
+  <h2>Qué hace</h2>
+  <p>iVirtual Wrap es una extensión de navegador que reestiliza iVirtual, el Moodle del ITSON (<code>ivirtual.itson.edu.mx</code>), y el Portal de Sistemas, eRes, la Mesa de Ayuda y el Calendario Escolar: estilos, maquetación,
+  iconos y navegación. Solo actúa en esas páginas, mientras las tienes abiertas.</p>
+
+  <h2>Qué guarda, y dónde</h2>
+  <p>Únicamente tus preferencias de la extensión, en el almacenamiento local de tu navegador
+  (<code>chrome.storage.local</code>). Nunca salen de tu equipo.</p>
+  <table>
+    <tr><th>Dato</th><th>Para qué</th></tr>
+    <tr><td>Encendida / apagada</td><td>Recordar si quieres ver la interfaz nueva.</td></tr>
+    <tr><td>Tema (claro, oscuro o automático)</td><td>Pintar la interfaz como la elegiste.</td></tr>
+    <tr><td>Última versión vista</td><td>Mostrar las novedades una sola vez después de cada actualización.</td></tr>
+  </table>
+  
+
+  <h2>Qué NO hace</h2>
+  <ul>
+    <li>No guarda ni transmite tu usuario, contraseña, cursos, calificaciones ni ningún otro dato de iVirtual. Para reacomodar la página usa lo que ya muestra, en tu navegador, y lo olvida al cerrarla.</li><li>Nunca lee los campos de usuario y contraseña.</li>
+    <li>No inicia sesión por ti ni hace peticiones al portal por su cuenta.</li>
+    <li>No usa analítica, rastreadores, publicidad ni cookies propias.</li>
+    <li>No vende ni comparte datos con terceros: no tiene datos que compartir.</li>
+  </ul>
+
+  <h2>Con quién se comunica</h2>
+  <p>Con nadie de nuestra parte. La única petición externa son las <b>tipografías</b> de la interfaz
+  (Figtree y Plus Jakarta Sans), que se cargan desde Google Fonts como en cualquier sitio que las usa;
+  Google recibe esa petición según su <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad</a>.</p>
+
+  <h2>Permisos</h2>
+  <p><code>storage</code> para las preferencias de arriba, y acceso a <code>ivirtual.itson.edu.mx</code> y a las rutas del Portal de Sistemas, eRes, Mesa de Ayuda y Calendario Escolar en <code>apps9</code> y <code>apps11.itson.edu.mx</code> para poder reestilizarlos.
+  No pide acceso a ningún otro sitio.</p>
+
+  <h2>Código abierto</h2>
+  <p>Todo lo anterior se puede comprobar: el código está en
+  <a href="https://github.com/oyzters/iVirtual-Wrap" target="_blank" rel="noopener">github.com/oyzters/iVirtual-Wrap</a> (licencia MIT).</p>
+
+  <h2>Cambios y contacto</h2>
+  <p>Si esta política cambia, se actualiza aquí con su nueva fecha. Dudas o reportes:
+  <a href="mailto:mdjesuscv@gmail.com">mdjesuscv@gmail.com</a> ·
+  <a href="mailto:sebastianescram01@gmail.com">sebastianescram01@gmail.com</a>.</p>
+
+  <footer>iVirtual Wrap es un proyecto independiente de Oyzters, sin afiliación ni respaldo oficial del Instituto
+  Tecnológico de Sonora (ITSON). "ITSON", "iVirtual" y Moodle pertenecen a sus respectivos titulares.</footer>
+</main>
+</body>
+</html>

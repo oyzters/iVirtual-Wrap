@@ -106,19 +106,26 @@ tu propia sesión**, ya iniciada con tu cuenta.
   correo como texto de ayuda en vez de rojo de error, y los teléfonos de
   WhatsApp y las líneas telefónicas como dos fichas.
 
-## Instalar (modo desarrollador)
+## Instalar
 
-**Chrome / Edge / Brave**
-1. Ve a `chrome://extensions`.
-2. Activa **Modo de desarrollador** (arriba a la derecha).
-3. **Cargar descomprimida** → selecciona la carpeta `extension/`.
-4. Entra a iVirtual. La interfaz se aplica sola; abajo a la derecha hay un
-   botón **Wrap ON/OFF**, y también puedes prender/apagar desde el popup del
-   ícono de la extensión.
+**Chrome, Edge o Brave:** desde la [Chrome Web Store](https://ivirtual.potronet.com) —
+botón *Agregar a Chrome*. Se actualiza sola; cuando hay versión nueva, el ícono
+muestra **NEW** y el menú de la extensión lista las novedades.
 
-**Firefox**
-1. Ve a `about:debugging#/runtime/this-firefox`.
-2. **Cargar complemento temporal** → elige `extension/manifest.json`.
+Desde el ícono de la extensión se enciende o apaga, se elige el tema (claro,
+oscuro o automático) y se abre iVirtual.
+
+Sitio: [ivirtual.potronet.com](https://ivirtual.potronet.com) · Acceso directo:
+[ivirtual.potronet.com/entrar](https://ivirtual.potronet.com/entrar)
+
+### Desde el código (para desarrollar)
+
+1. Ve a `chrome://extensions` y activa el **modo de desarrollador**.
+2. **Cargar descomprimida** → la carpeta `extension/`.
+3. Entra a iVirtual: la interfaz se aplica sola.
+
+Para generar el `.zip` de la tienda: `python tools/package.py`. Publicar y
+versionar: [STORE.md](STORE.md) y [CHANGELOG.md](CHANGELOG.md).
 
 ## Otras formas de usarlo (gemelas de la extensión)
 
@@ -126,7 +133,7 @@ Mismo reskin, cambia cómo se activa:
 
 | Forma | Instalación | Se activa |
 |---|---|---|
-| **Extensión** (`extension/`) | Cargar en el navegador | Sola, siempre |
+| **Extensión** (`extension/`) | Chrome Web Store | Sola, siempre |
 | **Userscript** (`userscript/`) | Tampermonkey + pegar `ivirtual-wrap.user.js` | Sola |
 | **Bookmarklet** (`bookmarklet/`) | Abrir `ivirtual-wrap-installer.html` y arrastrar el botón | Clic en cada visita |
 
@@ -152,7 +159,9 @@ CSS, `enhance.js` o `build/core.js`.
 
 El estado vive en `chrome.storage.local` (`wrapEnabled`, por defecto ON). Todo
 el reskin está bajo el atributo `data-ivw="on"` en `<html>`: apagarlo revierte
-la vista sin recargar. El botón flotante y el popup escriben ese flag.
+la vista sin recargar. En la extensión lo escribe el popup; en el userscript y
+el bookmarklet, el botón flotante de la página. El tema vive en `themeMode`
+(`auto` por defecto, `light` o `dark`).
 
 ## Estructura
 

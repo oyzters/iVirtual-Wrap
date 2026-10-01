@@ -1,0 +1,29 @@
+<!doctype html>
+<!--
+  Mosaico promocional de la Chrome Web Store (440×280). Se rinde con:
+    chrome --headless --disable-gpu --allow-file-access-from-files --hide-scrollbars \
+           --window-size=440,280 --screenshot=promo-440x280.png "promo.html"
+  (en Windows, la página como file:///C:/ruta/completa/store/promo.html)
+-->
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family:'Figtree'; src:url('figtree.woff2') format('woff2'); font-weight:100 900; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:440px;height:280px;overflow:hidden}
+  body{font-family:'Figtree',sans-serif; color:#fff; padding:34px 34px 30px;
+    background:radial-gradient(120% 90% at 100% 0%, #1461bd 0%, #0b3c78 45%, #082a4d 100%);
+    display:flex; flex-direction:column; justify-content:space-between; position:relative}
+  body::after{content:""; position:absolute; right:-70px; bottom:-90px; width:260px; height:260px;
+    border-radius:50%; border:34px solid rgba(255,255,255,.06)}
+  .top{display:flex; align-items:center; gap:14px}
+  .top img{width:58px; height:58px; border-radius:15px; box-shadow:0 10px 26px -10px rgba(0,0,0,.6)}
+  h1{font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1}
+  p{font-size:17px; font-weight:600; line-height:1.35; color:rgba(255,255,255,.92); max-width:330px}
+  .tags{display:flex; gap:8px; flex-wrap:wrap}
+  .tags span{font-size:12px; font-weight:700; padding:5px 10px; border-radius:999px; background:rgba(255,255,255,.12)}
+</style></head>
+<body>
+  <div class="top"><img src="../extension/icons/icon.svg" alt=""><h1>iVirtual Wrap</h1></div>
+  <p>iVirtual del ITSON, con una interfaz moderna.</p>
+  <div class="tags"><span>Modo oscuro</span><span>Sin servidor</span><span>Código abierto</span></div>
+</body></html>
